@@ -44,3 +44,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Other
+.vscode
+build/*
+!build/README.md
