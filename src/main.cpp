@@ -2,13 +2,14 @@
 #include <SFML/Graphics.hpp>
 
 int main(){
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Dungeon Crawler");
+	std::cout << "Hello World" << std::endl;
+    sf::Vector2u windowSize(800u, 600u);
+	sf::RenderWindow window(sf::VideoMode(windowSize), "Dungeon Crawler");
     window.setFramerateLimit(60);
 
     while (window.isOpen()) {
 
     }
 
-	std::cout << "Hello World" << std::endl;
 	return 0;
 }
