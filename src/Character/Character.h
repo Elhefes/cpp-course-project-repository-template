@@ -1,0 +1,8 @@
+//
+// Created by dannypa on 05.11.23.
+//
+
+#ifndef DUNGEONCRAWLER_CHARACTER_H
+#define DUNGEONCRAWLER_CHARACTER_H
+
+#endif //DUNGEONCRAWLER_CHARACTER_H
