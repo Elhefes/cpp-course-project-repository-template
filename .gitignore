@@ -49,3 +49,5 @@ dkms.conf
 .vscode
 build/*
 !build/README.md
+.idea/
+cmake-build-debug
