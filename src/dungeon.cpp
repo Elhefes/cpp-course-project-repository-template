@@ -43,11 +43,27 @@ public:
 };
 
 void generateRooms(std::vector<Room>& rooms, int numRooms, int maxWidth, int maxHeight) {
+    int maxDistance = 25;
     while (rooms.size() < numRooms) {
         int roomWidth = 3 + rand() % 9;  // Random width in terms of tiles
         int roomHeight = 3 + rand() % 9;  // Random height in terms of tiles
-        int roomX = rand() % (maxWidth / tileSize - roomWidth);
-        int roomY = rand() % (maxHeight / tileSize - roomHeight);
+        int roomX;
+        int roomY;
+        
+        if (rooms.empty()) {
+            // Place first room randomly
+            roomX = rand() % (maxWidth / tileSize - roomWidth);
+            roomY = rand() % (maxHeight / tileSize - roomHeight);
+        } else {
+            // Place new room within maxDistance
+            const Room& existingRoom = rooms[rand() % rooms.size()];
+            roomX = std::max(existingRoom.x - maxDistance, 0) + rand() % (2 * maxDistance + 1);
+            roomY = std::max(existingRoom.y - maxDistance, 0) + rand() % (2 * maxDistance + 1);
+
+            roomX = std::min(roomX, (maxWidth / tileSize - roomWidth));
+            roomY = std::min(roomY, (maxHeight / tileSize - roomHeight));
+        }
+
         Room newRoom(roomX, roomY, roomWidth, roomHeight);
 
         // Check for overlaps with existing rooms
@@ -69,6 +85,7 @@ void generateRooms(std::vector<Room>& rooms, int numRooms, int maxWidth, int max
 }
 
 void generateCorridors(const std::vector<Room>& rooms, std::vector<Corridor>& corridors) {
+    int maxLength = 25;
     for (size_t i = 0; i < rooms.size(); i++) {
         for (size_t j = i + 1; j < rooms.size(); j++) {
             // Calculate corridor dimensions in terms of tiles
@@ -79,12 +96,19 @@ void generateCorridors(const std::vector<Room>& rooms, std::vector<Corridor>& co
                 corridorX = rooms[i].x + rooms[i].width;
                 corridorY = rooms[i].y + rooms[i].height / 2 - 1;
                 corridorWidth = rooms[j].x - (rooms[i].x + rooms[i].width);
+                if (corridorWidth > maxLength) {
+                    continue;
+                }
                 corridorHeight = 1;
                 vertical = true;
             } else if (rooms[i].x > rooms[j].x + rooms[j].width) {
                 corridorX = rooms[j].x + rooms[j].width;
                 corridorY = rooms[i].y + rooms[i].height / 2 - 1;
                 corridorWidth = rooms[i].x - (rooms[j].x + rooms[j].width);
+                corridorWidth = std::max(corridorWidth, 1);
+                if (corridorWidth > maxLength) {
+                    continue;
+                }
                 corridorHeight = 1;
                 vertical = true;
             } else if (rooms[i].y + rooms[i].height < rooms[j].y) {
@@ -92,11 +116,17 @@ void generateCorridors(const std::vector<Room>& rooms, std::vector<Corridor>& co
                 corridorY = rooms[i].y + rooms[i].height;
                 corridorWidth = 1;
                 corridorHeight = rooms[j].y - (rooms[i].y + rooms[i].height);
+                if (corridorHeight > maxLength) {
+                    continue;
+                }
             } else {
                 corridorX = rooms[i].x + rooms[i].width / 2 - 1;
                 corridorY = rooms[j].y + rooms[j].height;
                 corridorWidth = 1;
                 corridorHeight = rooms[i].y - (rooms[j].y + rooms[j].height);
+                if (corridorHeight > maxLength) {
+                    continue;
+                }
             }
 
             Corridor corridor(corridorX, corridorY, corridorWidth, corridorHeight);
@@ -115,7 +145,7 @@ int main() {
     std::vector<Room> rooms;
     std::vector<Corridor> corridors;
     std::vector<Corridor> c;
-    int numRooms = 13;
+    int numRooms = 10;
     int maxWidth = 800;
     int maxHeight = 600;
 
