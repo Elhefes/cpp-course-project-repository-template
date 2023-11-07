@@ -43,7 +43,7 @@ public:
 };
 
 void generateRooms(std::vector<Room>& rooms, int numRooms, int maxWidth, int maxHeight) {
-    int maxDistance = 25;
+    int maxDistance = 15;
     while (rooms.size() < numRooms) {
         int roomWidth = 3 + rand() % 9;  // Random width in terms of tiles
         int roomHeight = 3 + rand() % 9;  // Random height in terms of tiles
@@ -135,6 +135,7 @@ void generateCorridors(const std::vector<Room>& rooms, std::vector<Corridor>& co
     }
 }
 
+
 int main() {
     srand(static_cast<unsigned>(time(0)));
 
@@ -144,8 +145,7 @@ int main() {
 
     std::vector<Room> rooms;
     std::vector<Corridor> corridors;
-    std::vector<Corridor> c;
-    int numRooms = 10;
+    int numRooms = 5;
     int maxWidth = 800;
     int maxHeight = 600;
 
@@ -175,7 +175,6 @@ int main() {
                 }
             }
         }
-
 
         // Corridors
         for (const Corridor& corridor : corridors) {
