@@ -36,7 +36,8 @@ public:
         tileColors.resize(width, std::vector<sf::Color>(height));
         for (int i = 0; i < width; ++i) {
             for (int j = 0; j < height; ++j) {
-                tileColors[i][j] = getRandomColor();
+                tileColors[i][j] = sf::Color(255, 0, 0);
+                //tileColors[i][j] = getRandomColor();
             }
         }
     }
@@ -84,60 +85,71 @@ void generateRooms(std::vector<Room>& rooms, int numRooms, int maxWidth, int max
     }
 }
 
+
 void generateCorridors(const std::vector<Room>& rooms, std::vector<Corridor>& corridors) {
-    int maxLength = 25;
+    int minDistance = 20; // Minimum distance to connect rooms
     for (size_t i = 0; i < rooms.size(); i++) {
         for (size_t j = i + 1; j < rooms.size(); j++) {
-            // Calculate corridor dimensions in terms of tiles
-            int corridorX, corridorY, corridorWidth, corridorHeight;
-            bool vertical = false;
+            int deltaX, deltaY;
 
-            if (rooms[i].x + rooms[i].width < rooms[j].x) {
-                corridorX = rooms[i].x + rooms[i].width;
-                corridorY = rooms[i].y + rooms[i].height / 2 - 1;
-                corridorWidth = rooms[j].x - (rooms[i].x + rooms[i].width);
-                if (corridorWidth > maxLength) {
-                    continue;
-                }
-                corridorHeight = 1;
-                vertical = true;
-            } else if (rooms[i].x > rooms[j].x + rooms[j].width) {
-                corridorX = rooms[j].x + rooms[j].width;
-                corridorY = rooms[i].y + rooms[i].height / 2 - 1;
-                corridorWidth = rooms[i].x - (rooms[j].x + rooms[j].width);
-                corridorWidth = std::max(corridorWidth, 1);
-                if (corridorWidth > maxLength) {
-                    continue;
-                }
-                corridorHeight = 1;
-                vertical = true;
-            } else if (rooms[i].y + rooms[i].height < rooms[j].y) {
-                corridorX = rooms[i].x + rooms[i].width / 2 - 1;
-                corridorY = rooms[i].y + rooms[i].height;
-                corridorWidth = 1;
-                corridorHeight = rooms[j].y - (rooms[i].y + rooms[i].height);
-                if (corridorHeight > maxLength) {
-                    continue;
-                }
+            // Calculate the horizontal (X) delta
+            if (rooms[i].x > rooms[j].x + rooms[j].width) {
+                // Room i is to the right of room j
+                deltaX = -(rooms[i].x - (rooms[j].x + rooms[j].width));
+            } else if (rooms[j].x > rooms[i].x + rooms[i].width) {
+                // Room j is to the right of room i
+                deltaX = rooms[j].x - (rooms[i].x + rooms[i].width);
             } else {
-                corridorX = rooms[i].x + rooms[i].width / 2 - 1;
-                corridorY = rooms[j].y + rooms[j].height;
-                corridorWidth = 1;
-                corridorHeight = rooms[i].y - (rooms[j].y + rooms[j].height);
-                if (corridorHeight > maxLength) {
-                    continue;
-                }
+                // Rooms overlap in the X direction, set deltaX to 0
+                deltaX = 0;
             }
 
-            Corridor corridor(corridorX, corridorY, corridorWidth, corridorHeight);
-            corridors.push_back(corridor);
+            // Calculate the vertical (Y) delta
+            if (rooms[i].y > rooms[j].y + rooms[j].height) {
+                // Room i is below room j
+                deltaY = -(rooms[i].y - (rooms[j].y + rooms[j].height));
+            } else if (rooms[j].y > rooms[i].y + rooms[i].height) {
+                // Room j is below room i
+                deltaY = rooms[j].y - (rooms[i].y + rooms[i].height);
+            } else {
+                // Rooms overlap in the Y direction, set deltaY to 0
+                deltaY = 0;
+            }
+
+            std::cout << "DeltaX: " << deltaX << ", DeltaY: " << deltaY << std::endl;
+
+            // Check if rooms are close enough to connect or that rooms aren't already connected
+            if (std::abs(deltaX) < minDistance && std::abs(deltaY) < minDistance) {
+                // Calculate corridor dimensions in terms of tiles
+                int corridorX, corridorY, corridorWidth, corridorHeight;
+                bool vertical = false;
+
+                if (std::abs(deltaX) > std::abs(deltaY)) {
+                    // Horizontal corridor
+                    corridorX = (deltaX > 0) ? rooms[i].x + rooms[i].width : rooms[j].x + rooms[j].width;
+                    corridorY = rooms[i].y + rooms[i].height / 2 - 1;
+                    corridorWidth = std::abs(deltaX);
+                    corridorHeight = 1;
+                } else {
+                    // Vertical corridor
+                    corridorX = rooms[i].x + rooms[i].width / 2 - 1;
+                    corridorY = (deltaY > 0) ? rooms[i].y + rooms[i].height : rooms[j].y + rooms[j].height;
+                    corridorWidth = 1;
+                    corridorHeight = std::abs(deltaY);
+                    vertical = true;
+                }
+
+                Corridor corridor(corridorX, corridorY, corridorWidth, corridorHeight);
+                corridors.push_back(corridor);
+            }
         }
     }
 }
 
 
 int main() {
-    srand(static_cast<unsigned>(time(0)));
+    //srand(static_cast<unsigned>(time(0)));
+    srand(5);
 
     sf::Vector2u windowSize(800u, 600u);
     sf::RenderWindow window(sf::VideoMode(windowSize), "Dungeon");
@@ -145,7 +157,7 @@ int main() {
 
     std::vector<Room> rooms;
     std::vector<Corridor> corridors;
-    int numRooms = 5;
+    int numRooms = 3;
     int maxWidth = 800;
     int maxHeight = 600;
 
