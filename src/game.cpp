@@ -43,7 +43,7 @@ private:
     std::vector<Room> corridors;
 
     void initializeWindow() {
-        sf::Vector2u windowSize(800u, 600u);
+        sf::Vector2u windowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         window.create(sf::VideoMode(windowSize), "Dungeon Crawler");
         window.setFramerateLimit(60);
     }
