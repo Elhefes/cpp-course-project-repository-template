@@ -114,7 +114,7 @@ void generateCorridors(const std::vector<Room>& rooms, std::vector<Room>& corrid
     }
 }
 
-
+/*
 int main() {
     //srand(static_cast<unsigned>(time(0)));
     srand(5);
@@ -171,3 +171,4 @@ int main() {
 
     return 0;
 }
+*/
