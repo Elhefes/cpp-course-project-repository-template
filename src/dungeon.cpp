@@ -5,7 +5,7 @@
 #include <iostream>
 #include "room.cpp"
 
-const int tileSize = 10;
+const int TILE_SIZE = 10;
 
 class Dungeon {
 public:
@@ -13,10 +13,10 @@ public:
         
     }
     bool roomConstraintsOverlap(Room existingRoom, Room newRoom) {
-        return (newRoom.x * tileSize < existingRoom.x  * tileSize + existingRoom.width * tileSize &&
-                newRoom.x * tileSize + newRoom.width * tileSize > existingRoom.x * tileSize &&
-                newRoom.y * tileSize < existingRoom.y * tileSize + existingRoom.height * tileSize &&
-                newRoom.y * tileSize + newRoom.height * tileSize > existingRoom.y * tileSize);
+        return (newRoom.x * TILE_SIZE < existingRoom.x  * TILE_SIZE + existingRoom.width * TILE_SIZE &&
+                newRoom.x * TILE_SIZE + newRoom.width * TILE_SIZE > existingRoom.x * TILE_SIZE &&
+                newRoom.y * TILE_SIZE < existingRoom.y * TILE_SIZE + existingRoom.height * TILE_SIZE &&
+                newRoom.y * TILE_SIZE + newRoom.height * TILE_SIZE > existingRoom.y * TILE_SIZE);
     }
 
     void generateRooms(std::vector<Room>& rooms, int numRooms, int maxWidth, int maxHeight) {
@@ -29,16 +29,16 @@ public:
             
             if (rooms.empty()) {
                 // Place first room randomly
-                roomX = rand() % (maxWidth / tileSize - roomWidth);
-                roomY = rand() % (maxHeight / tileSize - roomHeight);
+                roomX = rand() % (maxWidth / TILE_SIZE - roomWidth);
+                roomY = rand() % (maxHeight / TILE_SIZE - roomHeight);
             } else {
                 // Place new room within maxDistance
                 const Room& existingRoom = rooms[rand() % rooms.size()];
                 roomX = std::max(existingRoom.x - maxDistance, 0) + rand() % (2 * maxDistance + 1);
                 roomY = std::max(existingRoom.y - maxDistance, 0) + rand() % (2 * maxDistance + 1);
 
-                roomX = std::min(roomX, (maxWidth / tileSize - roomWidth));
-                roomY = std::min(roomY, (maxHeight / tileSize - roomHeight));
+                roomX = std::min(roomX, (maxWidth / TILE_SIZE - roomWidth));
+                roomY = std::min(roomY, (maxHeight / TILE_SIZE - roomHeight));
             }
 
             Room newRoom(roomX, roomY, roomWidth, roomHeight);

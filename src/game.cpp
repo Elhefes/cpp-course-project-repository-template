@@ -4,22 +4,29 @@
 #include "dungeon.cpp"
 
 /*
-TODO: create some sort of tests here to check whether items, dungeons etc
+TODO: Create some sort of tests here to check whether items, dungeons etc
       are working properly as discussed with the project advisor
 */
+
+const unsigned int WINDOW_WIDTH = 800u;
+const unsigned int WINDOW_HEIGHT = 600u;
+
+const int ROOM_AMOUNT = 10;
+const int ROOM_MAX_WIDTH = 800;
+const int ROOM_MAX_HEIGHT = 600;
 
 class Game {
 public:
     Game() {
-        sf::Vector2u windowSize(800u, 600u);
+        sf::Vector2u windowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         window.create(sf::VideoMode(windowSize), "Dungeon Crawler");
         window.setFramerateLimit(60);
 
-        // Initialize the moving object (circle)
+        // Initialize the moving circle (this is for testing purposes)
         circle.setRadius(20);
         circle.setFillColor(sf::Color::Red);
         circle.setPosition(sf::Vector2f(100u, 300u));
-        drawDungeon();
+        initiateDungeon();
     }
 
     void run() {
@@ -33,6 +40,10 @@ public:
 private:
     sf::RenderWindow window;
     sf::CircleShape circle;
+
+    Dungeon dungeon;
+    std::vector<Room> rooms;
+    std::vector<Room> corridors;
 
     void processEvents() {
         sf::Event event;
@@ -56,62 +67,39 @@ private:
 
     void render() {
         window.clear();
-        // Render game objects, backgrounds, UI elements, etc.
-        // Render player, enemies, levels, HUD, etc.
+        // Render dungeon, game objects, UI elements, etc.
 
         // Render the moving object (circle)
         window.draw(circle);
 
+        // Render the dungeon
+        drawDungeon();
+
         window.display();
     }
 
-    void drawDungeon() {
-        Dungeon dungeon;
-
-        std::vector<Room> rooms;
-        std::vector<Room> corridors;
-
-        int numRooms = 10;
-        int maxWidth = 800;
-        int maxHeight = 600;
-
-        dungeon.generateRooms(rooms, numRooms, maxWidth, maxHeight);
+    void initiateDungeon() {
+        dungeon.generateRooms(rooms, ROOM_AMOUNT, ROOM_MAX_WIDTH, ROOM_MAX_HEIGHT);
         dungeon.generateCorridors(rooms, corridors);
+    }
 
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                }
+    void drawDungeon() {
+        for (const Room& room : rooms) {
+            drawRoom(room);
+        }
+        for (const Room& corridor : corridors) {
+            drawRoom(corridor);
+        }
+    }
+
+    void drawRoom(const Room& room) {
+        for (int i = 0; i < room.width; ++i) {
+            for (int j = 0; j < room.height; ++j) {
+                sf::RectangleShape tileShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
+                tileShape.setPosition(sf::Vector2f((room.x + i) * TILE_SIZE, (room.y + j) * TILE_SIZE));
+                tileShape.setFillColor(room.tileColors[i][j]);
+                window.draw(tileShape);
             }
-
-            window.clear();
-
-            // Draw the corridors and rooms
-            for (const Room& room : rooms) {
-                for (int i = 0; i < room.width; ++i) {
-                    for (int j = 0; j < room.height; ++j) {
-                        sf::RectangleShape tileShape(sf::Vector2f(tileSize, tileSize));
-                        tileShape.setPosition(sf::Vector2f((room.x + i) * tileSize, (room.y + j) * tileSize));
-                        tileShape.setFillColor(room.tileColors[i][j]);
-                        window.draw(tileShape);
-                    }
-                }
-            }
-
-            for (const Room& corridor : corridors) {
-                for (int i = 0; i < corridor.width; ++i) {
-                    for (int j = 0; j < corridor.height; ++j) {
-                        sf::RectangleShape tileShape(sf::Vector2f(tileSize, tileSize));
-                        tileShape.setPosition(sf::Vector2f((corridor.x + i) * tileSize, (corridor.y + j) * tileSize));
-                        tileShape.setFillColor(corridor.tileColors[i][j]);
-                        window.draw(tileShape);
-                    }
-                }
-            }
-
-            window.display();
         }
     }
 };
