@@ -89,7 +89,7 @@ public:
                     deltaY = 0;
                 }
 
-                std::cout << "DeltaX: " << deltaX << ", DeltaY: " << deltaY << std::endl;
+                //std::cout << "DeltaX: " << deltaX << ", DeltaY: " << deltaY << std::endl;
 
                 // Check if rooms are close enough to connect or that rooms aren't already connected
                 if (std::abs(deltaX) < minDistance && std::abs(deltaY) < minDistance) {
