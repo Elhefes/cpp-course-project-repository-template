@@ -1,10 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <vector>
+#include "dungeon.cpp"
 
 /*
 TODO: create some sort of tests here to check whether items, dungeons etc
-are working properly as discussed with the project advisor
+      are working properly as discussed with the project advisor
 */
 
 class Game {
@@ -18,6 +19,7 @@ public:
         circle.setRadius(20);
         circle.setFillColor(sf::Color::Red);
         circle.setPosition(sf::Vector2f(100u, 300u));
+        drawDungeon();
     }
 
     void run() {
@@ -63,4 +65,53 @@ private:
         window.display();
     }
 
+    void drawDungeon() {
+        Dungeon dungeon;
+
+        std::vector<Room> rooms;
+        std::vector<Room> corridors;
+
+        int numRooms = 10;
+        int maxWidth = 800;
+        int maxHeight = 600;
+
+        dungeon.generateRooms(rooms, numRooms, maxWidth, maxHeight);
+        dungeon.generateCorridors(rooms, corridors);
+
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                }
+            }
+
+            window.clear();
+
+            // Draw the corridors and rooms
+            for (const Room& room : rooms) {
+                for (int i = 0; i < room.width; ++i) {
+                    for (int j = 0; j < room.height; ++j) {
+                        sf::RectangleShape tileShape(sf::Vector2f(tileSize, tileSize));
+                        tileShape.setPosition(sf::Vector2f((room.x + i) * tileSize, (room.y + j) * tileSize));
+                        tileShape.setFillColor(room.tileColors[i][j]);
+                        window.draw(tileShape);
+                    }
+                }
+            }
+
+            for (const Room& corridor : corridors) {
+                for (int i = 0; i < corridor.width; ++i) {
+                    for (int j = 0; j < corridor.height; ++j) {
+                        sf::RectangleShape tileShape(sf::Vector2f(tileSize, tileSize));
+                        tileShape.setPosition(sf::Vector2f((corridor.x + i) * tileSize, (corridor.y + j) * tileSize));
+                        tileShape.setFillColor(corridor.tileColors[i][j]);
+                        window.draw(tileShape);
+                    }
+                }
+            }
+
+            window.display();
+        }
+    }
 };
