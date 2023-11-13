@@ -7,25 +7,24 @@
 
 #include <algorithm>
 #include <string>
+#include <iostream>
 #include "../Item.hpp" // maybe change path later idk where it would end up
 #include "SFML/Graphics.hpp"
 
-///
-/// Base class for every "alive" entity in the dungeon
-///
+/// @brief Base class for every "alive" entity in the dungeon
 class Creature {
  public:
 
-  Creature(const std::string &type, const std::string &name, int maxHealth, const sf::Vector2<float> &initialPos,
-           const sf::CircleShape &sprite = sf::CircleShape(50));
+  Creature(const std::string &type, const std::string &name, int maxHealth,
+           const sf::Vector2<float> &initialPos,
+           sf::RenderWindow &window,
+           std::ostream &logger = std::cout,
+           const sf::CircleShape &sprite = sf::CircleShape(50),
+           const std::vector<Item> &inventory = {});
 
   /// @brief Checks if the creature is alive.
   /// @return true if the creature is alive, false otherwise
   [[nodiscard]] bool IsAlive() const { return health_ > 0; }
-
-  /// @brief Reduces health by damage.
-  /// @param damage amount to reduce health_ by
-  void TakeDamage(int damage) { health_ = std::max(0, health_ - damage); }
 
   /// @return description_
   [[nodiscard]] const std::string &GetDescription() const;
@@ -37,13 +36,12 @@ class Creature {
   int TakeHit(int base_damage, const Creature &c2);
 
   /// @brief Updates state of the creature.
-  /// @param window Window which the creature is currently in. Passed to check that it is not leaving the window. \n
   /// Later probably need to pass something cleverer, like game class, tho i am not sure yet.
-  void Update(const sf::RenderWindow &window);
+  void Update();
 
   /// @brief Draws the creature's sprite in a given window.
   /// @param window window to draw the creature.
-  void Draw(sf::RenderWindow &window) const;
+  void Draw() const;
 
   /// @brief Setter for velocity.
   /// @param newVelocity
@@ -78,6 +76,14 @@ class Creature {
   sf::Vector2<float> position_;
   /// @brief current velocity of the creature
   sf::Vector2<float> velocity_;
+  /// @brief window in which the creature is supposed to be drawn
+  sf::RenderWindow &window_;
+  /// @brief stream to log information about the class
+  std::ostream &logger_;
+
+  /// @brief Reduces health by damage. If damage is greater then health, sets health to 0.
+  /// @param damage amount to reduce health_ by
+  void TakeDamage_(int damage) { health_ = std::max(0, health_ - damage); }
 };
 
 #endif //DUNGEONCRAWLER_CHARACTER_H

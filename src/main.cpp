@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Creature/Creature.hpp"
+#include "Creature/Assassin.hpp"
 
 int main() {
   std::cout << "Hello World" << std::endl;
@@ -14,26 +15,34 @@ int main() {
   shape1.setFillColor(sf::Color(123, 121, 200));
   sf::CircleShape shape2(50);
   shape2.setFillColor(sf::Color(239, 13, 214));
-  Creature c1("Dragon", "Willy", 1000, {10, 10}, shape1);
-  Creature c2("Hooman", "Ben", 50, {90, 90}, shape2);
+  Creature dragon("Dragon", "Willy", 1000, {10, 10}, window, std::cout, shape1);
+  Assassin assassin("Ben", {500, 500}, window, std::cout, shape2);
   // Creature testing end
 
   while (window.isOpen()) {
     window.clear();
     // Creature testing
-    c1.Draw(window);
-    c2.Draw(window);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) c1.SetVelocityX(5);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) c1.SetVelocity({-5, -5});
-    else c1.SetVelocity({0, 0});
-    c1.Update(window);
-    c2.Update(window);
+    dragon.Draw();
+    assassin.Draw();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) dragon.SetVelocityX(5);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) dragon.SetVelocityX(-5);
+    else dragon.SetVelocity({0, 0});
+    dragon.Update();
+    assassin.Update();
     // Creature testing end
     sf::Event event;
     while (window.pollEvent(event)) {
       // "close requested" event: we close the window
       if (event.type == sf::Event::Closed)
         window.close();
+      else if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::K) {
+          dragon.TakeHit(125, assassin);
+        } else if (event.key.code == sf::Keyboard::LShift) {
+          assassin.Special();
+        }
+
+      }
     }
     window.display();
   }
