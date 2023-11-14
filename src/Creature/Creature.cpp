@@ -15,7 +15,7 @@ Creature::Creature(const std::string &type,
       health_(maxHealth_),
       window_(window),
       logger_(logger),
-      items_(inventory),
+      inventory_(inventory),
       position_(initialPos),
       sprite_(sprite_) {
   description_ = "Creature \"" + type + " named " + name + "\"";
@@ -27,10 +27,10 @@ const std::string &Creature::GetDescription() const {
 
 int Creature::TakeHit(int base_damage, const Creature &c2) {
   // maybe calculate damage somehow (defense stats?)
-  int damage_dealt = std::min(base_damage, health_);
-  this->TakeDamage_(damage_dealt);
-  logger_ << c2.GetDescription() << " dealt " << damage_dealt << " ddamage to " << GetDescription() << "!" << std::endl;
-  return damage_dealt;
+  int damageDealt = std::min(base_damage, health_);
+  this->TakeDamage_(damageDealt);
+  logger_ << c2.GetDescription() << " dealt " << damageDealt << " ddamage to " << GetDescription() << "!" << std::endl;
+  return damageDealt;
 }
 
 void Creature::Draw() const {
@@ -53,4 +53,41 @@ void Creature::Update() {
                       (float) sz.x - 2 * sprite_.getRadius()); // won't work once we replace the sprite tho :((
   position_.y = bound(position_.y, (float) 0, (float) sz.y - 2 * sprite_.getRadius());
   sprite_.setPosition(position_); // it is not optimal to set it every frame, but i guess it is negligible
+}
+const std::vector<Item> &Creature::GetInventory() const {
+  return inventory_;
+}
+const sf::Vector2<float> &Creature::GetPosition() const {
+  return position_;
+}
+const sf::Vector2<float> &Creature::GetVelocity() const {
+  return velocity_;
+}
+
+template<typename T>
+int sign(T x) {
+  if (x > 0) return 1;
+  else if (x < 0) return -1;
+  else return 0;
+}
+
+template<typename T>
+T limitModule(T x, T limit) {
+  if (std::abs(x) > limit) {
+    x = sign(x) * limit;
+  }
+  return x;
+}
+void Creature::SetVelocity(const sf::Vector2<float> &newVelocity) {
+  SetVelocityX(newVelocity.x);
+  SetVelocityY(newVelocity.y);
+}
+
+void Creature::SetVelocityX(float nvx) { velocity_.x = limitModule(nvx, max_velocity_); }
+void Creature::SetVelocityY(float nvy) { velocity_.y = limitModule(nvy, max_velocity_); }
+void Creature::SetHealth(int health) {
+  health_ = std::min(health, maxHealth_);
+}
+void Creature::SetSprite(const sf::CircleShape &sprite) {
+  sprite_ = sprite;
 }

@@ -45,17 +45,26 @@ class Creature {
 
   /// @brief Setter for velocity.
   /// @param newVelocity
-  void SetVelocity(const sf::Vector2<float> &newVelocity) { velocity_ = newVelocity; };
+  void SetVelocity(const sf::Vector2<float> &newVelocity);
   /// @brief Sets x velocity.
   /// @param nvx new x velocity.
-  void SetVelocityX(float nvx) { velocity_.x = nvx; };
+  void SetVelocityX(float nvx);
   /// @brief Sets y velocity.
   /// @param nvy new y velocity.
-  void SetVelocityY(float nvy) { velocity_.y = nvy; };
+  void SetVelocityY(float nvy);
+  void SetHealth(int health);
+  void SetSprite(const sf::CircleShape &sprite);
+
+  /// @return inventory
+  const std::vector<Item> &GetInventory() const;
+  /// @return position
+  const sf::Vector2<float> &GetPosition() const;
+  /// @return velocity
+  const sf::Vector2<float> &GetVelocity() const;
 
  protected:
-  /// @brief max movement speed of the creature
-  float movement_speed_;
+  /// @brief max movement speed of the creature\nNote: this is the limit for vx and vy separately.
+  float max_velocity_;
   /// @brief max health of the creature
   int maxHealth_;
   /// @brief current health of the creature.
@@ -69,7 +78,7 @@ class Creature {
   /// @brief description in the format "Creature of type <type_> named <name>"
   std::string description_;
   /// @brief vector of items a creature currently has. Don't see the need to store references for now.
-  std::vector<Item> items_;
+  std::vector<Item> inventory_;
   /// @brief change to actual sprite later
   sf::CircleShape sprite_;
   /// @brief position of the creature on the screen
