@@ -12,7 +12,8 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 10;
+const int ROOM_AMOUNT = 20;
+const int TILE_SIZE = 1;
 const int ROOM_MAX_WIDTH = 800;
 const int ROOM_MAX_HEIGHT = 600;
 
@@ -88,8 +89,8 @@ private:
     }
 
     void initiateDungeon() {
-        dungeon.generateRooms(rooms, ROOM_AMOUNT, ROOM_MAX_WIDTH, ROOM_MAX_HEIGHT);
-        dungeon.generateCorridors(rooms, corridors);
+        srand(5);
+        dungeon.generateDungeon(rooms, ROOM_AMOUNT, TILE_SIZE, ROOM_MAX_WIDTH, ROOM_MAX_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     void initiateInventory() {

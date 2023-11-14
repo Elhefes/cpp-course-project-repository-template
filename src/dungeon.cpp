@@ -1,119 +1,97 @@
-#include <SFML/Graphics.hpp>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include "room.cpp"
+#include <algorithm>
 
-const int TILE_SIZE = 10;
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
 
 class Dungeon {
 public:
-    Dungeon() {
-        
-    }
-    bool roomConstraintsOverlap(Room existingRoom, Room newRoom) {
-        return (newRoom.x * TILE_SIZE < existingRoom.x  * TILE_SIZE + existingRoom.width * TILE_SIZE &&
-                newRoom.x * TILE_SIZE + newRoom.width * TILE_SIZE > existingRoom.x * TILE_SIZE &&
-                newRoom.y * TILE_SIZE < existingRoom.y * TILE_SIZE + existingRoom.height * TILE_SIZE &&
-                newRoom.y * TILE_SIZE + newRoom.height * TILE_SIZE > existingRoom.y * TILE_SIZE);
+    Dungeon() : corridors(), roomGrid(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
     }
 
-    void generateRooms(std::vector<Room>& rooms, int numRooms, int maxWidth, int maxHeight) {
-        int maxDistance = 15;
-        while (rooms.size() < numRooms) {
-            int roomWidth = 3 + rand() % 9;  // Random width in terms of tiles
-            int roomHeight = 3 + rand() % 9;  // Random height in terms of tiles
-            int roomX;
-            int roomY;
-            
-            if (rooms.empty()) {
-                // Place first room randomly
-                roomX = rand() % (maxWidth / TILE_SIZE - roomWidth);
-                roomY = rand() % (maxHeight / TILE_SIZE - roomHeight);
-            } else {
-                // Place new room within maxDistance
-                const Room& existingRoom = rooms[rand() % rooms.size()];
-                roomX = std::max(existingRoom.x - maxDistance, 0) + rand() % (2 * maxDistance + 1);
-                roomY = std::max(existingRoom.y - maxDistance, 0) + rand() % (2 * maxDistance + 1);
+    void generateDungeon(std::vector<Room>& rooms, int numRooms, int TILE_SIZE, int ROOM_MAX_WIDTH, int ROOM_MAX_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
+        const int GRID_SIZE = 20;
+        const float GRID_WIDTH = static_cast<float>(WINDOW_WIDTH) / GRID_SIZE;
+        const float GRID_HEIGHT = static_cast<float>(WINDOW_HEIGHT) / GRID_SIZE;
 
-                roomX = std::min(roomX, (maxWidth / TILE_SIZE - roomWidth));
-                roomY = std::min(roomY, (maxHeight / TILE_SIZE - roomHeight));
-            }
+        // Create a 2D array to represent the grid
+        std::pair<int, int> grid[GRID_SIZE][GRID_SIZE];
 
-            Room newRoom(roomX, roomY, roomWidth, roomHeight);
+        // Calculate the center of the grid
+        int centerX = GRID_SIZE / 2;
+        int centerY = GRID_SIZE / 2;
 
-            bool overlaps;
-
-            for (const Room& existingRoom : rooms) {
-                overlaps = roomConstraintsOverlap(existingRoom, newRoom);
-                if (overlaps) {
-                    break;
-                }
-            }
-
-            // Check for overlaps with existing rooms
-            if (!overlaps) {
-                rooms.push_back(newRoom);
+        // Initialize the grid with coordinates scaled based on WINDOW_WIDTH and WINDOW_HEIGHT
+        for (int i = 0; i < GRID_SIZE; ++i) {
+            for (int j = 0; j < GRID_SIZE; ++j) {
+                int x = i;
+                int y = j;
+                grid[i][j] = std::make_pair(x, y);
             }
         }
+
+        generateRooms(rooms, numRooms, GRID_SIZE / 2, GRID_SIZE / 2, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
     }
 
-    void generateCorridors(const std::vector<Room>& rooms, std::vector<Room>& corridors) {
-        int minDistance = 20; // Minimum distance to connect rooms
-        for (size_t i = 0; i < rooms.size(); i++) {
-            for (size_t j = i + 1; j < rooms.size(); j++) {
-                int deltaX, deltaY;
+private:
+    const static int GRID_SIZE = 20;
+    std::vector<Room> corridors;
+    std::vector<std::vector<bool>> roomGrid;
 
-                // Calculate the horizontal (X) delta
-                if (rooms[i].x > rooms[j].x + rooms[j].width) {
-                    // Room i is to the right of room j
-                    deltaX = -(rooms[i].x - (rooms[j].x + rooms[j].width));
-                } else if (rooms[j].x > rooms[i].x + rooms[i].width) {
-                    // Room j is to the right of room i
-                    deltaX = rooms[j].x - (rooms[i].x + rooms[i].width);
-                } else {
-                    // Rooms overlap in the X direction, set deltaX to 0
-                    deltaX = 0;
+    void generateRooms(std::vector<Room>& rooms, int numRooms, int x, int y, float GRID_WIDTH, float GRID_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT, int GRID_SIZE) {
+        if (rooms.size() >= numRooms) {
+            return;
+        }
+
+        if (!roomGrid[x][y]) {
+            int roomWidth = 10 + rand() % 10;  // Random width
+            int roomHeight = 10 + rand() % 10; // Random height
+            int roomX = x * GRID_WIDTH + (GRID_WIDTH / 2) - (roomWidth / 2);
+            int roomY = y * GRID_HEIGHT + (GRID_HEIGHT / 2) - (roomHeight / 2);
+
+            // Adjust room position to be centered within the grid cell
+            roomX += (GRID_WIDTH - roomWidth) / 2;
+            roomY += (GRID_HEIGHT - roomHeight) / 2;
+
+            Room newRoom(roomX, roomY, roomWidth, roomHeight);
+            rooms.push_back(newRoom);
+
+            roomGrid[x][y] = true;
+
+            // Randomly choose directions (right, down) to branch out
+            std::vector<Direction> directions = { UP, DOWN, LEFT, RIGHT };
+            std::random_shuffle(directions.begin(), directions.end());
+
+            for (const auto& dir : directions) {
+                int newX = x;
+                int newY = y;
+
+                switch (dir) {
+                case UP:
+                    newY--;
+                    break;
+                case DOWN:
+                    newY++;
+                    break;
+                case LEFT:
+                    newX--;
+                    break;
+                case RIGHT:
+                    newX++;
+                    break;
                 }
 
-                // Calculate the vertical (Y) delta
-                if (rooms[i].y > rooms[j].y + rooms[j].height) {
-                    // Room i is below room j
-                    deltaY = -(rooms[i].y - (rooms[j].y + rooms[j].height));
-                } else if (rooms[j].y > rooms[i].y + rooms[i].height) {
-                    // Room j is below room i
-                    deltaY = rooms[j].y - (rooms[i].y + rooms[i].height);
-                } else {
-                    // Rooms overlap in the Y direction, set deltaY to 0
-                    deltaY = 0;
-                }
-
-                //std::cout << "DeltaX: " << deltaX << ", DeltaY: " << deltaY << std::endl;
-
-                // Check if rooms are close enough to connect or that rooms aren't already connected
-                if (std::abs(deltaX) < minDistance && std::abs(deltaY) < minDistance) {
-                    // Calculate corridor dimensions in terms of tiles
-                    int corridorX, corridorY, corridorWidth, corridorHeight;
-                    bool vertical = false;
-
-                    if (std::abs(deltaX) > std::abs(deltaY)) {
-                        // Horizontal corridor
-                        corridorX = (deltaX > 0) ? rooms[i].x + rooms[i].width : rooms[j].x + rooms[j].width;
-                        corridorY = rooms[i].y + rooms[i].height / 2 - 1;
-                        corridorWidth = std::abs(deltaX);
-                        corridorHeight = 1;
-                    } else {
-                        // Vertical corridor
-                        corridorX = rooms[i].x + rooms[i].width / 2 - 1;
-                        corridorY = (deltaY > 0) ? rooms[i].y + rooms[i].height : rooms[j].y + rooms[j].height;
-                        corridorWidth = 1;
-                        corridorHeight = std::abs(deltaY);
-                        vertical = true;
-                    }
-
-                    Room corridor(corridorX, corridorY, corridorWidth, corridorHeight);
-                    corridors.push_back(corridor);
+                // Check if the new coordinates are within the grid
+                if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
+                    generateRooms(rooms, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
                 }
             }
         }
