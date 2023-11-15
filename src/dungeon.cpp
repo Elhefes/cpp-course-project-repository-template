@@ -88,10 +88,6 @@ private:
             int roomX = x * GRID_WIDTH + (GRID_WIDTH / 2) - (roomWidth / 2);
             int roomY = y * GRID_HEIGHT + (GRID_HEIGHT / 2) - (roomHeight / 2);
 
-            // Adjust room position to be centered within the grid cell
-            roomX += (GRID_WIDTH - roomWidth) / 2;
-            roomY += (GRID_HEIGHT - roomHeight) / 2;
-
             Room newRoom(roomX, roomY, roomWidth, roomHeight);
             rooms.push_back(newRoom);
 
@@ -100,17 +96,23 @@ private:
                 int lastRoomX = (lastRoom.x + (lastRoom.width / 2) - (GRID_WIDTH / 2)) / GRID_WIDTH;
                 int lastRoomY = (lastRoom.y + (lastRoom.height / 2) - (GRID_HEIGHT / 2)) / GRID_HEIGHT;
 
-                if (lastRoomX > x) {
-                    Room corridor(newRoom.x, newRoom.y, GRID_WIDTH, 1);
+                int shorterSide = (lastRoomX == x) ? std::min(newRoom.width, lastRoom.width) : std::min(newRoom.height, lastRoom.height);
+
+                if (lastRoomX > x)  {
+                    // left
+                    Room corridor(newRoom.x + newRoom.width / 2, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, GRID_WIDTH, 1);
                     corridors.push_back(corridor);
                 } else if (lastRoomX < x) {
-                    Room corridor(lastRoom.x, newRoom.y, GRID_WIDTH, 1);
+                    // right
+                    Room corridor(lastRoom.x + newRoom.width / 2, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, GRID_WIDTH, 1);
                     corridors.push_back(corridor);
                 } else if (lastRoomY > y) {
-                    Room corridor(newRoom.x, newRoom.y, 1, GRID_HEIGHT);
+                    // down
+                    Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, newRoom.y + newRoom.height / 2, 1, GRID_HEIGHT);
                     corridors.push_back(corridor);
                 } else {
-                    Room corridor(newRoom.x, lastRoom.y, 1, GRID_HEIGHT);
+                    // up
+                    Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.y + lastRoom.height / 2, 1, GRID_HEIGHT);
                     corridors.push_back(corridor);
                 }
             }

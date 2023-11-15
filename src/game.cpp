@@ -12,7 +12,7 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 10;
+const int ROOM_AMOUNT = 20;
 const int TILE_SIZE = 1;
 
 class Game {
@@ -87,7 +87,7 @@ private:
     }
 
     void initiateDungeon() {
-        srand(3);
+        srand(1);
         dungeon.generateDungeon(rooms, corridors, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
