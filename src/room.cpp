@@ -21,17 +21,16 @@ public:
         }
     }
 private:
-    std::string texture1Path = "../assets/textures/room_floor1.png";
-    std::string texture2Path = "../assets/textures/room_floor2.png";
+    const std::string TEXTURES_PATH = "../assets/textures/";
     sf::Texture texture1;
     sf::Texture texture2;
 
     void loadTextures() {
-        if (!texture1.loadFromFile(texture1Path)) {
+        if (!texture1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
             std::cerr << "Error loading room_floor1.png" << std::endl;
             return;
         }
-            if (!texture2.loadFromFile(texture2Path)) {
+            if (!texture2.loadFromFile(TEXTURES_PATH + "room_floor2.png")) {
             std::cerr << "Error loading room_floor2.png" << std::endl;
             return;
         }

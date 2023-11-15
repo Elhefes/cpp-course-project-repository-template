@@ -9,7 +9,6 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
       are working properly as discussed with the project advisor
 */
 
-
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
