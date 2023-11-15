@@ -82,7 +82,6 @@ private:
             return;
         }
 
-        if (!roomGrid[x][y]) {
             int roomWidth = 10 + rand() % 10;  // Random width of room
             int roomHeight = 10 + rand() % 10; // Random height of room
             int roomX = x * GRID_WIDTH + (GRID_WIDTH / 2) - (roomWidth / 2);
@@ -123,6 +122,9 @@ private:
             std::vector<Direction> directions = { UP, DOWN, LEFT, RIGHT };
             std::random_shuffle(directions.begin(), directions.end());
 
+            // Flag to check if a valid direction is found
+            bool validDirectionFound = false;
+
             for (const auto& dir : directions) {
                 int newX = x;
                 int newY = y;
@@ -143,10 +145,19 @@ private:
                 }
 
                 // Check if the new coordinates are within the grid
-                if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
-                    generateRooms(rooms, corridors, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);   
+                if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE && !roomGrid[newX][newY]) {
+                    validDirectionFound = true;
+                    generateRooms(rooms, corridors, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
+                    break;
                 }
             }
-        }
+            // If no valid direction is found, clear vectors and restart from the center
+            if (!validDirectionFound) {
+                return;
+                rooms.clear();
+                corridors.clear();
+                roomGrid.assign(GRID_SIZE, std::vector<bool>(GRID_SIZE, false));
+                generateRooms(rooms, corridors, numRooms, GRID_SIZE / 2, GRID_SIZE / 2, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
+            }
     }
 };
