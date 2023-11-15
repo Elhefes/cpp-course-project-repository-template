@@ -14,8 +14,6 @@ const unsigned int WINDOW_HEIGHT = 600u;
 
 const int ROOM_AMOUNT = 20;
 const int TILE_SIZE = 1;
-const int ROOM_MAX_WIDTH = 800;
-const int ROOM_MAX_HEIGHT = 600;
 
 class Game {
 public:
@@ -89,8 +87,8 @@ private:
     }
 
     void initiateDungeon() {
-        srand(5);
-        dungeon.generateDungeon(rooms, ROOM_AMOUNT, TILE_SIZE, ROOM_MAX_WIDTH, ROOM_MAX_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
+        srand(3);
+        dungeon.generateDungeon(rooms, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     void initiateInventory() {

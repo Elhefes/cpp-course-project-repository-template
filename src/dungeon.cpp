@@ -5,24 +5,41 @@
 #include "room.cpp"
 #include <algorithm>
 
+/**
+ * @brief Enumeration representing directions.
+ */
 enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
+    UP,     /**< Up direction. */
+    DOWN,   /**< Down direction. */
+    LEFT,   /**< Left direction. */
+    RIGHT   /**< Right direction. */
 };
 
+/**
+ * @brief Class representing a dungeon.
+ */
 class Dungeon {
 public:
+    /**
+     * @brief Constructor for the Dungeon class.
+     */
     Dungeon() : corridors(), roomGrid(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
     }
 
-    void generateDungeon(std::vector<Room>& rooms, int numRooms, int TILE_SIZE, int ROOM_MAX_WIDTH, int ROOM_MAX_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
-        const int GRID_SIZE = 20;
+    /**
+     * @brief Generates a dungeon with rooms.
+     *
+     * @param rooms Vector to store generated rooms.
+     * @param numRooms Number of rooms to generate.
+     * @param TILE_SIZE Size of a tile.
+     * @param WINDOW_WIDTH Width of the game window.
+     * @param WINDOW_HEIGHT Height of the game window.
+     */
+    void generateDungeon(std::vector<Room>& rooms, int numRooms, int TILE_SIZE, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
         const float GRID_WIDTH = static_cast<float>(WINDOW_WIDTH) / GRID_SIZE;
         const float GRID_HEIGHT = static_cast<float>(WINDOW_HEIGHT) / GRID_SIZE;
 
-        // Create a 2D array to represent the grid
+        // Create a 2D array to represent the grid that rooms are placed in
         std::pair<int, int> grid[GRID_SIZE][GRID_SIZE];
 
         // Calculate the center of the grid
@@ -43,17 +60,30 @@ public:
 
 private:
     const static int GRID_SIZE = 20;
-    std::vector<Room> corridors;
-    std::vector<std::vector<bool>> roomGrid;
+    std::vector<Room> corridors; /**< Vector to store corridors. */
+    std::vector<std::vector<bool>> roomGrid; /**< 2D grid representing which grid instances have rooms. */
 
+    /**
+     * @brief Recursively generates rooms in the dungeon.
+     *
+     * @param rooms Vector to store generated rooms.
+     * @param numRooms Number of rooms to generate.
+     * @param x X-coordinate.
+     * @param y Y-coordinate.
+     * @param GRID_WIDTH Width of a grid cell.
+     * @param GRID_HEIGHT Height of a grid cell.
+     * @param WINDOW_WIDTH Width of the window.
+     * @param WINDOW_HEIGHT Height of the window.
+     * @param GRID_SIZE Size of the grid.
+     */
     void generateRooms(std::vector<Room>& rooms, int numRooms, int x, int y, float GRID_WIDTH, float GRID_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT, int GRID_SIZE) {
         if (rooms.size() >= numRooms) {
             return;
         }
 
         if (!roomGrid[x][y]) {
-            int roomWidth = 10 + rand() % 10;  // Random width
-            int roomHeight = 10 + rand() % 10; // Random height
+            int roomWidth = 10 + rand() % 10;  // Random width of room
+            int roomHeight = 10 + rand() % 10; // Random height of room
             int roomX = x * GRID_WIDTH + (GRID_WIDTH / 2) - (roomWidth / 2);
             int roomY = y * GRID_HEIGHT + (GRID_HEIGHT / 2) - (roomHeight / 2);
 
