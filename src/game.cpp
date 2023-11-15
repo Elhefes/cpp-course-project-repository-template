@@ -119,7 +119,7 @@ private:
             for (int j = 0; j < room.height; ++j) {
                 sf::RectangleShape tileShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
                 tileShape.setPosition(sf::Vector2f((room.x + i) * TILE_SIZE, (room.y + j) * TILE_SIZE));
-                tileShape.setFillColor(room.tileColors[i][j]);
+                tileShape.setTexture(&room.tileTextures[i][j]);
                 window.draw(tileShape);
             }
         }
