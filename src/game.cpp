@@ -9,6 +9,8 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
       are working properly as discussed with the project advisor
 */
 
+const std::string WINDOW_TITLE = "Dungeon Crawler";
+
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
@@ -42,14 +44,22 @@ private:
     std::vector<Room> rooms;
     std::vector<Room> corridors;
 
+    bool moveUp = false;
+    bool moveDown = false;
+    bool moveLeft = false;
+    bool moveRight = false;
+
+    float circleSpeed = 1.0f;
+
     void initializeWindow() {
         sf::Vector2u windowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        window.create(sf::VideoMode(windowSize), "Dungeon Crawler");
+        window.create(sf::VideoMode(windowSize), WINDOW_TITLE);
         window.setFramerateLimit(60);
+        window.setPosition(sf::Vector2i(0, 0));
     }
 
     void initializeCircle() {
-        circle.setRadius(20);
+        circle.setRadius(10);
         circle.setFillColor(sf::Color::Red);
         circle.setPosition(sf::Vector2f(100u, 300u));
     }
@@ -57,21 +67,54 @@ private:
     void processEvents() {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
             // Handle other input events (keyboard, mouse, etc.)
+            if (event.type == sf::Event::KeyPressed) {
+                sf::Keyboard::Key key = event.key.code;
+                if (key == sf::Keyboard::W) {
+                    moveUp = true;
+                } else if (key == sf::Keyboard::S) {
+                    moveDown = true;
+                } else if (key == sf::Keyboard::A) {
+                    moveLeft = true;
+                } else if (key == sf::Keyboard::D) {
+                    moveRight = true;
+                }
+            } else if (event.type == sf::Event::KeyReleased) {
+                sf::Keyboard::Key key = event.key.code;
+                if (key == sf::Keyboard::W) {
+                    moveUp = false;
+                } else if (key == sf::Keyboard::S) {
+                    moveDown = false;
+                } else if (key == sf::Keyboard::A) {
+                    moveLeft = false;
+                } else if (key == sf::Keyboard::D) {
+                    moveRight = false;
+                }
+            }
         }
     }
 
     void update() {
         // Update game objects, handle collisions, implement game logic
         // Update player, enemies, levels, etc.
+        sf::Vector2f movement(0, 0);
+        if (moveUp) {
+            movement.y -= circleSpeed;
+        }
+        if (moveDown) {
+            movement.y += circleSpeed;
+        }
+        if (moveLeft) {
+            movement.x -= circleSpeed;
+        }
+        if (moveRight) {
+            movement.x += circleSpeed;
+        }
+        circle.move(movement);
 
-        // Example: Move the circle to the right
-        sf::Vector2f newPosition = circle.getPosition();
-        newPosition.x += 1;
-        circle.setPosition(newPosition);
     }
 
     void render() {
