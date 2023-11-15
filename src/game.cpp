@@ -12,7 +12,7 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 20;
+const int ROOM_AMOUNT = 100;
 const int TILE_SIZE = 1;
 
 class Game {
@@ -87,7 +87,7 @@ private:
     }
 
     void initiateDungeon() {
-        srand(1);
+        srand(3);
         dungeon.generateDungeon(rooms, corridors, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
@@ -109,7 +109,7 @@ private:
             drawRoom(room);
         }
         for (const Room& corridor : corridors) {
-            drawRoom(corridor);
+            drawC(corridor);
         }
     }
 
@@ -119,6 +119,17 @@ private:
                 sf::RectangleShape tileShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
                 tileShape.setPosition(sf::Vector2f((room.x + i) * TILE_SIZE, (room.y + j) * TILE_SIZE));
                 tileShape.setFillColor(room.tileColors[i][j]);
+                window.draw(tileShape);
+            }
+        }
+    }
+
+    void drawC(const Room& room) {
+        for (int i = 0; i < abs(room.width); ++i) {
+            for (int j = 0; j < abs(room.height); ++j) {
+                sf::RectangleShape tileShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
+                tileShape.setPosition(sf::Vector2f((room.x + i) * TILE_SIZE, (room.y + j) * TILE_SIZE));
+                tileShape.setFillColor(sf::Color(255, 0, 0));
                 window.draw(tileShape);
             }
         }

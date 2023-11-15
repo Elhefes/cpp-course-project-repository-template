@@ -100,19 +100,19 @@ private:
 
                 if (lastRoomX > x)  {
                     // left
-                    Room corridor(newRoom.x + newRoom.width / 2, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, GRID_WIDTH, 1);
+                    Room corridor(newRoom.x + newRoom.width, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.x - newRoom.x - newRoom.width, 1);
                     corridors.push_back(corridor);
                 } else if (lastRoomX < x) {
                     // right
-                    Room corridor(lastRoom.x + newRoom.width / 2, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, GRID_WIDTH, 1);
+                    Room corridor(lastRoom.x + lastRoom.width, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.x - newRoom.x + lastRoom.width, 1);
                     corridors.push_back(corridor);
                 } else if (lastRoomY > y) {
-                    // down
-                    Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, newRoom.y + newRoom.height / 2, 1, GRID_HEIGHT);
+                    // up
+                    Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, newRoom.y + newRoom.height, 1, lastRoom.y - newRoom.y - newRoom.height);
                     corridors.push_back(corridor);
                 } else {
-                    // up
-                    Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.y + lastRoom.height / 2, 1, GRID_HEIGHT);
+                    // down
+                    Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.y + lastRoom.height, 1, lastRoom.y - newRoom.y + lastRoom.height);
                     corridors.push_back(corridor);
                 }
             }

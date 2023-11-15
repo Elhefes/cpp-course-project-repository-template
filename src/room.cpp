@@ -12,9 +12,9 @@ public:
     std::vector<std::vector<sf::Color>> tileColors;
 
     Room(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {
-        tileColors.resize(width, std::vector<sf::Color>(height));
-        for (int i = 0; i < width; ++i) {
-            for (int j = 0; j < height; ++j) {
+        tileColors.resize(abs(width), std::vector<sf::Color>(abs(height)));
+        for (int i = 0; i < abs(width); ++i) {
+            for (int j = 0; j < abs(height); ++j) {
                 tileColors[i][j] = getRandomColor();
             }
         }
