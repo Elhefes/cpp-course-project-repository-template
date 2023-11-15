@@ -36,7 +36,7 @@ public:
      * @param WINDOW_WIDTH Width of the game window.
      * @param WINDOW_HEIGHT Height of the game window.
      */
-    void generateDungeon(std::vector<Room>& rooms, std::vector<Room> corridors, int numRooms, int TILE_SIZE, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
+    void generateDungeon(std::vector<Room>& rooms, std::vector<Room>& corridors, int numRooms, int TILE_SIZE, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
         const float GRID_WIDTH = static_cast<float>(WINDOW_WIDTH) / GRID_SIZE;
         const float GRID_HEIGHT = static_cast<float>(WINDOW_HEIGHT) / GRID_SIZE;
 
@@ -64,9 +64,10 @@ private:
     std::vector<std::vector<bool>> roomGrid; /**< 2D grid representing which grid instances have rooms. */
 
     /**
-     * @brief Recursively generates rooms in the dungeon.
+     * @brief Recursively generates rooms and corridors that connect the rooms in the dungeon.
      *
      * @param rooms Vector to store generated rooms.
+     * @param rooms Vector to store generated corridors.
      * @param numRooms Number of rooms to generate.
      * @param x X-coordinate.
      * @param y Y-coordinate.
@@ -76,7 +77,7 @@ private:
      * @param WINDOW_HEIGHT Height of the window.
      * @param GRID_SIZE Size of the grid.
      */
-    void generateRooms(std::vector<Room>& rooms, std::vector<Room> corridors, int numRooms, int x, int y, float GRID_WIDTH, float GRID_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT, int GRID_SIZE) {
+    void generateRooms(std::vector<Room>& rooms, std::vector<Room>& corridors, int numRooms, int x, int y, float GRID_WIDTH, float GRID_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT, int GRID_SIZE) {
         if (rooms.size() >= numRooms) {
             return;
         }
@@ -93,6 +94,26 @@ private:
 
             Room newRoom(roomX, roomY, roomWidth, roomHeight);
             rooms.push_back(newRoom);
+
+            if (rooms.size() > 1) {
+                Room lastRoom = rooms[rooms.size() - 2];
+                int lastRoomX = (lastRoom.x + (lastRoom.width / 2) - (GRID_WIDTH / 2)) / GRID_WIDTH;
+                int lastRoomY = (lastRoom.y + (lastRoom.height / 2) - (GRID_HEIGHT / 2)) / GRID_HEIGHT;
+
+                if (lastRoomX > x) {
+                    Room corridor(newRoom.x, newRoom.y, GRID_WIDTH, 1);
+                    corridors.push_back(corridor);
+                } else if (lastRoomX < x) {
+                    Room corridor(lastRoom.x, newRoom.y, GRID_WIDTH, 1);
+                    corridors.push_back(corridor);
+                } else if (lastRoomY > y) {
+                    Room corridor(newRoom.x, newRoom.y, 1, GRID_HEIGHT);
+                    corridors.push_back(corridor);
+                } else {
+                    Room corridor(newRoom.x, lastRoom.y, 1, GRID_HEIGHT);
+                    corridors.push_back(corridor);
+                }
+            }
 
             roomGrid[x][y] = true;
 
@@ -121,7 +142,7 @@ private:
 
                 // Check if the new coordinates are within the grid
                 if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
-                    generateRooms(rooms, corridors, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
+                    generateRooms(rooms, corridors, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);   
                 }
             }
         }
