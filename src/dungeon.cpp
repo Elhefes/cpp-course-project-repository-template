@@ -23,19 +23,20 @@ public:
     /**
      * @brief Constructor for the Dungeon class.
      */
-    Dungeon() : corridors(), roomGrid(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
+    Dungeon() : roomGrid(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
     }
 
     /**
      * @brief Generates a dungeon with rooms.
      *
      * @param rooms Vector to store generated rooms.
+     * @param corridors Vector to store generated corridors.
      * @param numRooms Number of rooms to generate.
      * @param TILE_SIZE Size of a tile.
      * @param WINDOW_WIDTH Width of the game window.
      * @param WINDOW_HEIGHT Height of the game window.
      */
-    void generateDungeon(std::vector<Room>& rooms, int numRooms, int TILE_SIZE, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
+    void generateDungeon(std::vector<Room>& rooms, std::vector<Room> corridors, int numRooms, int TILE_SIZE, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
         const float GRID_WIDTH = static_cast<float>(WINDOW_WIDTH) / GRID_SIZE;
         const float GRID_HEIGHT = static_cast<float>(WINDOW_HEIGHT) / GRID_SIZE;
 
@@ -55,12 +56,11 @@ public:
             }
         }
 
-        generateRooms(rooms, numRooms, GRID_SIZE / 2, GRID_SIZE / 2, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
+        generateRooms(rooms, corridors, numRooms, GRID_SIZE / 2, GRID_SIZE / 2, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
     }
 
 private:
     const static int GRID_SIZE = 20;
-    std::vector<Room> corridors; /**< Vector to store corridors. */
     std::vector<std::vector<bool>> roomGrid; /**< 2D grid representing which grid instances have rooms. */
 
     /**
@@ -76,7 +76,7 @@ private:
      * @param WINDOW_HEIGHT Height of the window.
      * @param GRID_SIZE Size of the grid.
      */
-    void generateRooms(std::vector<Room>& rooms, int numRooms, int x, int y, float GRID_WIDTH, float GRID_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT, int GRID_SIZE) {
+    void generateRooms(std::vector<Room>& rooms, std::vector<Room> corridors, int numRooms, int x, int y, float GRID_WIDTH, float GRID_HEIGHT, int WINDOW_WIDTH, int WINDOW_HEIGHT, int GRID_SIZE) {
         if (rooms.size() >= numRooms) {
             return;
         }
@@ -96,7 +96,7 @@ private:
 
             roomGrid[x][y] = true;
 
-            // Randomly choose directions (right, down) to branch out
+            // Randomly choose directions to branch out
             std::vector<Direction> directions = { UP, DOWN, LEFT, RIGHT };
             std::random_shuffle(directions.begin(), directions.end());
 
@@ -121,7 +121,7 @@ private:
 
                 // Check if the new coordinates are within the grid
                 if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
-                    generateRooms(rooms, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
+                    generateRooms(rooms, corridors, numRooms, newX, newY, GRID_WIDTH, GRID_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, GRID_SIZE);
                 }
             }
         }

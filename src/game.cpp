@@ -88,7 +88,7 @@ private:
 
     void initiateDungeon() {
         srand(3);
-        dungeon.generateDungeon(rooms, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
+        dungeon.generateDungeon(rooms, corridors, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     void initiateInventory() {
