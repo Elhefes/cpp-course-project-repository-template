@@ -71,28 +71,14 @@ private:
                 window.close();
             }
             // Handle other input events (keyboard, mouse, etc.)
-            if (event.type == sf::Event::KeyPressed) {
+
+            // Handle keyboard player movement
+            if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
                 sf::Keyboard::Key key = event.key.code;
-                if (key == sf::Keyboard::W) {
-                    moveUp = true;
-                } else if (key == sf::Keyboard::S) {
-                    moveDown = true;
-                } else if (key == sf::Keyboard::A) {
-                    moveLeft = true;
-                } else if (key == sf::Keyboard::D) {
-                    moveRight = true;
-                }
-            } else if (event.type == sf::Event::KeyReleased) {
-                sf::Keyboard::Key key = event.key.code;
-                if (key == sf::Keyboard::W) {
-                    moveUp = false;
-                } else if (key == sf::Keyboard::S) {
-                    moveDown = false;
-                } else if (key == sf::Keyboard::A) {
-                    moveLeft = false;
-                } else if (key == sf::Keyboard::D) {
-                    moveRight = false;
-                }
+                moveUp = (key == sf::Keyboard::W) ? (event.type == sf::Event::KeyPressed) : moveUp;
+                moveDown = (key == sf::Keyboard::S) ? (event.type == sf::Event::KeyPressed) : moveDown;
+                moveLeft = (key == sf::Keyboard::A) ? (event.type == sf::Event::KeyPressed) : moveLeft;
+                moveRight = (key == sf::Keyboard::D) ? (event.type == sf::Event::KeyPressed) : moveRight;
             }
         }
     }
@@ -114,7 +100,6 @@ private:
             movement.x += circleSpeed;
         }
         circle.move(movement);
-
     }
 
     void render() {
