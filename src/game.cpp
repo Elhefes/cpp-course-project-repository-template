@@ -12,7 +12,7 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 30;
+const int ROOM_AMOUNT = 2;
 const int TILE_SIZE = 1;
 
 class Game {
@@ -118,7 +118,7 @@ private:
             for (int j = 0; j < room.height; ++j) {
                 sf::RectangleShape tileShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
                 tileShape.setPosition(sf::Vector2f((room.x + i) * TILE_SIZE, (room.y + j) * TILE_SIZE));
-                tileShape.setFillColor(room.tileColors[i][j]);
+                tileShape.setTexture(&room.tileColors[i][j]);
                 window.draw(tileShape);
             }
         }
