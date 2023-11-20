@@ -9,17 +9,17 @@ class Room {
 public:
     int x, y, width, height;
 
-    std::vector<std::vector<sf::Texture>> tileColors;
+    std::vector<std::vector<sf::Color>> tileColors;
 
     Room(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {
-        tileColors.resize(abs(width), std::vector<sf::Texture>(abs(height)));
+        tileColors.resize(abs(width), std::vector<sf::Color>(abs(height)));
         for (int i = 0; i < abs(width); ++i) {
             for (int j = 0; j < abs(height); ++j) {
                 sf::Texture texture;
 
-                texture.loadFromFile("../assets/textures/room_floor1.png");
+                //texture.loadFromFile("../assets/textures/room_floor1.png");
 
-                tileColors[i][j] = texture;
+                tileColors[i][j] = getRandomColor();
             }
         }
     }
