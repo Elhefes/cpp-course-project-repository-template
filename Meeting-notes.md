@@ -8,34 +8,37 @@ In each meeting, you are required to discuss:
 4. Deviations and changes to the project plan, if any
 
 
-# Meeting 6.11.2023 18:00–20:00
+# Meeting 13.11.2023 18:00–20:00
 
 **Participants**: 
-1. Daniil
-2. Matias
-3. Lauri
+1. Henri
+2. Daniil
+3. Matias
+4. Lauri
 
 ## Summary of works
 * The group: 
-   * Project setup, basic classes’ functionality 
+   * Got everything ready to combine into a project 
 
-1. Henri: Setup submodules for the project, started implementing the game class 
+1. Henri: initial game class implemented, code reviews
 
-2. Matias: Dungeon class. Started on random dungeon generation and tile system for dungeon rooms and corridors. 
+2. Matias: Dungeon class. Fixed bugs with the dungeon generation, merged a basic version of the class to master, started on connecting rooms with  two-sectioned corridors 
 
-3. Lauri: Basic Item class 
+3. Lauri: Map textures
 
-4. Daniil: Basic functionality for Creature class 
+4. Daniil: Finished creature class and added inheritant Player and Monster classes. 
 
 ## Challenges
 
-* Currently it is hard to make project work with sfml without requiring user to have sfml installed. 
+* Hard to divide work in the group
 
 ## Actions
-1. Henri: finalize the initial game class 
+The goal for the next week is to have a working game preview – player controls, player-monster interactions and room transitions. 
 
-2. Matias: Address the length of the  corridors. Fix corridors ending nowhere. 
+1. Henri: keyboard input & user interface 
 
-3. Daniel: Update creature class, add children classes Player and Monster 
+2. Matias:  Fix corridors ending nowhere. 
 
-4. Lauri: Basic graphics for the map 
+3. Daniel: Creature-Creature collisions and creature-item collisions 
+
+4. Lauri: Basic graphics for player and enemy/enemies. Item pickup (sword and potion). 

@@ -20,7 +20,7 @@ enum RoomType {
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 10;
+const int ROOM_AMOUNT = 20;
 const int TILE_SIZE = 1;
 
 class Game {
@@ -29,7 +29,7 @@ public:
         initializeWindow();
         initiateDungeon();
         initializeCircle();
-        initiateInventory();
+        //initiateInventory();
     }
 
     void run() {
