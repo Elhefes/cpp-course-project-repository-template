@@ -12,7 +12,7 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 30;
+const int ROOM_AMOUNT = 15;
 const int TILE_SIZE = 1;
 
 class Game {

@@ -15,9 +15,6 @@ public:
         tileColors.resize(abs(width), std::vector<sf::Color>(abs(height)));
         for (int i = 0; i < abs(width); ++i) {
             for (int j = 0; j < abs(height); ++j) {
-                sf::Texture texture;
-
-                //texture.loadFromFile("../assets/textures/room_floor1.png");
 
                 tileColors[i][j] = getRandomColor();
             }
