@@ -9,12 +9,19 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
       are working properly as discussed with the project advisor
 */
 
+/**
+ * @brief Enumeration representing room types
+ */
+enum RoomType {
+    ROOM,     /**< Room */
+    CORRIDOR,   /**< Corridor */
+};
+
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
 
-const int ROOM_AMOUNT = 10;
-const int ROOM_MAX_WIDTH = 800;
-const int ROOM_MAX_HEIGHT = 600;
+const int ROOM_AMOUNT = 20;
+const int TILE_SIZE = 1;
 
 class Game {
 public:
@@ -22,7 +29,7 @@ public:
         initializeWindow();
         initiateDungeon();
         initializeCircle();
-        initiateInventory();
+        //initiateInventory();
     }
 
     void run() {
@@ -88,8 +95,8 @@ private:
     }
 
     void initiateDungeon() {
-        dungeon.generateRooms(rooms, ROOM_AMOUNT, ROOM_MAX_WIDTH, ROOM_MAX_HEIGHT);
-        dungeon.generateCorridors(rooms, corridors);
+        srand(4);
+        dungeon.generateDungeon(rooms, corridors, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     void initiateInventory() {
@@ -107,19 +114,32 @@ private:
 
     void drawDungeon() {
         for (const Room& room : rooms) {
-            drawRoom(room);
+            drawRoom(room, ROOM);
         }
         for (const Room& corridor : corridors) {
-            drawRoom(corridor);
+            drawRoom(corridor, CORRIDOR);
         }
     }
 
-    void drawRoom(const Room& room) {
-        for (int i = 0; i < room.width; ++i) {
-            for (int j = 0; j < room.height; ++j) {
+    void drawRoom(const Room& room, RoomType type) {
+        for (int i = 0; i < abs(room.width); ++i) {
+            for (int j = 0; j < abs(room.height); ++j) {
                 sf::RectangleShape tileShape(sf::Vector2f(TILE_SIZE, TILE_SIZE));
                 tileShape.setPosition(sf::Vector2f((room.x + i) * TILE_SIZE, (room.y + j) * TILE_SIZE));
-                tileShape.setTexture(&room.tileTextures[i][j]);
+
+                switch (type)
+                {
+                case ROOM:
+                    tileShape.setFillColor(room.tileColors[i][j]);
+                    break;
+                case CORRIDOR:
+                    tileShape.setFillColor(sf::Color(255, 0, 0));
+                    break;
+                default:
+                    tileShape.setFillColor(sf::Color(255, 0, 0));
+                    break;
+                }
+                
                 window.draw(tileShape);
             }
         }
