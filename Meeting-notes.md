@@ -8,7 +8,7 @@ In each meeting, you are required to discuss:
 4. Deviations and changes to the project plan, if any
 
 
-# Meeting 13.11.2023 18:00–20:00
+# Meeting 20.11.2023 18:00–20:00
 
 **Participants**: 
 1. Henri
@@ -20,13 +20,13 @@ In each meeting, you are required to discuss:
 * The group: 
    * Got everything ready to combine into a project 
 
-1. Henri: initial game class implemented, code reviews
+1. Henri: keyboard inputs, initial ui code
 
-2. Matias: Dungeon class. Fixed bugs with the dungeon generation, merged a basic version of the class to master, started on connecting rooms with  two-sectioned corridors 
+2. Matias: Dungeon class. Reimplemented dungeon generation. Randomly generated dungeon consisting of rooms connected by corridors. 
 
-3. Lauri: Map textures
+3. Lauri: Graphics for player, enemy and a potion. Started working on code for adding potion to rooms.
 
-4. Daniil: Finished creature class and added inheritant Player and Monster classes. 
+4. Daniil: Helper functions for vector work  
 
 ## Challenges
 
@@ -35,10 +35,10 @@ In each meeting, you are required to discuss:
 ## Actions
 The goal for the next week is to have a working game preview – player controls, player-monster interactions and room transitions. 
 
-1. Henri: keyboard input & user interface 
+1. Henri: user interface & camera to follow player
 
-2. Matias:  Fix corridors ending nowhere. 
+2. Matias:  Look into and possibly implement sound effects, Finnish dungeon class. 
 
-3. Daniel: Creature-Creature collisions and creature-item collisions 
+3. Daniel: In-room game-logic: basic monster movement, attacks, item pickup 
 
-4. Lauri: Basic graphics for player and enemy/enemies. Item pickup (sword and potion). 
+4. Lauri: Add graphics for player and enemy when they are added to the map. Try to optimize graphics loading.
