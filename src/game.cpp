@@ -24,6 +24,8 @@ const unsigned int WINDOW_HEIGHT = 600u;
 const int ROOM_AMOUNT = 20;
 const int TILE_SIZE = 1;
 
+const float ZOOM_LEVEL = 5.0f;
+
 class Game {
 public:
     Game() {
@@ -67,7 +69,7 @@ private:
     void initializeCircle() {
         circle.setRadius(10);
         circle.setFillColor(sf::Color::Red);
-        circle.setPosition(sf::Vector2f(100u, 300u));
+        circle.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
     }
 
     void processEvents() {
@@ -106,6 +108,12 @@ private:
             movement.x += circleSpeed;
         }
         circle.move(movement);
+        sf::View view = window.getView();
+        view.setCenter(circle.getPosition());
+
+        view.setSize(window.getDefaultView().getSize() / ZOOM_LEVEL);
+
+        window.setView(view);
     }
 
     void render() {
