@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <vector>
-#include "dungeon.cpp"
+#include "dungeon.hpp"
 #include "item.cpp"
 
 /*
