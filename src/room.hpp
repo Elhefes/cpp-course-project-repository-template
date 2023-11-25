@@ -27,7 +27,7 @@ public:
     int width; /**< Width of the room. */
     int height; /**< Height of the room. */
 
-    std::vector<std::vector<sf::Color>> tileColors; /**< 2D vector storing the tile colors of the room. */
+    std::vector<std::vector<sf::Texture>> tileColors; /**< 2D vector storing the tile colors of the room. */
 
 private:
     /**
@@ -35,7 +35,8 @@ private:
      *
      * @return sf::Color A randomly generated color.
      */
-    sf::Color getRandomColor();
+    //sf::Color getRandomColor();
+    //sf::Texture getRandomTexture();
 };
 
 #endif

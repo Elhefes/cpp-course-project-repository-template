@@ -1,13 +1,17 @@
 #include "game.hpp"
+#include "textures.hpp"
 
 /*
 TODO: Create some sort of tests here to check whether items, dungeons etc
       are working properly as discussed with the project advisor
 */
-
+const std::string TEXTURES_PATH = "../assets/textures/";
+sf::Texture t1;
+sf::Texture t2;
 
 Game::Game() {
     initializeWindow();
+    loadTextures();
     initiateDungeon();
     initializeCircle();
     //initiateInventory();
@@ -18,6 +22,17 @@ void Game::run() {
         processEvents();
         update();
         render();
+    }
+}
+
+void Game::loadTextures() {
+    if (!t1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
+        std::cerr << "Error loading room_floor1.png" << std::endl;
+        return;
+    }
+        if (!t2.loadFromFile(TEXTURES_PATH + "room_floor2.png")) {
+        std::cerr << "Error loading room_floor2.png" << std::endl;
+        return;
     }
 }
 
@@ -116,7 +131,7 @@ void Game::drawRoom(const Room& room, RoomType type) {
 
             switch (type) {
                 case ROOM:
-                    tileShape.setFillColor(room.tileColors[i][j]);
+                    tileShape.setTexture(&room.tileColors[i][j]);
                     break;
                 case CORRIDOR:
                     tileShape.setFillColor(sf::Color(255, 0, 0));

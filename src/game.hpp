@@ -40,6 +40,7 @@ private:
 
     float circleSpeed = 1.0f;
 
+    void loadTextures();
     void initializeWindow();
     void initializeCircle();
     void processEvents();
