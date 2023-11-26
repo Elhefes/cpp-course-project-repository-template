@@ -14,6 +14,9 @@ Room::Room(int x, int y, int width, int height) : x(x), y(y), width(width), heig
     }
 }
 
+Room::~Room() {
+    }
+
 sf::Color Room::getRandomColor() {
     return sf::Color(rand() % 256, rand() % 256, rand() % 256);
 }

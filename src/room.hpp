@@ -22,6 +22,8 @@ public:
      */
     Room(int x, int y, int width, int height);
 
+    ~Room();
+
     int x; /**< X-coordinate of the room. */
     int y; /**< Y-coordinate of the room. */
     int width; /**< Width of the room. */
@@ -30,6 +32,7 @@ public:
     std::vector<std::vector<sf::Color>> tileColors; /**< 2D vector storing the tile colors of the room. */
 
 private:
+
     /**
      * @brief Generates a random color for the room.
      *
