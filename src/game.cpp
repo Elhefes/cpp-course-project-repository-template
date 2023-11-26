@@ -1,5 +1,4 @@
 #include "game.hpp"
-#include "textures.hpp"
 
 /*
 TODO: Create some sort of tests here to check whether items, dungeons etc
@@ -11,7 +10,7 @@ sf::Texture t2;
 
 Game::Game() {
     initializeWindow();
-    loadTextures();
+    initializeTextures();
     initiateDungeon();
     initializeCircle();
     //initiateInventory();
@@ -25,7 +24,7 @@ void Game::run() {
     }
 }
 
-void Game::loadTextures() {
+void Game::initializeTextures() {
     if (!t1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
         std::cerr << "Error loading room_floor1.png" << std::endl;
         return;
@@ -131,13 +130,13 @@ void Game::drawRoom(const Room& room, RoomType type) {
 
             switch (type) {
                 case ROOM:
-                    tileShape.setTexture(&room.tileColors[i][j]);
+                    tileShape.setTexture(room.tileTextures[i][j]);
                     break;
                 case CORRIDOR:
                     tileShape.setFillColor(sf::Color(255, 0, 0));
                     break;
                 default:
-                    tileShape.setFillColor(sf::Color(255, 0, 0));
+                    tileShape.setTexture(room.tileTextures[i][j]);
                     break;
             }
 
