@@ -5,8 +5,9 @@ TODO: Create some sort of tests here to check whether items, dungeons etc
       are working properly as discussed with the project advisor
 */
 const std::string TEXTURES_PATH = "../assets/textures/";
-sf::Texture t1;
-sf::Texture t2;
+sf::Texture room_t1;
+sf::Texture room_t2;
+sf::Texture corridor_t1;
 
 Game::Game() {
     initializeWindow();
@@ -25,12 +26,16 @@ void Game::run() {
 }
 
 void Game::initializeTextures() {
-    if (!t1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
+    if (!room_t1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
         std::cerr << "Error loading room_floor1.png" << std::endl;
         return;
     }
-        if (!t2.loadFromFile(TEXTURES_PATH + "room_floor2.png")) {
+        if (!room_t2.loadFromFile(TEXTURES_PATH + "room_floor2.png")) {
         std::cerr << "Error loading room_floor2.png" << std::endl;
+        return;
+    }
+        if (!corridor_t1.loadFromFile(TEXTURES_PATH + "corridor_floor1.png")) {
+        std::cerr << "Error loading corridor_floor1.png" << std::endl;
         return;
     }
 }
@@ -133,7 +138,7 @@ void Game::drawRoom(const Room& room, RoomType type) {
                     tileShape.setTexture(room.tileTextures[i][j]);
                     break;
                 case CORRIDOR:
-                    tileShape.setFillColor(sf::Color(255, 0, 0));
+                    tileShape.setTexture(&corridor_t1);
                     break;
                 default:
                     tileShape.setTexture(room.tileTextures[i][j]);

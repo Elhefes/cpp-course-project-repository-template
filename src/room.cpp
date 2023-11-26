@@ -20,9 +20,9 @@ Room::Room(int x, int y, int width, int height) : x(x), y(y), width(width), heig
             short int random = dis(gen);
 
             if (random == 1) {
-                tileTextures[i][j] = &t1;
+                tileTextures[i][j] = &room_t1;
             } else {
-                tileTextures[i][j] = &t2;
+                tileTextures[i][j] = &room_t2;
             }
         }
     }
