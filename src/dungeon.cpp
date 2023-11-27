@@ -8,6 +8,10 @@
 Dungeon::Dungeon() : roomGrid(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
     }
 
+ Dungeon::~Dungeon() {
+    
+ }
+
 void Dungeon::generateDungeon(std::vector<Room>& rooms, std::vector<Room>& corridors, int numRooms, int TILE_SIZE, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
     const float GRID_WIDTH = static_cast<float>(WINDOW_WIDTH) / GRID_SIZE;
     const float GRID_HEIGHT = static_cast<float>(WINDOW_HEIGHT) / GRID_SIZE;

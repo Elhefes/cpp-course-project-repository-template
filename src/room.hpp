@@ -23,6 +23,8 @@ public:
      */
     Room(int x, int y, int width, int height);
 
+    ~Room();
+
     int x; /**< X-coordinate of the room. */
     int y; /**< Y-coordinate of the room. */
     int width; /**< Width of the room. */

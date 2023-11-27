@@ -11,7 +11,7 @@
 const std::string WINDOW_TITLE = "Dungeon Crawler";
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
-const int ROOM_AMOUNT = 20;
+const int ROOM_AMOUNT = 5;
 const int TILE_SIZE = 1;
 const float ZOOM_LEVEL = 5.0f;
 
@@ -23,6 +23,7 @@ enum RoomType {
 class Game {
 public:
     Game();
+    ~Game(); 
     void run();
 
 private:

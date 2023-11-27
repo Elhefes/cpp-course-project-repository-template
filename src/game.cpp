@@ -17,6 +17,11 @@ Game::Game() {
     //initiateInventory();
 }
 
+Game::~Game() {
+    rooms.clear();
+    corridors.clear();
+}
+
 void Game::run() {
     while (window.isOpen()) {
         processEvents();

@@ -24,6 +24,7 @@ public:
      * @brief Constructor for the Dungeon class.
      */
     Dungeon();
+    ~Dungeon();
 
     /**
      * @brief Generates a dungeon with rooms.
