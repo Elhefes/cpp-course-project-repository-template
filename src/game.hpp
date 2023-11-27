@@ -6,6 +6,7 @@
 #include <vector>
 #include "dungeon.hpp"
 #include "item.cpp"
+#include "textureManager.hpp"
 
 const std::string WINDOW_TITLE = "Dungeon Crawler";
 const unsigned int WINDOW_WIDTH = 800u;
@@ -40,6 +41,7 @@ private:
 
     float circleSpeed = 1.0f;
 
+    void initializeTextures();
     void initializeWindow();
     void initializeCircle();
     void processEvents();
