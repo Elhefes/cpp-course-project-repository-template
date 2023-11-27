@@ -53,7 +53,7 @@ void Game::initializeWindow() {
 }
 
 void Game::initializeCircle() {
-    circle.setRadius(10);
+    circle.setRadius(0.1f);
     circle.setFillColor(sf::Color::Red);
     circle.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 }
@@ -101,8 +101,8 @@ void Game::update() {
 
 void Game::render() {
     window.clear();
-    window.draw(circle);
     drawDungeon();
+    window.draw(circle);
     window.display();
 }
 

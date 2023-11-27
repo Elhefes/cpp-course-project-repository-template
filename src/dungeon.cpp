@@ -45,7 +45,7 @@ void Dungeon::generateRooms(std::vector<Room>& rooms, std::vector<Room>& corrido
         int roomX = x * GRID_WIDTH + (GRID_WIDTH / 2) - (roomWidth / 2);
         int roomY = y * GRID_HEIGHT + (GRID_HEIGHT / 2) - (roomHeight / 2);
 
-        Room newRoom(roomX, roomY, roomWidth, roomHeight);
+        Room newRoom(roomX, roomY, roomWidth, roomHeight, false);
         rooms.push_back(newRoom);
 
         if (rooms.size() > 1) {
@@ -57,19 +57,19 @@ void Dungeon::generateRooms(std::vector<Room>& rooms, std::vector<Room>& corrido
 
             if (lastRoomX > x)  {
                 // left
-                Room corridor(newRoom.x + newRoom.width, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.x - newRoom.x - newRoom.width, 1);
+                Room corridor(newRoom.x + newRoom.width, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.x - newRoom.x - newRoom.width, 1, true);
                 corridors.push_back(corridor);
             } else if (lastRoomX < x) {
                 // right
-                Room corridor(lastRoom.x + lastRoom.width, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.x - newRoom.x + lastRoom.width, 1);
+                Room corridor(lastRoom.x + lastRoom.width, newRoom.y + (newRoom.height / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.x - newRoom.x + lastRoom.width, 1, true);
                 corridors.push_back(corridor);
             } else if (lastRoomY > y) {
                 // up
-                Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, newRoom.y + newRoom.height, 1, lastRoom.y - newRoom.y - newRoom.height);
+                Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, newRoom.y + newRoom.height, 1, lastRoom.y - newRoom.y - newRoom.height, true);
                 corridors.push_back(corridor);
             } else {
                 // down
-                Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.y + lastRoom.height, 1, lastRoom.y - newRoom.y + lastRoom.height);
+                Room corridor(newRoom.x + (newRoom.width / 2) + rand() % (shorterSide) - shorterSide / 2, lastRoom.y + lastRoom.height, 1, lastRoom.y - newRoom.y + lastRoom.height, true);
                 corridors.push_back(corridor);
             }
         }
