@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include "textureManager.hpp"
 
 /**
  * @brief Class representing a Room in the game.
@@ -29,16 +30,7 @@ public:
     int width; /**< Width of the room. */
     int height; /**< Height of the room. */
 
-    std::vector<std::vector<sf::Color>> tileColors; /**< 2D vector storing the tile colors of the room. */
-
-private:
-
-    /**
-     * @brief Generates a random color for the room.
-     *
-     * @return sf::Color A randomly generated color.
-     */
-    sf::Color getRandomColor();
+    std::vector<std::vector<sf::Texture*>> tileTextures; /**< 2D vector storing the tile textures of the room. */
 };
 
 #endif
