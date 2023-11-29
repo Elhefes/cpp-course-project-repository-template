@@ -67,47 +67,46 @@ void Creature::Draw() {
 
 void Creature::Update(bool monstersKilled) {
   if (!IsAlive()) return;
-  const int OFFSET = 10; // sfml specifics ig
-  auto newPos = position_ + velocity_;
-  auto newCPos = position_ + velocity_;
-  // check bounds
   int width = room_.width;
   int height = room_.height;
-  // won't work once we replace the sprite tho :((
-  //std::cout << corridors_[0].height << std::endl;
-  Room corridor = corridors_[0];
-  int index = 0;
-  for (int i = 0; i < (rooms_.size() - 1); ++i) {
-    if (room_.getId() == rooms_[i].getId()) {
-      index = i;
-      corridor = corridors_[i];
+
+  const int OFFSET = 10; // sfml specifics ig
+  auto newPos = position_ + velocity_;
+  std::cout << newPos.y << std::endl;
+  if (type_ == "Hooman") {
+
+    if (position_ == newPos) return;
+    
+    if (isInsideAnyRoom(newPos.x, newPos.y)) {
+      position_ = newPos;
+      //sprite_.setPosition(position_);
     }
-  }
-  using namespace sf;
-
-  FloatRect room1(sf::Vector2f(room_.x, room_.y), sf::Vector2f(room_.width, room_.height));
-  FloatRect room2(sf::Vector2f(rooms_[index + 1].x, rooms_[index + 1].y), sf::Vector2f(rooms_[index + 1].width, rooms_[index + 1].height));
-  FloatRect corridor1(sf::Vector2f(corridor.x, corridor.y), sf::Vector2f(abs(corridor.width), abs(corridor.height)));
-
-  sf::Vector2f temp = position_;
-
-  position_ = newPos;
-  sprite_.setPosition(position_);
-
-  sf::FloatRect playerBounds = sprite_.getGlobalBounds();
-
-  std::optional<sf::FloatRect> r1Intersection = room1.findIntersection(playerBounds);
-  std::optional<sf::FloatRect> r2Intersection = room2.findIntersection(playerBounds);
-  std::optional<sf::FloatRect> cIntersection = corridor1.findIntersection(playerBounds);
-
-  if (!r1Intersection && !r2Intersection && !cIntersection) {
-    position_ = temp;
+  } else {
+    float xlim = (float) (room_.x + width) - sprite_.getRadius();
+    float ylim = (float) (room_.y + height) - sprite_.getRadius();
+    newPos.x = bound(newPos.x, (float) room_.x, xlim);
+    newPos.y = bound(newPos.y, (float) room_.y, ylim);
+    if (newPos.x == xlim || newPos.x == room_.x) velocity_.x *= -1;
+    if (newPos.y == ylim || newPos.y == room_.y) velocity_.y *= -1;
+    position_ = newPos;
     sprite_.setPosition(position_);
   }
+}
 
-  if (r2Intersection) {
-    room_ = rooms_[index + 1];
-  }
+bool Creature::isInsideAnyRoom(float x, float y) {
+    for (const auto& room : rooms_) {
+        if (x >= room.x && x <= room.x + room.width &&
+            y >= room.y && y <= room.y + room.height) {
+            return true;
+        }
+    }
+    for (const auto& corridor : corridors_) {
+        if (x >= corridor.x && x <= corridor.x + abs(corridor.width) &&
+            y >= corridor.y && y <= corridor.y + abs(corridor.height)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 const std::vector<Item> &Creature::GetInventory() const {

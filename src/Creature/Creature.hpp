@@ -49,6 +49,8 @@ class Creature {
   /// Later probably need to pass something cleverer, like game class, tho i am not sure yet.
   void Update(bool monstersKilled);
 
+  bool isInsideAnyRoom(float x, float y);
+
   /// @brief Draws the creature's sprite in a given window.
   /// @param camera current camera state
   void Draw();
