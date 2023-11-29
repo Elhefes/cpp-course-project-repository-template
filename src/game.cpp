@@ -8,6 +8,8 @@ const std::string TEXTURES_PATH = "../assets/textures/";
 sf::Texture room_t1;
 sf::Texture room_t2;
 sf::Texture corridor_t1;
+sf::Texture player_t;
+sf::Texture assassin_t;
 const float PLAYER_SPEED = 0.1f;
 
 Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
@@ -48,6 +50,14 @@ void Game::initializeTextures() {
     }
         if (!corridor_t1.loadFromFile(TEXTURES_PATH + "corridor_floor1.png")) {
         std::cerr << "Error loading corridor_floor1.png" << std::endl;
+        return;
+    }
+        if (!player_t.loadFromFile(TEXTURES_PATH + "player.png")) {
+        std::cerr << "Error loading player.png" << std::endl;
+        return;
+    }
+        if (!assassin_t.loadFromFile(TEXTURES_PATH + "assassin.png")) {
+        std::cerr << "Error loading assassin.png" << std::endl;
         return;
     }
 }

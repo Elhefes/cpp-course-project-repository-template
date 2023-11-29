@@ -43,7 +43,18 @@ int Creature::TakeHit(int base_damage, const Creature &c2) {
   return damageDealt;
 }
 
+const std::string &Creature::GetType() const {
+  return type_;
+}
+
 void Creature::Draw() {
+  if (GetType() == "Hooman") {
+    sprite_.setTexture(&player_t);
+  }
+  else
+  {
+    sprite_.setTexture(&assassin_t);
+  }
   auto relativePos = position_;
   sprite_.setPosition(relativePos); // change some stuff when get actual sprite
   if (!IsAlive()) sprite_.setFillColor(sf::Color::Cyan);
