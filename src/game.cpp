@@ -103,7 +103,7 @@ void Game::update() {
     player_.Update(monstersKilled);
     for (auto m : monsters_) {
     m->tick(player_);
-    //m->Update();
+    //m->Update(monstersKilled);
     }
 }
 

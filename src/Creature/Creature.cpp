@@ -76,22 +76,37 @@ void Creature::Update(bool monstersKilled) {
   // won't work once we replace the sprite tho :((
   //std::cout << corridors_[0].height << std::endl;
   Room corridor = corridors_[0];
+  int index = 0;
   for (int i = 0; i < (rooms_.size() - 1); ++i) {
     if (room_.getId() == rooms_[i].getId()) {
-      //std::cout << corridors_[i].y << " " << sprite_.getPosition().y << std::endl;
+      index = i;
       corridor = corridors_[i];
     }
   }
-  //sf::FloatRect room1(sf::Vector2f(room_.x, room_.y), sf::Vector2f(room_.width, room_.height));
-  //sf::FloatRect corridor1(sf::Vector2f(corridor.x, corridor.y), sf::Vector2f(corridor.width, corridor.height));
-  sf::RectangleShape room1(sf::Vector2f(room_.width, room_.height));
-  room1.setPosition(sf::Vector2f(room_.x, room_.y));
-  
-  //sf::FloatRect playerBounds = sprite_.getGlobalBounds();
-  if (room1.getGlobalBounds().intersects(sprite_.getGlobalBounds())) {
-    velocity_.x *= -1;
-    velocity_.y *= -1;
+  using namespace sf;
+
+  FloatRect room1(sf::Vector2f(room_.x, room_.y), sf::Vector2f(room_.width, room_.height));
+  FloatRect room2(sf::Vector2f(rooms_[index + 1].x, rooms_[index + 1].y), sf::Vector2f(rooms_[index + 1].width, rooms_[index + 1].height));
+  FloatRect corridor1(sf::Vector2f(corridor.x, corridor.y), sf::Vector2f(abs(corridor.width), abs(corridor.height)));
+
+  sf::Vector2f temp = position_;
+
+  position_ = newPos;
+  sprite_.setPosition(position_);
+
+  sf::FloatRect playerBounds = sprite_.getGlobalBounds();
+
+  std::optional<sf::FloatRect> r1Intersection = room1.findIntersection(playerBounds);
+  std::optional<sf::FloatRect> r2Intersection = room2.findIntersection(playerBounds);
+  std::optional<sf::FloatRect> cIntersection = corridor1.findIntersection(playerBounds);
+
+  if (!r1Intersection && !r2Intersection && !cIntersection) {
+    position_ = temp;
     sprite_.setPosition(position_);
+  }
+
+  if (r2Intersection) {
+    room_ = rooms_[index + 1];
   }
 }
 
