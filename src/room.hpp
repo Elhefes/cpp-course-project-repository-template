@@ -33,6 +33,10 @@ public:
     bool operator==(const Room &other) const { return id_ == other.id_; }
     bool operator!=(const Room &other) const { return id_ != other.id_; }
 
+    int getId() {
+      return id_;
+    }
+
 
     std::vector<std::vector<sf::Texture*>> tileTextures; /**< 2D vector storing the tile textures of the room. */
 

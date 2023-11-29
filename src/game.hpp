@@ -7,11 +7,12 @@
 #include "dungeon.hpp"
 #include "item.cpp"
 #include "textureManager.hpp"
+#include "Creature/GameCharacter.hpp"
 
 const std::string WINDOW_TITLE = "Dungeon Crawler";
 const unsigned int WINDOW_WIDTH = 800u;
 const unsigned int WINDOW_HEIGHT = 600u;
-const int ROOM_AMOUNT = 20;
+const int ROOM_AMOUNT = 5;
 const int TILE_SIZE = 1;
 const float ZOOM_LEVEL = 50.0f;
 
@@ -27,6 +28,10 @@ public:
     void run();
 
 private:
+    /// @brief main character (me like literally)
+    Player player_;
+    std::vector<Monster *> monsters_;
+    
     sf::RenderWindow window;
     sf::CircleShape circle;
 

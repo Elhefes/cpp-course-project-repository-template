@@ -20,8 +20,10 @@ class Player : public Creature {
          const sf::Vector2<float> &initialPos,
          sf::RenderWindow &window,
          Room room,
+         std::vector<Room> rooms_ = {},
+         std::vector<Room> corridors_ = {},
          std::ostream &logger = std::cout,
-         const sf::CircleShape &sprite = sf::CircleShape(50),
+         const sf::CircleShape &sprite = sf::CircleShape(0.1f),
          const std::vector<Item> &inventory = {}) :
       Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, logger, sprite, inventory) {};
 
@@ -29,6 +31,15 @@ class Player : public Creature {
   void Special() {};
   void SetPosition(const sf::Vector2<float> &position) override {
     position_ = position;
+  }
+  void UpdateRooms(std::vector<Room> rooms) {
+    rooms_ = rooms;
+  }
+  void UpdateCorridors(std::vector<Room> corridors) {
+    corridors_ = corridors;
+  }
+  sf::Vector2f getPosition() {
+    return position_;
   }
   void SetRoom(Room &room, std::vector<Monster *> &monsters);
 };
@@ -38,7 +49,7 @@ class Player : public Creature {
 //}
 
 // MONSTER
-const int ATTACK_RADIUS = 50;
+const float ATTACK_RADIUS = 0.5f;
 class Monster : public Creature {
  public:
   Monster(const std::string &type,
@@ -49,7 +60,7 @@ class Monster : public Creature {
           sf::RenderWindow &window,
           const Room &room,
           std::ostream &logger = std::cout,
-          const sf::CircleShape &sprite = sf::CircleShape(25),
+          const sf::CircleShape &sprite = sf::CircleShape(0.3f),
           const std::vector<Item> &inventory = {}) : Creature(type,
                                                               name,
                                                               max_health,

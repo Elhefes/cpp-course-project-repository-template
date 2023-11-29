@@ -11,7 +11,9 @@ Creature::Creature(const std::string &type,
                    int base_damage,
                    std::ostream &logger,
                    const sf::CircleShape &sprite,
-                   const std::vector<Item> &inventory)
+                   const std::vector<Item> &inventory,
+                   std::vector<Room> rooms,
+                   std::vector<Room> corridors)
     : type_(type),
       name_(name),
       maxHealth_(maxHealth),
@@ -23,7 +25,9 @@ Creature::Creature(const std::string &type,
       logger_(logger),
       inventory_(inventory),
       position_(initialPos),
-      sprite_(sprite) {
+      sprite_(sprite),
+      rooms_(rooms),
+      corridors_(corridors) {
   description_ = "Creature \"" + type + " named " + name + "\"";
 }
 
@@ -61,22 +65,44 @@ void Creature::Draw() {
 //  window_.draw(line, 2, sf::Lines);
 }
 
-void Creature::Update() {
+void Creature::Update(bool monstersKilled) {
   if (!IsAlive()) return;
   const int OFFSET = 10; // sfml specifics ig
   auto newPos = position_ + velocity_;
+  auto newCPos = position_ + velocity_;
   // check bounds
   int width = room_.width;
-  int height = room_.width;
+  int height = room_.height;
   // won't work once we replace the sprite tho :((
-  float xlim = (float) (room_.x + width) - 2 * sprite_.getRadius();
-  float ylim = (float) (room_.y + height) - 2 * sprite_.getRadius() - OFFSET;
+  //std::cout << corridors_[0].height << std::endl;
+  Room corridor = corridors_[0];
+  for (int i = 0; i < (rooms_.size() - 1); ++i) {
+    if (room_.getId() == rooms_[i].getId()) {
+      //std::cout << corridors_[i].y << " " << sprite_.getPosition().y << std::endl;
+      corridor = corridors_[i];
+    }
+  }
+  bool inRoomPos = false;
+  float xlim = (float) (room_.x + width) - 1 * sprite_.getRadius();
+  float ylim = (float) (room_.y + height) - 1 * sprite_.getRadius();
   newPos.x = bound(newPos.x, (float) room_.x, xlim);
   newPos.y = bound(newPos.y, (float) room_.y, ylim);
-  if (newPos.x == xlim || newPos.x == room_.x) velocity_.x *= -1;
+  float cxlim = (float) corridor.x + abs(corridor.width) - sprite_.getRadius();
+  float cylim = (float) corridor.y + abs(corridor.height) - sprite_.getRadius();
+  newCPos.x = bound(newCPos.x, (float) corridor.x, cxlim);
+  newCPos.y = bound(newCPos.y, (float) corridor.y, cylim);
+  //std::cout << room_.x << std::endl;
+  //if (newPos.x == newCPos.x) {inRoomPos = true;}
+  if (newPos.x == xlim || newPos.x == room_.x) {
+  velocity_.x *= -1;
+  inRoomPos = true;
+  }
+  else if (newCPos.x == cxlim || newCPos.x == corridor.x) velocity_.x *= -1;
   if (newPos.y == ylim || newPos.y == room_.y) velocity_.y *= -1;
-  SetPosition(newPos); // doing it via setPos so the camera gets updated too
-
+  else if (newCPos.y == cylim || newCPos.y == corridor.y) velocity_.y *= -1;
+  //std::cout << inRoomPos << std::endl;
+  if (inRoomPos) SetPosition(newPos); // doing it via setPos so the camera gets updated too
+  else SetPosition(newCPos);
   sprite_.setPosition(position_);
 }
 
@@ -120,6 +146,7 @@ void Creature::SetSprite(const sf::CircleShape &sprite) {
 const Room &Creature::GetRoom() const {
   return room_;
 }
+
 int Creature::Attack(Creature &c2, const Item *item) {
   if (item == nullptr) {
     return c2.TakeHit(base_damage_, *this);

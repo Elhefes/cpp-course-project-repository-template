@@ -26,7 +26,9 @@ class Creature {
            int base_damage,
            std::ostream &logger = std::cout,
            const sf::CircleShape &sprite = sf::CircleShape(50),
-           const std::vector<Item> &inventory = {});
+           const std::vector<Item> &inventory = {},
+           std::vector<Room> rooms = {},
+           std::vector<Room> corridors = {});
 
   /// @brief Checks if the creature is alive.
   /// @return true if the creature is alive, false otherwise
@@ -45,7 +47,7 @@ class Creature {
 
   /// @brief Updates state of the creature.
   /// Later probably need to pass something cleverer, like game class, tho i am not sure yet.
-  void Update();
+  void Update(bool monstersKilled);
 
   /// @brief Draws the creature's sprite in a given window.
   /// @param camera current camera state
@@ -107,6 +109,8 @@ class Creature {
   std::ostream &logger_;
   /// @brief room the creature is in
   Room room_;
+  std::vector<Room> rooms_;
+  std::vector<Room> corridors_;
 
   /// @brief Reduces health by damage. If damage is greater then health, sets health to 0.
   /// @param damage amount to reduce health_ by

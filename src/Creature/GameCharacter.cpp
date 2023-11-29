@@ -27,7 +27,7 @@ void Monster::SpawnMonsters(Room &room, sf::RenderWindow &window, std::vector<Mo
   // TODO: if room is already completed do not spawn anyone
   const int MONSTER_NUMBER = 5; // TODO: set this to be a room parameter
   const int MONSTER_HEALTH = 10;
-  const float MONSTER_VELOCITY = 5;
+  const float MONSTER_VELOCITY = 0.1f;
   for (int _ = 0; _ < MONSTER_NUMBER; _++) {
     std::string type = "random type later ig";
     std::string name = "random name later ig";
