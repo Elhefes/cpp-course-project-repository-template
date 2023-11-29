@@ -23,7 +23,7 @@ class Player : public Creature {
          std::vector<Room> rooms_ = {},
          std::vector<Room> corridors_ = {},
          std::ostream &logger = std::cout,
-         const sf::CircleShape &sprite = sf::CircleShape(0.1f),
+         const sf::CircleShape &sprite = sf::CircleShape(0.5f),
          const std::vector<Item> &inventory = {}) :
       Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, logger, sprite, inventory) {};
 
@@ -60,7 +60,7 @@ class Monster : public Creature {
           sf::RenderWindow &window,
           const Room &room,
           std::ostream &logger = std::cout,
-          const sf::CircleShape &sprite = sf::CircleShape(0.3f),
+          const sf::CircleShape &sprite = sf::CircleShape(0.5f),
           const std::vector<Item> &inventory = {}) : Creature(type,
                                                               name,
                                                               max_health,

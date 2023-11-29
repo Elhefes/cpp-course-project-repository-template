@@ -12,6 +12,7 @@
 #include "SFML/Graphics.hpp"
 #include "../helper.hpp"
 #include "../room.hpp"
+#include "../textureManager.hpp"
 
 /// @brief Base class for every "alive" entity in the dungeon
 class Creature {
@@ -36,6 +37,7 @@ class Creature {
 
   /// @return description_
   [[nodiscard]] const std::string &GetDescription() const;
+  [[nodiscard]] const std::string &GetType() const;
 
   /// @brief Handles the logic when this creature is attacked.
   /// @param base_damage Base attack damage (actual damage may be later recalculated somehow)
