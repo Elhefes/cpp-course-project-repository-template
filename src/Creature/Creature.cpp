@@ -82,28 +82,17 @@ void Creature::Update(bool monstersKilled) {
       corridor = corridors_[i];
     }
   }
-  bool inRoomPos = false;
-  float xlim = (float) (room_.x + width) - 1 * sprite_.getRadius();
-  float ylim = (float) (room_.y + height) - 1 * sprite_.getRadius();
-  newPos.x = bound(newPos.x, (float) room_.x, xlim);
-  newPos.y = bound(newPos.y, (float) room_.y, ylim);
-  float cxlim = (float) corridor.x + abs(corridor.width) - sprite_.getRadius();
-  float cylim = (float) corridor.y + abs(corridor.height) - sprite_.getRadius();
-  newCPos.x = bound(newCPos.x, (float) corridor.x, cxlim);
-  newCPos.y = bound(newCPos.y, (float) corridor.y, cylim);
-  //std::cout << room_.x << std::endl;
-  //if (newPos.x == newCPos.x) {inRoomPos = true;}
-  if (newPos.x == xlim || newPos.x == room_.x) {
-  velocity_.x *= -1;
-  inRoomPos = true;
+  //sf::FloatRect room1(sf::Vector2f(room_.x, room_.y), sf::Vector2f(room_.width, room_.height));
+  //sf::FloatRect corridor1(sf::Vector2f(corridor.x, corridor.y), sf::Vector2f(corridor.width, corridor.height));
+  sf::RectangleShape room1(sf::Vector2f(room_.width, room_.height));
+  room1.setPosition(sf::Vector2f(room_.x, room_.y));
+  
+  //sf::FloatRect playerBounds = sprite_.getGlobalBounds();
+  if (room1.getGlobalBounds().intersects(sprite_.getGlobalBounds())) {
+    velocity_.x *= -1;
+    velocity_.y *= -1;
+    sprite_.setPosition(position_);
   }
-  else if (newCPos.x == cxlim || newCPos.x == corridor.x) velocity_.x *= -1;
-  if (newPos.y == ylim || newPos.y == room_.y) velocity_.y *= -1;
-  else if (newCPos.y == cylim || newCPos.y == corridor.y) velocity_.y *= -1;
-  //std::cout << inRoomPos << std::endl;
-  if (inRoomPos) SetPosition(newPos); // doing it via setPos so the camera gets updated too
-  else SetPosition(newCPos);
-  sprite_.setPosition(position_);
 }
 
 const std::vector<Item> &Creature::GetInventory() const {
