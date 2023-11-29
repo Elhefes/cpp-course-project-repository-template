@@ -7,7 +7,7 @@
 #include "room.hpp"
 
 
-Room::Room(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {
+Room::Room(int x, int y, int width, int height, bool isCorridor) : x(x), y(y), width(width), height(height), isCorridor_(isCorridor) {
     // Initialize random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -26,6 +26,7 @@ Room::Room(int x, int y, int width, int height) : x(x), y(y), width(width), heig
             }
         }
     }
+    id_ = rand();
 }
 
 Room::~Room() {

@@ -8,13 +8,20 @@ const std::string TEXTURES_PATH = "../assets/textures/";
 sf::Texture room_t1;
 sf::Texture room_t2;
 sf::Texture corridor_t1;
+const float PLAYER_SPEED = 0.1f;
 
-Game::Game() {
+Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
+                      sf::Vector2f(0, 0),
+                      window, Room(0, 0, 0, 0, false)) {
     initializeWindow();
     initializeTextures();
     initiateDungeon();
-    initializeCircle();
+    player_.UpdateRooms(rooms);
+    player_.UpdateCorridors(corridors);
+    //initializeCircle();
     //initiateInventory();
+    player_.SetRoom(rooms[0], monsters_);
+    player_.SetPosition(sf::Vector2f(rooms[0].x + rooms[0].width / 2.0, rooms[0].y + rooms[0].height / 2.0));
 }
 
 Game::~Game() {
@@ -49,11 +56,11 @@ void Game::initializeWindow() {
     sf::Vector2u windowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     window.create(sf::VideoMode(windowSize), WINDOW_TITLE);
     window.setFramerateLimit(60);
-    window.setPosition(sf::Vector2i(0, 0));
+    window.setPosition(sf::Vector2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 }
 
 void Game::initializeCircle() {
-    circle.setRadius(10);
+    circle.setRadius(0.1f);
     circle.setFillColor(sf::Color::Red);
     circle.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 }
@@ -78,31 +85,41 @@ void Game::processEvents() {
 }
 
 void Game::update() {
-    sf::Vector2f movement(0, 0);
-    if (moveUp) {
-        movement.y -= circleSpeed;
-    }
-    if (moveDown) {
-        movement.y += circleSpeed;
-    }
-    if (moveLeft) {
-        movement.x -= circleSpeed;
-    }
-    if (moveRight) {
-        movement.x += circleSpeed;
-    }
-    circle.move(movement);
+    sf::Vector2f movement(
+      moveRight ? 1 : (moveLeft ? -1 : 0.f),
+      moveDown ? 1 : (moveUp ? -1 : 0.f)
+    );
+    movement *= player_.GetMaxVelocity();
+    player_.SetVelocity(movement);
 
     sf::View view = window.getView();
-    view.setCenter(circle.getPosition());
+    view.setCenter(player_.getPosition());
     view.setSize(window.getDefaultView().getSize() / ZOOM_LEVEL);
     window.setView(view);
+    bool monstersKilled = false;
+    if (monsters_.size() == 1) {
+        monstersKilled = true;
+    }
+    player_.Update(monstersKilled);
+    for (auto m : monsters_) {
+    m->tick(player_);
+    m->Update(monstersKilled);
+    }
 }
 
 void Game::render() {
     window.clear();
-    window.draw(circle);
     drawDungeon();
+    window.draw(circle);
+    player_.Draw();
+    for (auto m : monsters_) {
+    auto pos = m->GetPosition();
+    auto rx = m->GetRoom().x;
+    auto ry = m->GetRoom().x;
+    auto rw = m->GetRoom().width;
+    auto rh = m->GetRoom().height;
+    m->Draw();
+    }
     window.display();
 }
 
