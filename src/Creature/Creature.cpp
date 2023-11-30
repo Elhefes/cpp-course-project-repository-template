@@ -88,6 +88,16 @@ void Creature::Update(bool monstersKilled) {
   std::cout << newPos.y << std::endl;
   if (type_ == "Hooman") {
 
+    sf::Vector2f curPos = creatureRect.getPosition();
+    sf::Vector2i position = sf::Mouse::getPosition(window_);
+    const float PI = 3.14159265;
+
+    float dx = curPos.x - position.x;
+    float dy = curPos.y - position.y;
+
+    float rotation = (atan2(dy, dx)) * 180 / PI;
+    creatureRect.setRotation(sf::degrees(rotation + 90));
+
     if (position_ == newPos) return;
     
     if (isInsideAnyRoom(newPos.x, newPos.y)) {
