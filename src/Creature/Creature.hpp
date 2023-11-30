@@ -112,6 +112,8 @@ class Creature {
   /// @brief stream to log information about the class
   std::ostream &logger_;
   /// @brief room the creature is in
+  
+  sf::RectangleShape creatureRect;
   Room room_;
   std::vector<Room> rooms_;
   std::vector<Room> corridors_;
