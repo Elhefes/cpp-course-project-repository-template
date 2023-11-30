@@ -48,17 +48,19 @@ const std::string &Creature::GetType() const {
 }
 
 void Creature::Draw() {
+  creatureRect.setSize(sf::Vector2f(1.0f, 1.0f));
+  creatureRect.setOrigin(sf::Vector2f(0.5f, 0.5f));
   if (GetType() == "Hooman") {
-    sprite_.setTexture(&player_t);
+    creatureRect.setTexture(&player_t);
   }
   else
   {
-    sprite_.setTexture(&assassin_t);
+    creatureRect.setTexture(&assassin_t);
   }
   auto relativePos = position_;
-  sprite_.setPosition(relativePos); // change some stuff when get actual sprite
-  if (!IsAlive()) sprite_.setFillColor(sf::Color::Cyan);
-  window_.draw(sprite_);
+  creatureRect.setPosition(relativePos); // change some stuff when get actual sprite
+  if (!IsAlive()) creatureRect.setFillColor(sf::Color::Red);
+  window_.draw(creatureRect);
 //  auto r = sprite_.getRadius();
 //  sf::Vertex line[] =
 //      {
