@@ -115,6 +115,7 @@ public:
         std::vector<sf::CircleShape> circles;
         for (int i = 0; i < items.size(); ++i) {
             sf::CircleShape circle(0.5f);
+            circle.setFillColor(sf::Color::Transparent);
             circle.setOutlineThickness(0.1f);
             circle.setOutlineColor(sf::Color::Blue);
             sf::Vector2f center = window.getView().getCenter();
