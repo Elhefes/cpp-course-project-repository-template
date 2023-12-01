@@ -81,6 +81,8 @@ class Creature {
   const sf::Vector2<float> &GetVelocity() const;
   /// @return current room
   const Room &GetRoom() const;
+  /// @return inventory of the creture
+  Inventory &GetInventory();
 
  protected:
   /// @brief max movement speed of the creature\nNote: this is the limit for vx and vy separately.

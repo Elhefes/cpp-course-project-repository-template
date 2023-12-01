@@ -21,9 +21,9 @@ Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
     player_.UpdateRooms(rooms);
     player_.UpdateCorridors(corridors);
     //initializeCircle();
-    initiateInventory();
     player_.SetRoom(rooms[0], monsters_);
     player_.SetPosition(sf::Vector2f(rooms[0].x + rooms[0].width / 2.0, rooms[0].y + rooms[0].height / 2.0));
+    initiateInventory();
 }
 
 Game::~Game() {
@@ -113,7 +113,7 @@ void Game::update() {
     player_.Update(monstersKilled);
     for (auto m : monsters_) {
     m->tick(player_);
-    m->Update(monstersKilled);
+    //m->Update(monstersKilled);
     }
 }
 
@@ -130,7 +130,7 @@ void Game::render() {
     auto rh = m->GetRoom().height;
     m->Draw();
     }
-    std::vector<sf::CircleShape> circles = inventory.Draw(window);
+    std::vector<sf::CircleShape> circles = player_.GetInventory().Draw(window);
     for (auto c : circles) {
         window.draw(c);
     }
@@ -143,11 +143,8 @@ void Game::initiateDungeon() {
 }
 
 void Game::initiateInventory() {
-    inventory.addItem("Sword", 2);
-    inventory.addItem("Sword", 2);
-    inventory.addItem("asdf", 2);
-    inventory.addItem("a", 2);
-    
+    player_.GetInventory().addItem("Sword", 2);
+    player_.GetInventory().addItem("Potion", 2);
 }
 
 void Game::drawDungeon() {

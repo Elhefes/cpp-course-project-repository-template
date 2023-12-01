@@ -173,6 +173,10 @@ const Room &Creature::GetRoom() const {
   return room_;
 }
 
+Inventory &Creature::GetInventory() {
+  return inventory_;
+}
+
 int Creature::Attack(Creature &c2, const Item *item) {
   if (item == nullptr) {
     return c2.TakeHit(base_damage_, *this);
