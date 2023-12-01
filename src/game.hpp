@@ -5,7 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <vector>
 #include "dungeon.hpp"
-#include "item.cpp"
+#include "inventory.hpp"
 #include "textureManager.hpp"
 #include "Creature/GameCharacter.hpp"
 

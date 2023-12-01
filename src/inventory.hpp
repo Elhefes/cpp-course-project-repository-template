@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include "Item.hpp"
+#include <SFML/Graphics.hpp>
 
 /**
  * @brief Class defining an inventory to manage items.
@@ -54,14 +55,21 @@ public:
         return false; // Item not found
     }
 
+    
     /**
      * @brief Check if an item is present in the inventory.
      * @param item The item to check.
      * @return True if the item is found, otherwise false.
      */
-    bool hasItem(const Item& item) {
-        return std::find(items.begin(), items.end(), item) != items.end();
-    }
+    /*
+    bool hasItem(const std::string& itemName) {
+    return std::find_if(items.begin(), items.end(),
+        [&itemName](const auto& item) { return std::get<0>(item) == itemName; }
+    ) != items.end();
+    }*/
+    
+    
+
 
     /**
      * @brief Get the count of a specific item in the inventory.
@@ -102,6 +110,23 @@ public:
     void clearInventory() {
         items.clear();
     }
+
+    std::vector<sf::CircleShape> Draw(sf::RenderWindow& window) {
+        std::vector<sf::CircleShape> circles;
+        for (int i = 0; i < items.size(); ++i) {
+            sf::CircleShape circle(0.5f);
+            circle.setOutlineThickness(0.1f);
+            circle.setOutlineColor(sf::Color::Blue);
+            sf::Vector2f center = window.getView().getCenter();
+            float x = center.x - window.getView().getSize().x / 2 + 0.5 + (i * 1.3f);
+            float y = center.y - window.getView().getSize().y / 2 + 0.5;
+            std::cout << x << "  " << y << std::endl;
+            circle.setPosition(sf::Vector2f(x, y));
+            circles.push_back(circle);
+        }
+        return circles;
+}
+
 
 };
 

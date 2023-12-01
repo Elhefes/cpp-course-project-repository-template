@@ -24,7 +24,7 @@ class Player : public Creature {
          std::vector<Room> corridors_ = {},
          std::ostream &logger = std::cout,
          const sf::CircleShape &sprite = sf::CircleShape(0.5f),
-         const std::vector<Item> &inventory = {}) :
+         Inventory inventory = Inventory()) :
       Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, logger, sprite, inventory) {};
 
   /// @brief Special ability of each player class
@@ -61,7 +61,7 @@ class Monster : public Creature {
           const Room &room,
           std::ostream &logger = std::cout,
           const sf::CircleShape &sprite = sf::CircleShape(0.5f),
-          const std::vector<Item> &inventory = {}) : Creature(type,
+          Inventory inventory = Inventory()) : Creature(type,
                                                               name,
                                                               max_health,
                                                               max_velocity,

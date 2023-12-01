@@ -11,7 +11,7 @@ Creature::Creature(const std::string &type,
                    int base_damage,
                    std::ostream &logger,
                    const sf::CircleShape &sprite,
-                   const std::vector<Item> &inventory,
+                   Inventory inventory,
                    std::vector<Room> rooms,
                    std::vector<Room> corridors)
     : type_(type),
@@ -85,7 +85,7 @@ void Creature::Update(bool monstersKilled) {
 
   const int OFFSET = 10; // sfml specifics ig
   auto newPos = position_ + velocity_;
-  std::cout << newPos.y << std::endl;
+  //std::cout << newPos.y << std::endl;
   if (type_ == "Hooman") {
 
     sf::Vector2f curPos = creatureRect.getPosition();
@@ -132,7 +132,7 @@ bool Creature::isInsideAnyRoom(float x, float y) {
     return false;
 }
 
-const std::vector<Item> &Creature::GetInventory() const {
+const Inventory &Creature::GetInventory() const {
   return inventory_;
 }
 const sf::Vector2<float> &Creature::GetPosition() const {

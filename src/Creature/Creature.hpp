@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <string>
 #include <iostream>
-#include "../item.cpp" // maybe change path later idk where it would end up
+#include "../inventory.hpp" // maybe change path later idk where it would end up
 #include "SFML/Graphics.hpp"
 #include "../helper.hpp"
 #include "../room.hpp"
@@ -27,7 +27,7 @@ class Creature {
            int base_damage,
            std::ostream &logger = std::cout,
            const sf::CircleShape &sprite = sf::CircleShape(50),
-           const std::vector<Item> &inventory = {},
+           Inventory inventory = Inventory(),
            std::vector<Room> rooms = {},
            std::vector<Room> corridors = {});
 
@@ -72,7 +72,7 @@ class Creature {
   virtual void SetRoom(Room &room);
 
   /// @return inventory
-  const std::vector<Item> &GetInventory() const;
+  const Inventory &GetInventory() const;
   /// @return position
   const sf::Vector2<float> &GetPosition() const;
   /// @return max velocity
@@ -99,8 +99,8 @@ class Creature {
   std::string name_;
   /// @brief description in the format "Creature of type <type_> named <name>"
   std::string description_;
-  /// @brief vector of items a creature currently has. Don't see the need to store references for now.
-  std::vector<Item> inventory_;
+  /// @brief the inventory of the creature
+  Inventory inventory_;
   /// @brief change to actual sprite later
   sf::CircleShape sprite_;
   /// @brief position of the creature on the screen
