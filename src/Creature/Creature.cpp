@@ -31,6 +31,8 @@ Creature::Creature(const std::string &type,
   description_ = "Creature \"" + type + " named " + name + "\"";
 }
 
+const float PI = 3.14159265;
+
 const std::string &Creature::GetDescription() const {
   return description_;
 }
@@ -85,12 +87,10 @@ void Creature::Update(bool monstersKilled) {
 
   const int OFFSET = 10; // sfml specifics ig
   auto newPos = position_ + velocity_;
-  std::cout << newPos.y << std::endl;
   if (type_ == "Hooman") {
 
     sf::Vector2f curPos = creatureRect.getPosition();
     sf::Vector2i position = sf::Mouse::getPosition(window_);
-    const float PI = 3.14159265;
 
     float dx = curPos.x - position.x;
     float dy = curPos.y - position.y;
