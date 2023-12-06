@@ -12,6 +12,7 @@ sf::Texture player_t;
 sf::Texture assassin_t;
 sf::Texture sword_inv_t;
 sf::Texture potion_inv_t;
+sf::Font font;
 const float PLAYER_SPEED = 0.1f;
 
 Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
@@ -68,6 +69,10 @@ void Game::initializeTextures() {
     }
         if (!potion_inv_t.loadFromFile(TEXTURES_PATH + "potion_inv.png")) {
         std::cerr << "Error loading potion_inv.png" << std::endl;
+        return;
+    }
+    if (!font.loadFromFile(TEXTURES_PATH + "Amatic-Bold.ttf")) {
+        std::cerr << "Error loading Font" << std::endl;
         return;
     }
 }

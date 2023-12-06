@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "Item.hpp"
 #include <SFML/Graphics.hpp>
+#include "textureManager.hpp"
 
 /**
  * @brief Class defining an inventory to manage items.
@@ -119,17 +120,29 @@ public:
             circle.setOutlineThickness(0.1f);
             circle.setOutlineColor(sf::Color::Blue);
             sf::Vector2f center = window.getView().getCenter();
-            float x = center.x - window.getView().getSize().x / 2 + 0.5 + (i * 1.3f);
+            float x = center.x - window.getView().getSize().x / 2 + 0.5 + (i * 1.5f);
             float y = center.y - window.getView().getSize().y / 2 + 0.5;
             std::cout << x << "  " << y << std::endl;
             circle.setPosition(sf::Vector2f(x, y));
+
             sf::Vector2f circleCenter(circle.getPosition());
             sf::Sprite sprite(std::get<2>(items[i]));
             sf::FloatRect itemBounds = sprite.getGlobalBounds();
-            //sprite.setOrigin(sf::Vector2f(itemBounds.width / 2, itemBounds.height / 2));
             float scale = (2.0f * circle.getRadius()) / std::max(itemBounds.width, itemBounds.height);
             sprite.setScale(sf::Vector2f(scale, scale));
             sprite.setPosition(circleCenter);
+
+
+            if (std::get<1>(items[i]) > 1) {
+                std::string amount = std::to_string(std::get<1>(items[i]));
+                sf::Text quantityText(font);
+                quantityText.setString(amount);
+                quantityText.setFillColor(sf::Color::White);
+                quantityText.setScale(sf::Vector2f(circle.getRadius() / 10, circle.getRadius() / 20));
+                quantityText.setPosition(sf::Vector2f(circleCenter.x + circle.getRadius() * 2, circleCenter.y - circle.getRadius() / 2));
+                window.draw(quantityText);
+            }
+            
             window.draw(sprite);
             circles.push_back(circle);
         }
