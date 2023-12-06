@@ -3,7 +3,6 @@
 #include <SFML/Audio.hpp>
 #include <vector>
 #include "../dungeon.hpp"
-#include "../item.cpp"
 #include "../textureManager.hpp"
 #include "../Creature/GameCharacter.hpp"
 

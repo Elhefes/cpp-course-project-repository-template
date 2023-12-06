@@ -4,7 +4,7 @@
 #include "Test/test.hpp"
 
 int main() {
-    runTests()
+    runTests();
     Game game;
     game.run();
     return 0;
