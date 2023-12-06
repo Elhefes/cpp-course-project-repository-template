@@ -13,9 +13,10 @@ sf::Texture assassin_t;
 sf::Texture sword_inv_t;
 sf::Texture potion_inv_t;
 sf::Font font;
-const float PLAYER_SPEED = 0.1f;
+const float PLAYER_WALKING_SPEED = 0.25f;
+const float PLAYER_RUNNING_SPEED = 0.4f;
 
-Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
+Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_WALKING_SPEED,
                       sf::Vector2f(0, 0),
                       window, Room(0, 0, 0, 0, false)) {
     initializeWindow();
@@ -23,7 +24,6 @@ Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
     initiateDungeon();
     player_.UpdateRooms(rooms);
     player_.UpdateCorridors(corridors);
-    //initializeCircle();
     player_.SetRoom(rooms[0], monsters_);
     player_.SetPosition(sf::Vector2f(rooms[0].x + rooms[0].width / 2.0, rooms[0].y + rooms[0].height / 2.0));
     initiateInventory();
@@ -84,27 +84,23 @@ void Game::initializeWindow() {
     window.setPosition(sf::Vector2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 }
 
-void Game::initializeCircle() {
-    circle.setRadius(0.1f);
-    circle.setFillColor(sf::Color::Red);
-    circle.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
-}
-
 void Game::processEvents() {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape) {
             window.close();
         }
-        // Handle other input events (keyboard, mouse, etc.)
-
-        // Handle keyboard player movement
-        if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+        sf::Event::EventType type = event.type;
+        if (type == sf::Event::KeyPressed || type == sf::Event::KeyReleased) {
             sf::Keyboard::Key key = event.key.code;
-            moveUp = (key == sf::Keyboard::W) ? (event.type == sf::Event::KeyPressed) : moveUp;
-            moveDown = (key == sf::Keyboard::S) ? (event.type == sf::Event::KeyPressed) : moveDown;
-            moveLeft = (key == sf::Keyboard::A) ? (event.type == sf::Event::KeyPressed) : moveLeft;
-            moveRight = (key == sf::Keyboard::D) ? (event.type == sf::Event::KeyPressed) : moveRight;
+            moveUp = (key == sf::Keyboard::W) ? (type == sf::Event::KeyPressed) : moveUp;
+            moveDown = (key == sf::Keyboard::S) ? (type == sf::Event::KeyPressed) : moveDown;
+            moveLeft = (key == sf::Keyboard::A) ? (type == sf::Event::KeyPressed) : moveLeft;
+            moveRight = (key == sf::Keyboard::D) ? (type == sf::Event::KeyPressed) : moveRight;
+
+            if (key == sf::Keyboard::LShift || key == sf::Keyboard::RShift) {
+                isRunning = (event.type == sf::Event::KeyPressed);
+            }
         }
     }
 }
@@ -115,7 +111,7 @@ void Game::update() {
       moveDown ? 1 : (moveUp ? -1 : 0.f)
     );
     movement *= player_.GetMaxVelocity();
-    player_.SetVelocity(movement);
+    player_.SetVelocity(movement *= (isRunning ? PLAYER_RUNNING_SPEED : PLAYER_WALKING_SPEED));
 
     sf::View view = window.getView();
     view.setCenter(player_.getPosition());
@@ -127,8 +123,8 @@ void Game::update() {
     }
     player_.Update(monstersKilled);
     for (auto m : monsters_) {
-    m->tick(player_);
-    //m->Update(monstersKilled);
+        m->tick(player_);
+        m->Update(monstersKilled);
     }
 }
 
@@ -138,12 +134,12 @@ void Game::render() {
     window.draw(circle);
     player_.Draw();
     for (auto m : monsters_) {
-    auto pos = m->GetPosition();
-    auto rx = m->GetRoom().x;
-    auto ry = m->GetRoom().x;
-    auto rw = m->GetRoom().width;
-    auto rh = m->GetRoom().height;
-    m->Draw();
+        auto pos = m->GetPosition();
+        auto rx = m->GetRoom().x;
+        auto ry = m->GetRoom().x;
+        auto rw = m->GetRoom().width;
+        auto rh = m->GetRoom().height;
+        m->Draw();
     }
     std::vector<sf::CircleShape> circles = player_.GetInventory().Draw(window);
     for (auto c : circles) {

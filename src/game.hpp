@@ -44,6 +44,7 @@ private:
     bool moveDown = false;
     bool moveLeft = false;
     bool moveRight = false;
+    bool isRunning = false;
 
     float circleSpeed = 0.3f;
 
