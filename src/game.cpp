@@ -10,6 +10,9 @@ sf::Texture room_t2;
 sf::Texture corridor_t1;
 sf::Texture player_t;
 sf::Texture assassin_t;
+sf::Texture sword_inv_t;
+sf::Texture potion_inv_t;
+sf::Font font;
 const float PLAYER_WALKING_SPEED = 0.25f;
 const float PLAYER_RUNNING_SPEED = 0.4f;
 
@@ -21,9 +24,9 @@ Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_WALKING_SPEED,
     initiateDungeon();
     player_.UpdateRooms(rooms);
     player_.UpdateCorridors(corridors);
-    //initiateInventory();
     player_.SetRoom(rooms[0], monsters_);
     player_.SetPosition(sf::Vector2f(rooms[0].x + rooms[0].width / 2.0, rooms[0].y + rooms[0].height / 2.0));
+    initiateInventory();
 }
 
 Game::~Game() {
@@ -58,6 +61,18 @@ void Game::initializeTextures() {
     }
         if (!assassin_t.loadFromFile(TEXTURES_PATH + "assassin.png")) {
         std::cerr << "Error loading assassin.png" << std::endl;
+        return;
+    }
+        if (!sword_inv_t.loadFromFile(TEXTURES_PATH + "sword_inv.png")) {
+        std::cerr << "Error loading sword_inv.png" << std::endl;
+        return;
+    }
+        if (!potion_inv_t.loadFromFile(TEXTURES_PATH + "potion_inv.png")) {
+        std::cerr << "Error loading potion_inv.png" << std::endl;
+        return;
+    }
+    if (!font.loadFromFile(TEXTURES_PATH + "Amatic-Bold.ttf")) {
+        std::cerr << "Error loading Font" << std::endl;
         return;
     }
 }
@@ -126,6 +141,10 @@ void Game::render() {
         auto rh = m->GetRoom().height;
         m->Draw();
     }
+    std::vector<sf::CircleShape> circles = player_.GetInventory().Draw(window);
+    for (auto c : circles) {
+        window.draw(c);
+    }
     window.display();
 }
 
@@ -135,15 +154,10 @@ void Game::initiateDungeon() {
 }
 
 void Game::initiateInventory() {
-    Item item1("Sword", 2);
-    Item item2("Potion", 5);
-    Item item3("Armor", 1);
-
-    inventory.addItem(item1);
-    inventory.addItem(item2);
-    inventory.addItem(item3);
-
-    inventory.printInventory();
+    Item defaultSword("defaultSword", sword_inv_t);
+    player_.GetInventory().addItem(defaultSword.getName(), 1, defaultSword.getTexture());
+    Item potion("potion", potion_inv_t);
+    player_.GetInventory().addItem(potion.getName(), 3, potion.getTexture());
 }
 
 void Game::drawDungeon() {
