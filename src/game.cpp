@@ -10,6 +10,8 @@ sf::Texture room_t2;
 sf::Texture corridor_t1;
 sf::Texture player_t;
 sf::Texture assassin_t;
+sf::Texture sword_inv_t;
+sf::Texture potion_inv_t;
 const float PLAYER_SPEED = 0.1f;
 
 Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
@@ -58,6 +60,14 @@ void Game::initializeTextures() {
     }
         if (!assassin_t.loadFromFile(TEXTURES_PATH + "assassin.png")) {
         std::cerr << "Error loading assassin.png" << std::endl;
+        return;
+    }
+        if (!sword_inv_t.loadFromFile(TEXTURES_PATH + "sword_inv.png")) {
+        std::cerr << "Error loading sword_inv.png" << std::endl;
+        return;
+    }
+        if (!potion_inv_t.loadFromFile(TEXTURES_PATH + "potion_inv.png")) {
+        std::cerr << "Error loading potion_inv.png" << std::endl;
         return;
     }
 }
@@ -143,8 +153,10 @@ void Game::initiateDungeon() {
 }
 
 void Game::initiateInventory() {
-    player_.GetInventory().addItem("Sword", 2);
-    player_.GetInventory().addItem("Potion", 2);
+    Item defaultSword("defaultSword", sword_inv_t);
+    player_.GetInventory().addItem(defaultSword.getName(), 1, defaultSword.getTexture());
+    Item potion("potion", potion_inv_t);
+    player_.GetInventory().addItem(potion.getName(), 3, potion.getTexture());
 }
 
 void Game::drawDungeon() {

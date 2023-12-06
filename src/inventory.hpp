@@ -12,7 +12,7 @@
  */
 class Inventory {
 private:
-    std::vector<std::tuple<std::string, int>> items; ///< Vector to hold items in the inventory.
+    std::vector<std::tuple<std::string, int, sf::Texture>> items; ///< Vector to hold items in the inventory.
 
 public:
     /**
@@ -20,7 +20,7 @@ public:
      * @param item The item to add.
      * @param quantity The amout of the item to add
      */
-    void addItem(const std::string& itemName, int quantity) {
+    void addItem(const std::string& itemName, int quantity, sf::Texture texture) {
     bool found = false;
     for (auto& item : items) {
         if (std::get<0>(item) == itemName) {
@@ -30,7 +30,7 @@ public:
         }
     }
     if (!found) {
-        items.emplace_back(itemName, quantity); // Add new item otherwise
+        items.emplace_back(itemName, quantity, texture); // Add new item otherwise
     }
     }
 
@@ -123,6 +123,14 @@ public:
             float y = center.y - window.getView().getSize().y / 2 + 0.5;
             std::cout << x << "  " << y << std::endl;
             circle.setPosition(sf::Vector2f(x, y));
+            sf::Vector2f circleCenter(circle.getPosition());
+            sf::Sprite sprite(std::get<2>(items[i]));
+            sf::FloatRect itemBounds = sprite.getGlobalBounds();
+            //sprite.setOrigin(sf::Vector2f(itemBounds.width / 2, itemBounds.height / 2));
+            float scale = (2.0f * circle.getRadius()) / std::max(itemBounds.width, itemBounds.height);
+            sprite.setScale(sf::Vector2f(scale, scale));
+            sprite.setPosition(circleCenter);
+            window.draw(sprite);
             circles.push_back(circle);
         }
         return circles;

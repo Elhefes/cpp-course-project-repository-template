@@ -56,6 +56,7 @@ private:
     void initiateDungeon();
     void initiateInventory();
     void drawDungeon();
+    void addItem(Item newItem);
     void drawRoom(const Room& room, RoomType type);
 };
 
