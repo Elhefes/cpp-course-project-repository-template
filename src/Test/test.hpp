@@ -16,6 +16,7 @@ bool testDungeonGeneration() {
 
     std::vector<Room> rooms;
     std::vector<Room> corridors;
+    sf::Texture player_t;
 
     Dungeon dungeon;
     dungeon.generateDungeon(rooms, corridors, numRooms, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -36,7 +37,7 @@ bool testDungeonGeneration() {
     // Create a test creature
     Monster test_creature("test", "creature", 50, 10.0f,
                        sf::Vector2f(0, 0),
-                       test_window, Room(0, 0, 0, 0, false));
+                       test_window, Room(0, 0, 0, 0, false), 10, player_t);
     
     // Check if the position matches the expected postition
     if (test_creature.GetPosition() != sf::Vector2f(0, 0)) {
@@ -45,7 +46,7 @@ bool testDungeonGeneration() {
     }
 
     // Add health postions to the test creatures inventory
-    test_creature.GetInventory().addPotion(HealthPotion(5), 3);
+    test_creature.GetInventory().addPotion(HealthPotion(), 3);
 
     // Check if the size of the inventory matches the expected size
 
