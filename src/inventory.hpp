@@ -131,20 +131,17 @@ class Inventory {
     float y = center.y - window.getView().getSize().y / 2 + 0.5;
     for (const auto &item : swords) {
       sf::RectangleShape rect(sf::Vector2f(1.f, 1.f));
-      rect.setFillColor(sf::Color::Transparent);
-      rect.setOutlineThickness(0.1f);
-      rect.setOutlineColor(sf::Color::Red);
+      rect.setTexture(&sword_inv_t);
       rect.setPosition(sf::Vector2f(x, y));
       window.draw(rect);
       x += 1.3f;
     }
+    // assumes that there is only one health potion for now i guess as all the textures are same
     for (const auto &item : potions) {
-      sf::CircleShape circle(0.5f);
-      circle.setFillColor(sf::Color::Transparent);
-      circle.setOutlineThickness(0.1f);
-      circle.setOutlineColor(sf::Color::Blue);
-      circle.setPosition(sf::Vector2f(x, y));
-      window.draw(circle);
+      sf::RectangleShape rect(sf::Vector2f(1.f, 1.f));
+      rect.setTexture(&potion_inv_t);
+      rect.setPosition(sf::Vector2f(x, y));
+      window.draw(rect);
       x += 1.3f;
     }
   }
