@@ -27,9 +27,7 @@ class Creature {
            int base_damage,
            std::ostream &logger = std::cout,
            const sf::CircleShape &sprite = sf::CircleShape(50),
-           Inventory inventory = Inventory(),
-           std::vector<Room> rooms = {},
-           std::vector<Room> corridors = {});
+           const Inventory &inventory = Inventory());
 
   /// @brief Checks if the creature is alive.
   /// @return true if the creature is alive, false otherwise
@@ -43,15 +41,13 @@ class Creature {
   /// @param base_damage Base attack damage (actual damage may be later recalculated somehow)
   /// @param c2 the creature who attacks
   /// @return the damage taken
-  int TakeHit(int base_damage, const Creature &c2);
+  int TakeHit(float base_damage, const Creature &c2);
 
-  int Attack(Creature &c2, const Item *item = nullptr);
+  int Attack(Creature &c2, const Sword &sword = {}) const;
 
   /// @brief Updates state of the creature.
   /// Later probably need to pass something cleverer, like game class, tho i am not sure yet.
-  void Update(bool monstersKilled);
-
-  bool isInsideAnyRoom(float x, float y);
+  virtual void Update();
 
   /// @brief Draws the creature's sprite in a given window.
   /// @param camera current camera state
@@ -66,7 +62,7 @@ class Creature {
   /// @brief Sets y velocity.
   /// @param nvy new y velocity.
   void SetVelocityY(float nvy);
-  void SetHealth(int health);
+  void SetHealth(float health);
   void SetSprite(const sf::CircleShape &sprite);
   virtual void SetPosition(const sf::Vector2<float> &position);
   virtual void SetRoom(Room &room);
@@ -76,7 +72,7 @@ class Creature {
   /// @return position
   const sf::Vector2<float> &GetPosition() const;
   /// @return max velocity
-  const float GetMaxVelocity() const;
+  float GetMaxVelocity() const;
   /// @return velocity
   const sf::Vector2<float> &GetVelocity() const;
   /// @return current room
@@ -88,11 +84,9 @@ class Creature {
   /// @brief max movement speed of the creature\nNote: this is the limit for vx and vy separately.
   const float maxVelocity_;
   /// @brief max health of the creature
-  const int maxHealth_;
+  const float maxHealth_;
   /// @brief current health of the creature.
-  /// Note: could be made unsigned int, but I am afraid that at some point I will forget that it is an unsigned
-  /// int and write something like health = max(health - damage, 0) and give some creature 2**32 hp.
-  int health_;
+  float health_;
   /// @brief damage that creature deals with no items
   int base_damage_;
   /// @brief type of the character (e.g. monster)
@@ -114,15 +108,19 @@ class Creature {
   /// @brief stream to log information about the class
   std::ostream &logger_;
   /// @brief room the creature is in
-  
+
   sf::RectangleShape creatureRect;
   Room room_;
-  std::vector<Room> rooms_;
-  std::vector<Room> corridors_;
 
   /// @brief Reduces health by damage. If damage is greater then health, sets health to 0.
   /// @param damage amount to reduce health_ by
-  void TakeDamage_(int damage) { health_ = std::max(0, health_ - damage); }
+  void TakeDamage_(float damage) { health_ = std::max(0.f, health_ - damage); }
+
+  virtual std::vector<Room> GetAvailableRooms();
+  void UpdatePosition();
+  void UpdateRotation();
+  virtual sf::Vector2f GetFacingDirection();
+  void TurnToDirection(float dx, float dy);
 };
 
 #endif //DUNGEONCRAWLER_CHARACTER_H

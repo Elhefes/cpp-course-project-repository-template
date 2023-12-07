@@ -1,3 +1,4 @@
+/*
 #include "inventory.hpp"
 
 void Inventory::addItem(const std::string& itemName, int quantity, sf::Texture texture) {
@@ -92,3 +93,4 @@ std::vector<sf::CircleShape> Inventory::Draw(sf::RenderWindow& window) {
         }
         return circles;
 }
+*/

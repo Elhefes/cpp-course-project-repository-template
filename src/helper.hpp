@@ -9,9 +9,9 @@
 #include "random"
 
 template<typename T>
-T bound(T x, T lower, T upper) {
-  x = std::max(lower, x);
-  x = std::min(x, upper);
+T bound(T x, T lower, T upper, T EPS) {
+  x = std::max(lower + EPS, x);
+  x = std::min(x, upper - EPS);
   return x;
 }
 
@@ -32,6 +32,15 @@ T square(const sf::Vector2<T> v) {
 template<typename T>
 double len(const sf::Vector2<T> v) {
   return sqrt(square(v));
+}
+
+/// @brief Checks if two numerical values are close enough (|a - b| < EPS)
+/// @tparam T type of values
+/// @param EPS precision desired
+/// @return true if close enough, false otherwise
+template<typename T>
+bool close(T a, T b, T EPS) {
+  return std::abs(a - b) < EPS;
 }
 
 /// @brief Checks if two positions are close enough (|v1 - v2| <= maxDist).
