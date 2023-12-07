@@ -37,6 +37,9 @@ Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
 Game::~Game() {
   rooms.clear();
   corridors.clear();
+  for (auto m : monsters_) {
+    delete m;
+  }
 }
 
 void Game::run() {

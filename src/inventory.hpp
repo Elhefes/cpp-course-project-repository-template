@@ -31,6 +31,43 @@ class Inventory {
     counter[item.GetName()] += quantity;
   }
 
+  template<typename T>
+  float DrawItems_(std::vector<T> items, const sf::Texture &t, float x, float y, sf::RenderWindow &window) {
+    for (const auto &item : items) {
+      // Draws the circles
+      sf::CircleShape circle(0.5f);
+      circle.setFillColor(sf::Color::Transparent);
+      circle.setOutlineThickness(0.1f);
+      circle.setOutlineColor(sf::Color::Blue);
+      sf::Vector2f center = window.getView().getCenter();
+      circle.setPosition(sf::Vector2f(x, y));
+      window.draw(circle);
+
+      // Draws the items inside the circles
+      sf::Vector2f circleCenter(circle.getPosition());
+      sf::Sprite sprite(t);
+      sf::FloatRect itemBounds = sprite.getGlobalBounds();
+      float scale = (2.0f * circle.getRadius()) / std::max(itemBounds.width, itemBounds.height);
+      sprite.setScale(sf::Vector2f(scale, scale));
+      sprite.setPosition(circleCenter);
+      window.draw(sprite);
+
+      // if the item is a potion, show quantity
+      if (!item.IsSword()) {
+        sf::Text quantityText(font);
+        quantityText.setString(std::to_string(counter[item.GetName()]));
+        quantityText.setFillColor(sf::Color::White);
+        quantityText.setScale(sf::Vector2f(circle.getRadius() / 10, circle.getRadius() / 20));
+        quantityText.setPosition(sf::Vector2f(circleCenter.x + circle.getRadius() * 2,
+                                              circleCenter.y - circle.getRadius() / 2));
+        window.draw(quantityText);
+      }
+
+      x += 1.5f;
+    }
+    return x;
+  }
+
  public:
   /**
    * @brief Add an item to the inventory.
@@ -125,25 +162,14 @@ class Inventory {
 //    items.clear();
 //  }
 
-  void Draw(sf::RenderWindow &window) const { // todo: highlight the item in use
+  void Draw(sf::RenderWindow &window) { // maybe todo: highlight the item in use
     sf::Vector2f center = window.getView().getCenter();
     float x = center.x - window.getView().getSize().x / 2 + 0.5;
     float y = center.y - window.getView().getSize().y / 2 + 0.5;
-    for (const auto &item : swords) {
-      sf::RectangleShape rect(sf::Vector2f(1.f, 1.f));
-      rect.setTexture(&sword_inv_t);
-      rect.setPosition(sf::Vector2f(x, y));
-      window.draw(rect);
-      x += 1.3f;
-    }
-    // assumes that there is only one health potion for now i guess as all the textures are same
-    for (const auto &item : potions) {
-      sf::RectangleShape rect(sf::Vector2f(1.f, 1.f));
-      rect.setTexture(&potion_inv_t);
-      rect.setPosition(sf::Vector2f(x, y));
-      window.draw(rect);
-      x += 1.3f;
-    }
+
+    x = DrawItems_(swords, sword_inv_t, x, y, window);
+    DrawItems_(potions, potion_inv_t, x, y, window);
+    // assumes that there is only one health potion and sword for now i guess as all the textures are same
   }
 
   Sword GetSword(int index) {
