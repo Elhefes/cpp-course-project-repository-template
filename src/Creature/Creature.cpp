@@ -27,6 +27,8 @@ Creature::Creature(const std::string &type,
   description_ = "Creature \"" + type + " named " + name + "\"";
 }
 
+const float PI = 3.14159265;
+
 const std::string &Creature::GetDescription() const {
   return description_;
 }
@@ -188,6 +190,6 @@ sf::Vector2f Creature::GetFacingDirection() {
 
 void Creature::TurnToDirection(float dx, float dy) {
   float rotation = atan2f(dy, dx);
-  creatureRect.setRotation(sf::radians(rotation - M_PI_2f));
+  creatureRect.setRotation(sf::radians(rotation - M_PI_2f32));
 }
 

@@ -10,9 +10,13 @@ sf::Texture room_t2;
 sf::Texture corridor_t1;
 sf::Texture player_t;
 sf::Texture assassin_t;
-const float PLAYER_SPEED = 0.1f;
+sf::Texture sword_inv_t;
+sf::Texture potion_inv_t;
+sf::Font font;
+const float PLAYER_WALKING_SPEED = 0.15f;
+const float PLAYER_RUNNING_SPEED = 0.25f;
 
-Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_SPEED,
+Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
                        sf::Vector2f(0, 0),
                        window, Room(0, 0, 0, 0, false)) {
   initializeWindow();
@@ -44,26 +48,38 @@ void Game::run() {
 }
 
 void Game::initializeTextures() {
-  if (!room_t1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
-    std::cerr << "Error loading room_floor1.png" << std::endl;
-    return;
-  }
-  if (!room_t2.loadFromFile(TEXTURES_PATH + "room_floor2.png")) {
-    std::cerr << "Error loading room_floor2.png" << std::endl;
-    return;
-  }
-  if (!corridor_t1.loadFromFile(TEXTURES_PATH + "corridor_floor1.png")) {
-    std::cerr << "Error loading corridor_floor1.png" << std::endl;
-    return;
-  }
-  if (!player_t.loadFromFile(TEXTURES_PATH + "player.png")) {
-    std::cerr << "Error loading player.png" << std::endl;
-    return;
-  }
-  if (!assassin_t.loadFromFile(TEXTURES_PATH + "assassin.png")) {
-    std::cerr << "Error loading assassin.png" << std::endl;
-    return;
-  }
+    if (!room_t1.loadFromFile(TEXTURES_PATH + "room_floor1.png")) {
+        std::cerr << "Error loading room_floor1.png" << std::endl;
+        return;
+    }
+        if (!room_t2.loadFromFile(TEXTURES_PATH + "room_floor2.png")) {
+        std::cerr << "Error loading room_floor2.png" << std::endl;
+        return;
+    }
+        if (!corridor_t1.loadFromFile(TEXTURES_PATH + "corridor_floor1.png")) {
+        std::cerr << "Error loading corridor_floor1.png" << std::endl;
+        return;
+    }
+        if (!player_t.loadFromFile(TEXTURES_PATH + "player.png")) {
+        std::cerr << "Error loading player.png" << std::endl;
+        return;
+    }
+        if (!assassin_t.loadFromFile(TEXTURES_PATH + "assassin.png")) {
+        std::cerr << "Error loading assassin.png" << std::endl;
+        return;
+    }
+        if (!sword_inv_t.loadFromFile(TEXTURES_PATH + "sword_inv.png")) {
+        std::cerr << "Error loading sword_inv.png" << std::endl;
+        return;
+    }
+        if (!potion_inv_t.loadFromFile(TEXTURES_PATH + "potion_inv.png")) {
+        std::cerr << "Error loading potion_inv.png" << std::endl;
+        return;
+    }
+    if (!font.loadFromFile(TEXTURES_PATH + "Amatic-Bold.ttf")) {
+        std::cerr << "Error loading Font" << std::endl;
+        return;
+    }
 }
 
 void Game::initializeWindow() {
@@ -96,6 +112,10 @@ void Game::processEvents() {
       moveLeft = (key == sf::Keyboard::A) ? (event.type == sf::Event::KeyPressed) : moveLeft;
       moveRight = (key == sf::Keyboard::D) ? (event.type == sf::Event::KeyPressed) : moveRight;
 
+      if (key == sf::Keyboard::LShift || key == sf::Keyboard::RShift) {
+                isRunning = (event.type == sf::Event::KeyPressed);
+            }
+
       if (sf::Keyboard::Num1 <= key && key <= sf::Keyboard::Num9) {
         player_.SetItemInUse(key - sf::Keyboard::Num1);
       }
@@ -117,8 +137,8 @@ void Game::update() {
       moveRight ? 1 : (moveLeft ? -1 : 0.f),
       moveDown ? 1 : (moveUp ? -1 : 0.f)
   );
-  movement *= player_.GetMaxVelocity();
-  player_.SetVelocity(movement);
+  //movement *= player_.GetMaxVelocity();
+  player_.SetVelocity(movement *= (isRunning ? PLAYER_RUNNING_SPEED : PLAYER_WALKING_SPEED));
 
   sf::View view = window.getView();
   view.setCenter(player_.getPosition());
@@ -159,7 +179,6 @@ void Game::render() {
 }
 
 void Game::initiateDungeon() {
-  srand(4);
   dungeon.generateDungeon(rooms, corridors, ROOM_AMOUNT, TILE_SIZE, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 

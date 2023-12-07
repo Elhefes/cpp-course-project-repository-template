@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <SFML/Graphics.hpp>
 #include "Item.hpp"
+#include "textureManager.hpp"
 
 /**
  * @brief Class defining an inventory to manage items.

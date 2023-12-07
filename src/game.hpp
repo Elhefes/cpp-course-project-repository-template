@@ -44,6 +44,7 @@ private:
     bool moveDown = false;
     bool moveLeft = false;
     bool moveRight = false;
+    bool isRunning = false;
 
     float circleSpeed = 0.3f;
 
@@ -56,6 +57,7 @@ private:
     void initiateDungeon();
     void initiateInventory();
     void drawDungeon();
+    void addItem(Item newItem);
     void drawRoom(const Room& room, RoomType type);
 };
 

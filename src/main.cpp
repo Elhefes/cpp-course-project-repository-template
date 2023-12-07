@@ -1,9 +1,11 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "game.hpp"
+#include "Test/test.hpp"
 
 int main() {
-  Game game;
-  game.run();
-  return 0;
+    runTests();
+    Game game;
+    game.run();
+    return 0;
 }

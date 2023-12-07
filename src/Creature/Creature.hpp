@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <string>
 #include <iostream>
-#include "../inventory.hpp" // maybe change path later idk where it would end up
+#include "../inventory.hpp"
 #include "SFML/Graphics.hpp"
 #include "../helper.hpp"
 #include "../room.hpp"
