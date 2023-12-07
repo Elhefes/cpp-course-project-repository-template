@@ -88,17 +88,27 @@ void Game::processEvents() {
     // Handle other input events (keyboard, mouse, etc.)
 
     // Handle keyboard player movement
-    if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+    if (event.type == sf::Event::KeyPressed
+        || event.type == sf::Event::KeyReleased) { // todo: maybe refactor movement logic to isKeyPressed
       sf::Keyboard::Key key = event.key.code;
       moveUp = (key == sf::Keyboard::W) ? (event.type == sf::Event::KeyPressed) : moveUp;
       moveDown = (key == sf::Keyboard::S) ? (event.type == sf::Event::KeyPressed) : moveDown;
       moveLeft = (key == sf::Keyboard::A) ? (event.type == sf::Event::KeyPressed) : moveLeft;
       moveRight = (key == sf::Keyboard::D) ? (event.type == sf::Event::KeyPressed) : moveRight;
+
+      if (sf::Keyboard::Num1 <= key && key <= sf::Keyboard::Num9) {
+        player_.SetItemInUse(key - sf::Keyboard::Num1);
+      }
+
+      if (key == sf::Keyboard::E && event.type == sf::Event::KeyPressed) {
+        player_.tryHealing();
+      }
     }
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
       player_.TryAttack(monsters_);
     }
+
   }
 }
 
@@ -154,8 +164,8 @@ void Game::initiateDungeon() {
 }
 
 void Game::initiateInventory() {
-  player_.GetInventory().addItem(Sword("Escalibur", 1.2), 1);
-  player_.GetInventory().addItem(HealthPotion(5), 3);
+  player_.GetInventory().addSword(Sword("Escalibur", 1.2), 1);
+  player_.GetInventory().addPotion(HealthPotion(5), 3);
 }
 
 void Game::drawDungeon() {

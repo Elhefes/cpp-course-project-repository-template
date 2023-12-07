@@ -88,6 +88,20 @@ class Player : public Creature {
     monstersCleared_ = monstersCleared;
   }
 
+  void SetItemInUse(int index) {
+    if (index >= inventory_.getSize()) return;
+    else itemInUse = index;
+  }
+
+  void tryHealing() {
+    if (!inventory_.IsSword(itemInUse)) {
+      float amountToHeal = inventory_.GetHealingAmount(itemInUse);
+      float old = health_;
+      health_ = std::min(maxHealth_, health_ + amountToHeal);
+      std::cout << "Player healed from " << old << " to " << health_ << std::endl;
+    }
+  }
+
   std::vector<Room> GetAvailableRooms() override {
     std::vector<Room> res = {room_};
     if (monstersCleared_) {
@@ -106,8 +120,10 @@ class Player : public Creature {
       }
     }
     if (!monsters.empty() && help::close(monsters[ind]->GetPosition(), GetPosition(), ATTACK_RADIUS)) {
-      if (itemInUse >= inventory_.getSize() || !inventory_.GetByIndex(itemInUse).IsSword()) Attack(*monsters[ind]);
-      else Attack(*monsters[ind], inventory_.GetByIndex(itemInUse));
+      if (itemInUse >= inventory_.getSize() || !inventory_.IsSword(itemInUse)) Attack(*monsters[ind]);
+      else {
+        Attack(*monsters[ind], inventory_.GetSword(itemInUse));
+      }
     }
   }
 

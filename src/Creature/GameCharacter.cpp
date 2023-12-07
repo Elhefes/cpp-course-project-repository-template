@@ -48,7 +48,7 @@ void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res
   // TODO: if room is already completed do not spawn anyone
 //  int monster_number = 0;
   int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
-  int monster_health = 10;
+  int monster_health = 60;
   float monster_velocity = 0.1f;
   if (roomIndex_ + 1 == rooms_.size()) {
     monster_number = 1;

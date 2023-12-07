@@ -31,9 +31,9 @@ const std::string &Creature::GetDescription() const {
   return description_;
 }
 
-int Creature::TakeHit(int base_damage, const Creature &c2) {
+int Creature::TakeHit(float base_damage, const Creature &c2) {
   // maybe calculate damage somehow (defense stats?)
-  int damageDealt = std::min(base_damage, health_);
+  float damageDealt = std::min(base_damage, (float) health_);
   this->TakeDamage_(damageDealt);
   logger_ << c2.GetDescription() << " dealt " << damageDealt << " damage to " << GetDescription() << "!" << std::endl;
   return damageDealt;
@@ -122,7 +122,7 @@ void Creature::SetVelocity(const sf::Vector2<float> &newVelocity) {
 
 void Creature::SetVelocityX(float nvx) { velocity_.x = limitModule(nvx, maxVelocity_); }
 void Creature::SetVelocityY(float nvy) { velocity_.y = limitModule(nvy, maxVelocity_); }
-void Creature::SetHealth(int health) {
+void Creature::SetHealth(float health) {
   health_ = std::min(health, maxHealth_);
 }
 void Creature::SetSprite(const sf::CircleShape &sprite) {
@@ -136,12 +136,13 @@ Inventory &Creature::GetInventory() {
   return inventory_;
 }
 
-int Creature::Attack(Creature &c2, const Item *item) {
-  if (item == nullptr) {
+int Creature::Attack(Creature &c2, const Sword &sword) const {
+  if (sword.GetName().empty()) { // no sword was passed
     return c2.TakeHit(base_damage_, *this);
   }
   // do some calculations based on item's nature
-  return c2.TakeHit(base_damage_ + 1, *this);
+  float damage = base_damage_ * sword.GetMultiplier();
+  return c2.TakeHit(damage, *this);
 
 }
 void Creature::SetPosition(const sf::Vector2<float> &position) {

@@ -30,16 +30,16 @@ class Sword : public Item {
   [[nodiscard]] float GetMultiplier() const { return multiplier_; }
  private:
   float multiplier_;
-//  float multiplier_;
 };
 
 class HealthPotion : public Item {
  public:
-  explicit HealthPotion(int hpRestored) : Item("Health potion " + std::to_string(hpRestored), false),
-                                          hpRestored_(hpRestored) {};
+  HealthPotion() = default;
+  explicit HealthPotion(float hpRestored) : Item("Health potion " + std::to_string(hpRestored), false),
+                                            hpRestored_(hpRestored) {};
 
-  [[nodiscard]] int GetHpRestored() const { return hpRestored_; };
+  [[nodiscard]] float GetHpRestored() const { return hpRestored_; };
  private:
-  int hpRestored_;
+  float hpRestored_{};
 };
 #endif //DUNGEONCRAWLER_SRC_ITEM_HPP_
