@@ -170,11 +170,13 @@ void Game::render() {
 //    auto rw = m->GetRoom().width;
 //    auto rh = m->GetRoom().height;
     m->Draw();
+    m->DrawHealthBar(window);
   }
   player_.GetInventory().Draw(window);
 //  for (auto c : circles) {
 //    window.draw(c);
 //  }
+  player_.DrawHealthBar(window);
   window.display();
 }
 
