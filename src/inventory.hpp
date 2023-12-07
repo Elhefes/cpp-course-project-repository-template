@@ -32,13 +32,17 @@ class Inventory {
   }
 
   template<typename T>
-  float DrawItems_(std::vector<T> items, const sf::Texture &t, float x, float y, sf::RenderWindow &window) {
+  float DrawItems_(std::vector<T> items, const sf::Texture &t, float x, float y, sf::RenderWindow &window, bool itemInUse) {
     for (const auto &item : items) {
       // Draws the circles
       sf::CircleShape circle(0.5f);
       circle.setFillColor(sf::Color::Transparent);
       circle.setOutlineThickness(0.1f);
-      circle.setOutlineColor(sf::Color::Blue);
+      if (itemInUse) {
+        circle.setOutlineColor(sf::Color::Red);
+      } else {
+        circle.setOutlineColor(sf::Color::Blue);
+      }
       sf::Vector2f center = window.getView().getCenter();
       circle.setPosition(sf::Vector2f(x, y));
       window.draw(circle);
@@ -158,13 +162,19 @@ class Inventory {
 //    items.clear();
 //  }
 
-  void Draw(sf::RenderWindow &window) { // maybe todo: highlight the item in use
+  void Draw(sf::RenderWindow &window, int itemInUse) { // maybe todo: highlight the item in use
     sf::Vector2f center = window.getView().getCenter();
     float x = center.x - window.getView().getSize().x / 2 + 0.5;
     float y = center.y - window.getView().getSize().y / 2 + 0.5;
 
-    x = DrawItems_(swords, sword_inv_t, x, y, window);
-    DrawItems_(potions, potion_inv_t, x, y, window);
+    if (IsSword(itemInUse)) {
+      x = DrawItems_(swords, sword_inv_t, x, y, window, true);
+      DrawItems_(potions, potion_inv_t, x, y, window, false);
+    } else {
+      x = DrawItems_(swords, sword_inv_t, x, y, window, false);
+      DrawItems_(potions, potion_inv_t, x, y, window, true);
+    }
+    
     // assumes that there is only one health potion and sword for now i guess as all the textures are same
   }
 

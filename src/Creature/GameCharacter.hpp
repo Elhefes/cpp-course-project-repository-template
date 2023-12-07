@@ -93,6 +93,10 @@ class Player : public Creature {
     else itemInUse = index;
   }
 
+  int GetItemInUse() {
+    return itemInUse;
+  }
+
   void tryHealing() {
     if (!inventory_.IsSword(itemInUse)) {
       float amountToHeal = inventory_.GetHealingAmount(itemInUse);
