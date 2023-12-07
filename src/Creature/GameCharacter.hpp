@@ -105,7 +105,6 @@ class Player : public Creature {
   std::vector<Room> GetAvailableRooms() override {
     std::vector<Room> res = {room_};
     if (monstersCleared_) {
-      if (roomIndex_ > 0) res.push_back(rooms_[roomIndex_ - 1]);
       if (roomIndex_ + 1 < rooms_.size()) res.push_back(rooms_[roomIndex_ + 1]);
     }
     return res;
