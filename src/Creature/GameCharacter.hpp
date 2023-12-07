@@ -132,6 +132,19 @@ class Player : public Creature {
     return position - curPos;
   }
 
+  void TryPickup(std::vector<sf::Vector2f> &potionPositions) {
+    int ind = 0;
+    for (int i = 1; i < potionPositions.size(); i++) {
+      if (help::square(potionPositions[i] - position_) < help::square(potionPositions[ind] - position_)) {
+        ind = i;
+      }
+    }
+    if (ind < potionPositions.size() && help::len(potionPositions[ind] - position_) <= ATTACK_RADIUS) {
+      potionPositions.erase(potionPositions.begin() + ind);
+      inventory_.addPotion(HealthPotion(), 1);
+    }
+  }
+
   void SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res);
   void SpawnPotion(std::vector<sf::Vector2f> &pos) {
     // spawns with probability 1/3

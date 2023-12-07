@@ -126,6 +126,10 @@ void Game::processEvents() {
       if (key == sf::Keyboard::E && event.type == sf::Event::KeyPressed) {
         player_.tryHealing();
       }
+
+      if (key == sf::Keyboard::F && event.type == sf::Event::KeyPressed) {
+        player_.TryPickup(potions_);
+      }
     }
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
@@ -185,7 +189,7 @@ void Game::initiateDungeon() {
 
 void Game::initiateInventory() {
   player_.GetInventory().addSword(Sword("Escalibur", 1.2), 1);
-  player_.GetInventory().addPotion(HealthPotion(5), 3);
+  player_.GetInventory().addPotion(HealthPotion(), 3);
 }
 
 void Game::drawDungeon() {
