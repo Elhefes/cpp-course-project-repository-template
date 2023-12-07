@@ -66,6 +66,9 @@ class Creature {
   void SetSprite(const sf::CircleShape &sprite);
   virtual void SetPosition(const sf::Vector2<float> &position);
   virtual void SetRoom(Room &room);
+  /// @brief draws the healthbar of the creature
+  /// @param window the window where the healthbar is drawn to
+  void DrawHealthBar(sf::RenderWindow &window);
 
   /// @return inventory
   const Inventory &GetInventory() const;

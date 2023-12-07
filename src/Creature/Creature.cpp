@@ -193,3 +193,26 @@ void Creature::TurnToDirection(float dx, float dy) {
   creatureRect.setRotation(sf::radians(rotation - M_PI_2f32));
 }
 
+void Creature::DrawHealthBar(sf::RenderWindow &window) {
+  float barWidth = 0.3f;
+  sf::RectangleShape healthBar(sf::Vector2f(barWidth, 0.2f));
+  healthBar.setFillColor(sf::Color::Green);
+  float x = window.getView().getCenter().x;
+  float y = window.getView().getCenter().y;
+  healthBar.setPosition(sf::Vector2f(position_.x - barWidth * 2, position_.y - 0.8f));
+
+  float healthRatio = health_ / maxHealth_;
+  healthBar.setSize(sf::Vector2f(healthRatio, 0.2f));
+
+  sf::Color maxHealthColor = sf::Color::Green;
+    sf::Color minHealthColor = sf::Color::Red;
+
+  sf::Color barColor = sf::Color(
+            float(minHealthColor.r + (maxHealthColor.r - minHealthColor.r) * healthRatio),
+            float(minHealthColor.g + (maxHealthColor.g - minHealthColor.g) * healthRatio),
+            float(minHealthColor.b + (maxHealthColor.b - minHealthColor.b) * healthRatio)
+        );
+
+        healthBar.setFillColor(barColor);
+  window.draw(healthBar);
+}
