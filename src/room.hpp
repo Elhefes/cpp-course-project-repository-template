@@ -69,6 +69,7 @@ class Room {
   /// @brief room id.
   int id_;
   static int randInt(int a, int b) {
+    if (b == a) return a; // shouldnt be like that, but it is what it is
     return a + rand() % (b - a);
   }
 };
