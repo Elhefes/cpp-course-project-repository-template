@@ -27,9 +27,7 @@ class Creature {
            int base_damage,
            std::ostream &logger = std::cout,
            const sf::CircleShape &sprite = sf::CircleShape(50),
-           Inventory inventory = Inventory(),
-           std::vector<Room> rooms = {},
-           std::vector<Room> corridors = {});
+           const Inventory &inventory = Inventory());
 
   /// @brief Checks if the creature is alive.
   /// @return true if the creature is alive, false otherwise
@@ -45,13 +43,11 @@ class Creature {
   /// @return the damage taken
   int TakeHit(int base_damage, const Creature &c2);
 
-  int Attack(Creature &c2, const Item *item = nullptr);
+  int Attack(Creature &c2, const Sword sword = {});
 
   /// @brief Updates state of the creature.
   /// Later probably need to pass something cleverer, like game class, tho i am not sure yet.
-  void Update(bool monstersKilled);
-
-  bool isInsideAnyRoom(float x, float y);
+  virtual void Update();
 
   /// @brief Draws the creature's sprite in a given window.
   /// @param camera current camera state
@@ -76,7 +72,7 @@ class Creature {
   /// @return position
   const sf::Vector2<float> &GetPosition() const;
   /// @return max velocity
-  const float GetMaxVelocity() const;
+  float GetMaxVelocity() const;
   /// @return velocity
   const sf::Vector2<float> &GetVelocity() const;
   /// @return current room
@@ -114,15 +110,19 @@ class Creature {
   /// @brief stream to log information about the class
   std::ostream &logger_;
   /// @brief room the creature is in
-  
+
   sf::RectangleShape creatureRect;
   Room room_;
-  std::vector<Room> rooms_;
-  std::vector<Room> corridors_;
 
   /// @brief Reduces health by damage. If damage is greater then health, sets health to 0.
   /// @param damage amount to reduce health_ by
   void TakeDamage_(int damage) { health_ = std::max(0, health_ - damage); }
+
+  virtual std::vector<Room> GetAvailableRooms();
+  void UpdatePosition();
+  void UpdateRotation();
+  virtual sf::Vector2f GetFacingDirection();
+  void TurnToDirection(float dx, float dy);
 };
 
 #endif //DUNGEONCRAWLER_CHARACTER_H

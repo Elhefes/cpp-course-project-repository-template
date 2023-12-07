@@ -4,7 +4,7 @@
 #include "GameCharacter.hpp"
 
 void Monster::tick(Player &p) {
-  if (clock() - lastTick_ < TICK_TIME) return;
+  if (clock() - lastTick_ < TICK_TIME || !IsAlive()) return;
   lastTick_ = clock();
   // check if the player is in the same room
   if (p.GetRoom() != room_) {
@@ -21,24 +21,46 @@ void Monster::tick(Player &p) {
   }
 }
 
-void Monster::SpawnMonsters(Room &room, sf::RenderWindow &window, std::vector<Monster *> &res) {
-  if (room.isCorridor()) return;
-
-  // TODO: if room is already completed do not spawn anyone
-  const int MONSTER_NUMBER = 5; // TODO: set this to be a room parameter
-  const int MONSTER_HEALTH = 10;
-  const float MONSTER_VELOCITY = 0.1f;
-  for (int _ = 0; _ < MONSTER_NUMBER; _++) {
-    std::string type = "random type later ig";
-    std::string name = "random name later ig";
-    auto pos = room.randomPos();
-    res.push_back(new Monster(type, name, MONSTER_HEALTH, MONSTER_VELOCITY,
-                              pos, window, room));
-  }
-}
+//void Monster::SpawnMonsters(Room &room, sf::RenderWindow &window, std::vector<Monster *> &res) {
+//  if (room.isCorridor()) return;
+//
+//  // TODO: if room is already completed do not spawn anyone
+////  const int MONSTER_NUMBER = 0; // TODO: set this to be a room parameter
+//  int monster_number = 1 + rand() % ()
+//  const int MONSTER_HEALTH = 10;
+//  const float MONSTER_VELOCITY = 0.1f;
+//  for (int _ = 0; _ < MONSTER_NUMBER; _++) {
+//    std::string type = "random type later ig";
+//    std::string name = "random name later ig";
+//    auto pos = room.randomPos(1.f);
+//    res.push_back(new Monster(type, name, MONSTER_HEALTH, MONSTER_VELOCITY,
+//                              pos, window, room));
+//  }
+//}
 
 void Player::SetRoom(Room &room, std::vector<Monster *> &monsters) {
-  room_ = room;
-  Monster::SpawnMonsters(room, window_, monsters);
+  SetRoom(room);
+  SpawnMonsters(window_, monsters);
+}
+void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res) {
+  if (room_.isCorridor()) return;
+
+  // TODO: if room is already completed do not spawn anyone
+//  int monster_number = 0;
+  int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
+  int monster_health = 10;
+  float monster_velocity = 0.1f;
+  if (roomIndex_ + 1 == rooms_.size()) {
+    monster_number = 1;
+    monster_health = 100;
+    monster_velocity = 0.03f;
+  }
+  for (int _ = 0; _ < monster_number; _++) {
+    std::string type = "random type later ig";
+    std::string name = "random name later ig";
+    auto pos = room_.randomPos(1.f);
+    res.push_back(new Monster(type, name, monster_health, monster_velocity,
+                              pos, window, room_));
+  }
 }
 
