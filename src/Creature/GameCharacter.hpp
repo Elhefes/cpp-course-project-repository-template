@@ -23,18 +23,18 @@ class Monster : public Creature {
           const sf::Vector2<float> &initial_pos,
           sf::RenderWindow &window,
           const Room &room,
+          int base_damage,
+          sf::Texture &texture,
           std::ostream &logger = std::cout,
-          const sf::CircleShape &sprite = sf::CircleShape(0.5f),
           Inventory inventory = Inventory()) : Creature(type,
                                                         name,
                                                         max_health,
                                                         max_velocity,
                                                         initial_pos,
                                                         window,
-                                                        room, 0,
+                                                        room, base_damage, texture,
                                                         logger,
-                                                        sprite,
-                                                        inventory) { base_damage_ = 10; } // todo: add to constructor
+                                                        inventory) {}
 
   void tick(Player &p);
  private:
@@ -48,10 +48,10 @@ class Player : public Creature {
          const sf::Vector2<float> &initialPos,
          sf::RenderWindow &window,
          Room room,
+         sf::Texture &texture,
          std::ostream &logger = std::cout,
-         const sf::CircleShape &sprite = sf::CircleShape(0.5f),
          Inventory inventory = Inventory()) :
-      Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, logger, sprite, inventory) {};
+      Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, texture, logger, inventory) {};
 
   /// @brief Special ability of each player class
   void Special() {};
