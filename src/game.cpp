@@ -22,7 +22,7 @@ Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
   initializeWindow();
   initializeTextures();
   initiateDungeon();
-  player_.SetRoom(rooms[0], monsters_);
+  player_.SetRoom(rooms[0], monsters_, potions_);
   std::vector<Room> allRooms;
   for (int i = 0; i + 1 < rooms.size(); i++) {
     allRooms.push_back(rooms[i]);
@@ -154,7 +154,7 @@ void Game::update() {
     }
   }
   player_.SetMonstersCleared(monstersKilled);
-  player_.Update(monsters_);
+  player_.Update(monsters_, potions_);
   for (auto m : monsters_) {
     m->tick(player_);
     m->Update();
@@ -168,17 +168,13 @@ void Game::render() {
   player_.Draw();
   for (auto m : monsters_) {
     auto pos = m->GetPosition();
-//    auto rx = m->GetRoom().x;
-//    auto ry = m->GetRoom().x;
-//    auto rw = m->GetRoom().width;
-//    auto rh = m->GetRoom().height;
     m->Draw();
     m->DrawHealthBar(window);
   }
+  for (auto p : potions_) {
+    Item::Draw(window, p, 1, potion_inv_t);
+  }
   player_.GetInventory().Draw(window);
-//  for (auto c : circles) {
-//    window.draw(c);
-//  }
   player_.DrawHealthBar(window);
   window.display();
 }

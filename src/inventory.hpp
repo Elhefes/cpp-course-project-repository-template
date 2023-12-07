@@ -45,12 +45,7 @@ class Inventory {
 
       // Draws the items inside the circles
       sf::Vector2f circleCenter(circle.getPosition());
-      sf::Sprite sprite(t);
-      sf::FloatRect itemBounds = sprite.getGlobalBounds();
-      float scale = (2.0f * circle.getRadius()) / std::max(itemBounds.width, itemBounds.height);
-      sprite.setScale(sf::Vector2f(scale, scale));
-      sprite.setPosition(circleCenter);
-      window.draw(sprite);
+      Item::Draw(window, circleCenter, 2 * circle.getRadius(), t);
 
       // if the item is a potion, show quantity
       if (!item.IsSword()) {
@@ -69,6 +64,7 @@ class Inventory {
   }
 
  public:
+
   /**
    * @brief Add an item to the inventory.
    * @param item The item to add.

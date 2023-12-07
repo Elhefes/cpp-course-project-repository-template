@@ -38,15 +38,14 @@ void Monster::tick(Player &p) {
 //  }
 //}
 
-void Player::SetRoom(Room &room, std::vector<Monster *> &monsters) {
+void Player::SetRoom(Room &room, std::vector<Monster *> &monsters, std::vector<sf::Vector2f> &potionPos) {
   SetRoom(room);
   SpawnMonsters(window_, monsters);
+  SpawnPotion(potionPos);
 }
 void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res) {
   if (room_.isCorridor()) return;
 
-  // TODO: if room is already completed do not spawn anyone
-//  int monster_number = 0;
   int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
   int monster_health = 60;
   float monster_velocity = 0.1f;

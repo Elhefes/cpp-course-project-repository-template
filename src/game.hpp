@@ -17,48 +17,49 @@ const int TILE_SIZE = 1;
 const float ZOOM_LEVEL = 50.0f;
 
 enum RoomType {
-    ROOM,
-    CORRIDOR,
+  ROOM,
+  CORRIDOR,
 };
 
 class Game {
-public:
-    Game();
-    ~Game(); 
-    void run();
+ public:
+  Game();
+  ~Game();
+  void run();
 
-private:
-    /// @brief main character (me like literally)
-    Player player_;
-    std::vector<Monster *> monsters_;
-    
-    sf::RenderWindow window;
-    sf::CircleShape circle;
+ private:
+  /// @brief main character (me like literally)
+  Player player_;
+  std::vector<Monster *> monsters_;
+  std::vector<sf::Vector2f> potions_;
 
-    Dungeon dungeon;
-    Inventory inventory;
-    std::vector<Room> rooms;
-    std::vector<Room> corridors;
+  sf::RenderWindow window;
+  sf::CircleShape circle;
 
-    bool moveUp = false;
-    bool moveDown = false;
-    bool moveLeft = false;
-    bool moveRight = false;
-    bool isRunning = false;
+  Dungeon dungeon;
+  Inventory inventory;
+  std::vector<Room> rooms;
+  std::vector<Room> corridors;
 
-    float circleSpeed = 0.3f;
+  bool moveUp = false;
+  bool moveDown = false;
+  bool moveLeft = false;
+  bool moveRight = false;
+  bool isRunning = false;
 
-    void initializeTextures();
-    void initializeWindow();
-    void initializeCircle();
-    void processEvents();
-    void update();
-    void render();
-    void initiateDungeon();
-    void initiateInventory();
-    void drawDungeon();
-    void addItem(Item newItem);
-    void drawRoom(const Room& room, RoomType type);
+  float circleSpeed = 0.3f;
+
+  void initializeTextures();
+  void initializeWindow();
+  void initializeCircle();
+  void processEvents();
+  void update();
+  void render();
+  void initiateDungeon();
+  void initiateInventory();
+  void drawDungeon();
+  void addItem(Item newItem);
+  void drawRoom(const Room &room, RoomType type);
 };
 
 #endif /* GAME_HPP */

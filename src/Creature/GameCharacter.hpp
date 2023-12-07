@@ -4,12 +4,11 @@
 
 #ifndef DUNGEONCRAWLER_SRC_CREATURE_GAMECHARACTERS_HPP_
 #define DUNGEONCRAWLER_SRC_CREATURE_GAMECHARACTERS_HPP_
+#include <unordered_set>
 #include "Creature.hpp"
 #include "../room.hpp"
 #include "../helper.hpp"
 
-const int CAMERA_WIDTH = 800u; // TODO: change later to width constants
-const int CAMERA_HEIGHT = 600u;
 const long TICK_TIME = CLOCKS_PER_SEC / 2;
 
 class Player;
@@ -69,13 +68,14 @@ class Player : public Creature {
     UpdateRoomIndex_();
   };
 
-  void SetRoom(Room &room, std::vector<Monster *> &monsters);
+  void SetRoom(Room &room, std::vector<Monster *> &monsters, std::vector<sf::Vector2f> &potionPos);
 
-  void Update(std::vector<Monster *> &monsters) {
+  void Update(std::vector<Monster *> &monsters, std::vector<sf::Vector2f> potions) {
     auto old = room_;
     Creature::Update();
     if (room_ != old) {
       SpawnMonsters(window_, monsters);
+      SpawnPotion(potions);
     }
   }
 
@@ -105,7 +105,6 @@ class Player : public Creature {
   std::vector<Room> GetAvailableRooms() override {
     std::vector<Room> res = {room_};
     if (monstersCleared_) {
-      if (roomIndex_ > 0) res.push_back(rooms_[roomIndex_ - 1]);
       if (roomIndex_ + 1 < rooms_.size()) res.push_back(rooms_[roomIndex_ + 1]);
     }
     return res;
@@ -134,6 +133,11 @@ class Player : public Creature {
   }
 
   void SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res);
+  void SpawnPotion(std::vector<sf::Vector2f> &pos) {
+    // spawns with probability 1/3
+    if (rand() % 3 != 0) return; // spawns just one for now, but can be easily changed to spawn more
+    pos.push_back(room_.randomPos(1.f));
+  }
 
  private:
   int itemInUse = 0;
