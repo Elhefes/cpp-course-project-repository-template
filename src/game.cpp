@@ -10,6 +10,7 @@ sf::Texture room_t2;
 sf::Texture corridor_t1;
 sf::Texture player_t;
 sf::Texture assassin_t;
+sf::Texture boss_t;
 sf::Texture sword_inv_t;
 sf::Texture potion_inv_t;
 sf::Font font;
@@ -18,11 +19,12 @@ const float PLAYER_RUNNING_SPEED = 0.25f;
 
 Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
                        sf::Vector2f(0, 0),
-                       window, Room(0, 0, 0, 0, false)) {
+                       window, Room(0, 0, 0, 0, false), player_t) {
   initializeWindow();
   initializeTextures();
   initiateDungeon();
   player_.SetRoom(rooms[0], monsters_, potions_);
+  player_.SetTexture(player_t);
   std::vector<Room> allRooms;
   for (int i = 0; i + 1 < rooms.size(); i++) {
     allRooms.push_back(rooms[i]);
@@ -83,6 +85,10 @@ void Game::initializeTextures() {
     std::cerr << "Error loading Font" << std::endl;
     return;
   }
+  if (!boss_t.loadFromFile(TEXTURES_PATH + "boss.png")) {
+    std::cerr << "Error loading Boss (boss.png)" << std::endl;
+    return;
+  }
 }
 
 void Game::initializeWindow() {
@@ -126,6 +132,10 @@ void Game::processEvents() {
       if (key == sf::Keyboard::E && event.type == sf::Event::KeyPressed) {
         player_.tryHealing();
       }
+
+      if (key == sf::Keyboard::F && event.type == sf::Event::KeyPressed) {
+        player_.TryPickup(potions_);
+      }
     }
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
@@ -166,16 +176,15 @@ void Game::render() {
   drawDungeon();
   window.draw(circle);
   player_.Draw();
+  player_.GetInventory().Draw(window);
+  player_.DrawHealthBar(window);
   for (auto m : monsters_) {
-    auto pos = m->GetPosition();
     m->Draw();
     m->DrawHealthBar(window);
   }
   for (auto p : potions_) {
     Item::Draw(window, p, 1, potion_inv_t);
   }
-  player_.GetInventory().Draw(window);
-  player_.DrawHealthBar(window);
   window.display();
 }
 
@@ -185,7 +194,7 @@ void Game::initiateDungeon() {
 
 void Game::initiateInventory() {
   player_.GetInventory().addSword(Sword("Escalibur", 1.2), 1);
-  player_.GetInventory().addPotion(HealthPotion(5), 3);
+  player_.GetInventory().addPotion(HealthPotion(), 3);
 }
 
 void Game::drawDungeon() {

@@ -49,6 +49,6 @@ class HealthPotion : public Item {
 
   [[nodiscard]] float GetHpRestored() const { return hpRestored_; };
  private:
-  float hpRestored_{};
+  float hpRestored_ = 10;
 };
 #endif //DUNGEONCRAWLER_SRC_ITEM_HPP_

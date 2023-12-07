@@ -9,8 +9,8 @@ Creature::Creature(const std::string &type,
                    sf::RenderWindow &window,
                    const Room &room,
                    int base_damage,
+                   sf::Texture &t,
                    std::ostream &logger,
-                   const sf::CircleShape &sprite,
                    const Inventory &inventory)
     : type_(type),
       name_(name),
@@ -23,17 +23,17 @@ Creature::Creature(const std::string &type,
       logger_(logger),
       inventory_(inventory),
       position_(initialPos),
-      sprite_(sprite) {
+      texture_(t) {
   description_ = "Creature \"" + type + " named " + name + "\"";
+  creatureRect.setSize(sf::Vector2f(1.0f, 1.0f));
+  creatureRect.setOrigin(sf::Vector2f(0.5f, 0.5f));
 }
-
-const float PI = 3.14159265;
 
 const std::string &Creature::GetDescription() const {
   return description_;
 }
 
-int Creature::TakeHit(float base_damage, const Creature &c2) {
+float Creature::TakeHit(float base_damage, const Creature &c2) {
   // maybe calculate damage somehow (defense stats?)
   float damageDealt = std::min(base_damage, (float) health_);
   this->TakeDamage_(damageDealt);
@@ -45,46 +45,25 @@ const std::string &Creature::GetType() const {
   return type_;
 }
 
-void Creature::Draw() { // TODO: set all those values on create
-  creatureRect.setSize(sf::Vector2f(1.0f, 1.0f));
-  creatureRect.setOrigin(sf::Vector2f(0.5f, 0.5f));
+void Creature::Draw() {
+  //debug:
+//  creatureRect.setOutlineColor(sf::Color::Red);
+//  creatureRect.setOutlineThickness(0.05f);
+//  sf::CircleShape tmp(0.1);
+//  tmp.setFillColor(sf::Color::Blue);
+//  tmp.setPosition(position_ - sf::Vector2f(0.5f, 0.5f));
+//  window_.draw(tmp);
+//  tmp.setPosition(position_ + sf::Vector2f(0.5f, 0.5f));
+//  window_.draw(tmp);
+//  window_.draw(creatureRect);
+//  sf::RectangleShape tmp2(sf::Vector2f(0.1, room_.height));
+//  tmp2.setPosition(sf::Vector2f(room_.x, room_.y));
+//  window_.draw(tmp2);
 
-  creatureRect.setOutlineColor(sf::Color::Red);
-  creatureRect.setOutlineThickness(0.05f);
-  sf::CircleShape tmp(0.1);
-  tmp.setFillColor(sf::Color::Blue);
-  tmp.setPosition(position_ - sf::Vector2f(0.5f, 0.5f));
-  window_.draw(tmp);
-  tmp.setPosition(position_ + sf::Vector2f(0.5f, 0.5f));
-  window_.draw(tmp);
-  window_.draw(creatureRect);
-  sf::RectangleShape tmp2(sf::Vector2f(0.1, room_.height));
-  tmp2.setPosition(sf::Vector2f(room_.x, room_.y));
-  window_.draw(tmp2);
-
-  if (GetType() == "Hooman") {
-    creatureRect.setTexture(&player_t);
-  } else {
-    creatureRect.setTexture(&assassin_t);
-  }
+  creatureRect.setTexture(&texture_);
   creatureRect.setPosition(position_);
   if (!IsAlive()) creatureRect.setFillColor(sf::Color::Red);
   window_.draw(creatureRect);
-//  auto r = sprite_.getRadius();
-//  sf::Vertex line[] =
-//      {
-//          sf::Vertex(relativePos),
-//          sf::Vertex(relativePos + sf::Vector2f(2 * r, 0)),
-//          sf::Vertex(relativePos + sf::Vector2f(2 * r, 2 * r)),
-//          sf::Vertex(relativePos + sf::Vector2f(0, 2 * r))
-//      };
-//  helper.setPosition(relativePos);
-//  window_.draw(line, 4, sf::Lines);
-//  sf::Vertex line[] = {
-//      sf::Vertex(sf::Vector2f(room_.x - camera.position.x, room_.y - camera.position.y - 2 * r)),
-//      sf::Vertex(sf::Vector2f(room_.x - camera.position.x + room_.width, room_.y - 2 * r - camera.position.y)),
-//  };
-//  window_.draw(line, 2, sf::Lines);
 }
 
 void Creature::Update() {
@@ -127,8 +106,9 @@ void Creature::SetVelocityY(float nvy) { velocity_.y = limitModule(nvy, maxVeloc
 void Creature::SetHealth(float health) {
   health_ = std::min(health, maxHealth_);
 }
-void Creature::SetSprite(const sf::CircleShape &sprite) {
-  sprite_ = sprite;
+void Creature::SetTexture(const sf::Texture &t) {
+  texture_ = t;
+  creatureRect.setTexture(&t);
 }
 const Room &Creature::GetRoom() const {
   return room_;
@@ -197,22 +177,20 @@ void Creature::DrawHealthBar(sf::RenderWindow &window) {
   float barWidth = 0.3f;
   sf::RectangleShape healthBar(sf::Vector2f(barWidth, 0.2f));
   healthBar.setFillColor(sf::Color::Green);
-  float x = window.getView().getCenter().x;
-  float y = window.getView().getCenter().y;
   healthBar.setPosition(sf::Vector2f(position_.x - barWidth * 2, position_.y - 0.8f));
 
   float healthRatio = health_ / maxHealth_;
   healthBar.setSize(sf::Vector2f(healthRatio, 0.2f));
 
   sf::Color maxHealthColor = sf::Color::Green;
-    sf::Color minHealthColor = sf::Color::Red;
+  sf::Color minHealthColor = sf::Color::Red;
 
   sf::Color barColor = sf::Color(
-            float(minHealthColor.r + (maxHealthColor.r - minHealthColor.r) * healthRatio),
-            float(minHealthColor.g + (maxHealthColor.g - minHealthColor.g) * healthRatio),
-            float(minHealthColor.b + (maxHealthColor.b - minHealthColor.b) * healthRatio)
-        );
+      float(minHealthColor.r + (maxHealthColor.r - minHealthColor.r) * healthRatio),
+      float(minHealthColor.g + (maxHealthColor.g - minHealthColor.g) * healthRatio),
+      float(minHealthColor.b + (maxHealthColor.b - minHealthColor.b) * healthRatio)
+  );
 
-        healthBar.setFillColor(barColor);
+  healthBar.setFillColor(barColor);
   window.draw(healthBar);
 }
