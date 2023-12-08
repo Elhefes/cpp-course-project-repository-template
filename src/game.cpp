@@ -187,7 +187,7 @@ void Game::update() {
 
 bool Game::checkWinning(bool monstersKilled) {
   if (player_.getRoomIndex() == rooms.size() + corridors.size() - 1 && monstersKilled) {
-        gameOverScreen.render(window, font, "Congratulations! You won!", sf::Color::Green);
+        gameOverScreen.render(window, font, "Congratulations! You won!", sf::Color::Green, sf::Color::Blue);
         return true;
   } 
   return false;
@@ -195,7 +195,7 @@ bool Game::checkWinning(bool monstersKilled) {
 
 bool Game::checkLosing() {
   if (!player_.IsAlive()) {
-        gameOverScreen.render(window, font, "You died! Game over!", sf::Color::Red);
+        gameOverScreen.render(window, font, "You died! Game over!", sf::Color::Red, sf::Color::Red);
         return true;
   } 
   return false;

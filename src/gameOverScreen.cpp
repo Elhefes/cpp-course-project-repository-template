@@ -1,37 +1,44 @@
 #include "gameOverScreen.hpp"
 
-void GameOverScreen::render(sf::RenderWindow& window, sf::Font& font, std::string text, sf::Color textColor) {
-  sf::Text winText(font);
-  winText.setString(text);
-  winText.setCharacterSize(100);
-  winText.setFillColor(textColor);
-  sf::FloatRect textRect = winText.getLocalBounds();
-  winText.setOrigin(sf::Vector2(textRect.left + textRect.width / 2.0f, textRect.top  + textRect.height / 2.0f));
-  winText.setPosition(window.getView().getCenter());
-  winText.setScale(sf::Vector2f(0.01f, 0.01f));
+void GameOverScreen::render(sf::RenderWindow& window, sf::Font& font, std::string text, sf::Color textColor, sf::Color buttonColor) {
+    sf::Text winText = createText(font, text, textColor, window, 100);
+    sf::Text buttonText = createText(font, "Play Again", sf::Color::White, window, 24);
+    playAgainButton = createPlayAgainButton(window, buttonText, buttonColor);
+    buttonText.setPosition(playAgainButton.getPosition());
+    buttonText.setOrigin(sf::Vector2f(buttonText.getLocalBounds().width / 2.0f, buttonText.getLocalBounds().height / 2.0f));
+    buttonText.setScale(sf::Vector2f(0.02f, 0.02f));
+    
+    drawElements(window, winText, playAgainButton, buttonText);
+    window.display();
+}
 
-  // Create a "Play Again" button aligned just under the Congratulations text
-  playAgainButton = sf::RectangleShape(sf::Vector2f(200, 50));
-  playAgainButton.setFillColor(sf::Color::Blue);
-  sf::FloatRect rect = playAgainButton.getLocalBounds();
-  playAgainButton.setOrigin(sf::Vector2(rect.width / 2.0f, rect.height / 2.0f));
-  playAgainButton.setPosition(sf::Vector2(window.getView().getCenter().x, winText.getPosition().y + textRect.height * 0.02f));
-  playAgainButton.setScale(sf::Vector2f(0.02f, 0.02f));
+sf::Text GameOverScreen::createText(sf::Font& font, std::string text, sf::Color textColor, sf::RenderWindow& window, unsigned int characterSize) {
+    sf::Text newText(font);
+    newText.setString(text);
+    newText.setCharacterSize(characterSize);
+    newText.setFillColor(textColor);
+    sf::FloatRect textRect = newText.getLocalBounds();
+    newText.setOrigin(sf::Vector2f(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f));
+    newText.setPosition(window.getView().getCenter());
+    newText.setScale(sf::Vector2f(0.01f, 0.01f));
+    return newText;
+}
 
-  sf::Text buttonText(font);
-  buttonText.setString("Play Again");
-  buttonText.setCharacterSize(24);
-  buttonText.setFillColor(sf::Color::White);
-  sf::FloatRect buttonRect = buttonText.getLocalBounds();
-  buttonText.setOrigin(sf::Vector2(buttonRect.left + buttonRect.width / 2.0f, buttonRect.top + buttonRect.height / 2.0f));
-  buttonText.setPosition(playAgainButton.getPosition());
-  buttonText.setScale(sf::Vector2f(0.02f, 0.02f));
+sf::RectangleShape GameOverScreen::createPlayAgainButton(sf::RenderWindow& window, sf::Text& buttonText, sf::Color buttonColor) {
+    sf::RectangleShape buttonShape(sf::Vector2f(200, 50));
+    buttonShape.setFillColor(buttonColor);
+    sf::FloatRect rect = buttonShape.getLocalBounds();
+    buttonShape.setOrigin(sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f));
+    buttonShape.setPosition(sf::Vector2(window.getView().getCenter().x, buttonText.getPosition().y + rect.height * 0.03f));
+    buttonShape.setScale(sf::Vector2f(0.02f, 0.02f));
+    return buttonShape;
+}
 
-  window.clear();
-  window.draw(winText);
-  window.draw(playAgainButton);
-  window.draw(buttonText);
-  window.display();
+void GameOverScreen::drawElements(sf::RenderWindow& window, sf::Text& winText, sf::RectangleShape& playAgainButton, sf::Text& buttonText) {
+    window.clear();
+    window.draw(winText);
+    window.draw(playAgainButton);
+    window.draw(buttonText);
 }
 
 sf::RectangleShape GameOverScreen::getPlayAgainButton() {
