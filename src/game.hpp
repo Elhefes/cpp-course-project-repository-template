@@ -8,10 +8,11 @@
 #include "inventory.hpp"
 #include "textureManager.hpp"
 #include "Creature/GameCharacter.hpp"
+#include "ui.hpp"
 
 const std::string WINDOW_TITLE = "Dungeon Crawler";
-const unsigned int WINDOW_WIDTH = 800u;
-const unsigned int WINDOW_HEIGHT = 600u;
+const unsigned int WINDOW_WIDTH = 1080u;
+const unsigned int WINDOW_HEIGHT = 720u;
 const int ROOM_AMOUNT = 5;
 const int TILE_SIZE = 1;
 const float ZOOM_LEVEL = 50.0f;
@@ -27,39 +28,41 @@ class Game {
   ~Game();
   void run();
 
- private:
-  /// @brief main character (me like literally)
-  Player player_;
-  std::vector<Monster *> monsters_;
-  std::vector<sf::Vector2f> potions_;
+private:
+    /// @brief main character (me like literally)
+    Player player_;
+    std::vector<Monster *> monsters_;
+    std::vector<sf::Vector2f> potions_;
+    
+    sf::RenderWindow window;
+    sf::RectangleShape playAgainButton;
 
-  sf::RenderWindow window;
-  sf::CircleShape circle;
+    Dungeon dungeon;
+    Inventory inventory;
+    UIManager uiManager;
+    std::vector<Room> rooms;
+    std::vector<Room> corridors;
 
-  Dungeon dungeon;
-  Inventory inventory;
-  std::vector<Room> rooms;
-  std::vector<Room> corridors;
+    bool moveUp = false;
+    bool moveDown = false;
+    bool moveLeft = false;
+    bool moveRight = false;
+    bool isRunning = false;
+    bool gameWon = false;
 
-  bool moveUp = false;
-  bool moveDown = false;
-  bool moveLeft = false;
-  bool moveRight = false;
-  bool isRunning = false;
-
-  float circleSpeed = 0.3f;
-
-  void initializeTextures();
-  void initializeWindow();
-  void initializeCircle();
-  void processEvents();
-  void update();
-  void render();
-  void initiateDungeon();
-  void initiateInventory();
-  void drawDungeon();
-  void addItem(Item newItem);
-  void drawRoom(const Room &room, RoomType type);
+    void initializeTextures();
+    bool checkWinning(bool monstersKilled);
+    void initializeWindow();
+    void initializeCircle();
+    void processEvents();
+    void update();
+    void render();
+    void renderWinningScreen();
+    void initiateDungeon();
+    void initiateInventory();
+    void drawDungeon();
+    void addItem(Item newItem);
+    void drawRoom(const Room& room, RoomType type);
 };
 
 #endif /* GAME_HPP */
