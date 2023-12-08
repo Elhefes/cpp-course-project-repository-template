@@ -3,7 +3,7 @@
 ## Prerequisites
 Before building this project SFML needs to be added as a submodule with the following command
 ```
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 ```
 SFML also needs some dependencies for it to compile. Download the required dependencies with the following apt-get command
 ```
