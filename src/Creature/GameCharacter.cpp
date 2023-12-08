@@ -49,12 +49,12 @@ void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res
   int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
   float damage = 10;
   int monster_health = 60;
-  float monster_velocity = 0.1f;
+  float monster_velocity = 0.085f;
   sf::Texture &texture = assassin_t;
   if (roomIndex_ + 1 == rooms_.size()) {
     monster_number = 1;
-    monster_health = 100;
-    monster_velocity = 0.03f;
+    monster_health = 250;
+    monster_velocity = 0.07f;
     damage *= 1.5;
     texture = boss_t;
   }

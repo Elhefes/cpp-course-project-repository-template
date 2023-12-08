@@ -10,8 +10,8 @@ sf::Texture boss_t;
 sf::Texture sword_inv_t;
 sf::Texture potion_inv_t;
 sf::Font font;
-const float PLAYER_WALKING_SPEED = 0.15f;
-const float PLAYER_RUNNING_SPEED = 0.25f;
+const float PLAYER_WALKING_SPEED = 0.12f;
+const float PLAYER_RUNNING_SPEED = 0.16f;
 
 Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
                        sf::Vector2f(0, 0),
