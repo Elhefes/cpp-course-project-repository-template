@@ -203,7 +203,6 @@ bool Game::checkLosing() {
 
 void Game::render() {
   window.clear();
-        
   drawDungeon();
   player_.Draw();
   player_.GetInventory().Draw(window, player_.GetItemInUse());
@@ -215,8 +214,6 @@ void Game::render() {
   for (auto p : potions_) {
     Item::Draw(window, p, 1, potion_inv_t);
   }
-  player_.DrawHealthBar(window);
-  player_.GetInventory().Draw(window);
   window.display();
 }
 
