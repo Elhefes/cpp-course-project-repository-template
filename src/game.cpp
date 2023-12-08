@@ -85,8 +85,8 @@ void Game::initializeTextures() {
     std::cerr << "Error loading Font" << std::endl;
     return;
   }
-  if (!boss_t.loadFromFile(TEXTURES_PATH + "assassin2.png")) {
-    std::cerr << "Error loading Boss (assasin2.png)" << std::endl;
+  if (!boss_t.loadFromFile(TEXTURES_PATH + "boss.png")) {
+    std::cerr << "Error loading Boss (boss.png)" << std::endl;
     return;
   }
 }
