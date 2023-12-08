@@ -59,6 +59,8 @@ class Player : public Creature {
     position_ = position;
   }
 
+  int getRoomIndex();
+
   sf::Vector2f getPosition() {
     return position_;
   }

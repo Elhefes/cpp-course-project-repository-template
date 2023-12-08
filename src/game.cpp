@@ -1,9 +1,5 @@
 #include "game.hpp"
 
-/*
-TODO: Create some sort of tests here to check whether items, dungeons etc
-      are working properly as discussed with the project advisor
-*/
 const std::string TEXTURES_PATH = "../assets/textures/";
 sf::Texture room_t1;
 sf::Texture room_t2;
@@ -48,7 +44,9 @@ void Game::run() {
   while (window.isOpen()) {
     processEvents();
     update();
-    render();
+    if (!gameWon && !gameLost) {
+      render();
+    }
   }
 }
 
@@ -98,12 +96,6 @@ void Game::initializeWindow() {
   window.setPosition(sf::Vector2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 }
 
-void Game::initializeCircle() {
-  circle.setRadius(0.1f);
-  circle.setFillColor(sf::Color::Red);
-  circle.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
-}
-
 void Game::processEvents() {
   sf::Event event;
   while (window.pollEvent(event)) {
@@ -142,27 +134,49 @@ void Game::processEvents() {
       player_.TryAttack(monsters_);
     }
 
+    // Handle mouse click on "Play Again" button
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+      sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+      sf::FloatRect buttonBounds = gameOverScreen.getPlayAgainButton().getGlobalBounds();
+      auto translated_pos = window.mapPixelToCoords(mousePos); // Mouse position translated into world coordinates
+
+      // Check if the click is within the button bounds
+      if (buttonBounds.contains(sf::Vector2f(translated_pos))) {
+        window.close();
+        Game game;
+        game.run();
+      }
+    }
+
   }
 }
 
 void Game::update() {
-  sf::Vector2f movement(
-      moveRight ? 1 : (moveLeft ? -1 : 0.f),
-      moveDown ? 1 : (moveUp ? -1 : 0.f)
-  );
-  //movement *= player_.GetMaxVelocity();
-  player_.SetVelocity(movement *= (isRunning ? PLAYER_RUNNING_SPEED : PLAYER_WALKING_SPEED));
-
-  sf::View view = window.getView();
-  view.setCenter(player_.getPosition());
-  view.setSize(window.getDefaultView().getSize() / ZOOM_LEVEL);
-  window.setView(view);
   bool monstersKilled = true;
   for (auto m : monsters_) {
     if (m->IsAlive()) {
       monstersKilled = false;
     }
   }
+  if (checkWinning(monstersKilled)) {
+    gameWon = true;
+    return;
+  }
+  if (checkLosing()) {
+    gameLost = true;
+    return;
+  }
+  
+  sf::Vector2f movement(
+      moveRight ? 1 : (moveLeft ? -1 : 0.f),
+      moveDown ? 1 : (moveUp ? -1 : 0.f)
+  );
+  player_.SetVelocity(movement *= (isRunning ? PLAYER_RUNNING_SPEED : PLAYER_WALKING_SPEED));
+
+  sf::View view = window.getView();
+  view.setCenter(player_.getPosition());
+  view.setSize(window.getDefaultView().getSize() / ZOOM_LEVEL);
+  window.setView(view);
   player_.SetMonstersCleared(monstersKilled);
   player_.Update(monsters_, potions_);
   for (auto m : monsters_) {
@@ -171,10 +185,25 @@ void Game::update() {
   }
 }
 
+bool Game::checkWinning(bool monstersKilled) {
+  if (player_.getRoomIndex() == rooms.size() + corridors.size() - 1 && monstersKilled) {
+        gameOverScreen.render(window, font, "Congratulations! You won!", sf::Color::Green, sf::Color::Blue);
+        return true;
+  } 
+  return false;
+}
+
+bool Game::checkLosing() {
+  if (!player_.IsAlive()) {
+        gameOverScreen.render(window, font, "You died! Game over!", sf::Color::Red, sf::Color::Red);
+        return true;
+  } 
+  return false;
+}
+
 void Game::render() {
   window.clear();
   drawDungeon();
-  window.draw(circle);
   player_.Draw();
   player_.GetInventory().Draw(window, player_.GetItemInUse());
   player_.DrawHealthBar(window);

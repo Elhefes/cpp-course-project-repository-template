@@ -67,3 +67,6 @@ void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res
   }
 }
 
+int Player::getRoomIndex() {
+  return roomIndex_;
+}
