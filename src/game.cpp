@@ -44,7 +44,7 @@ void Game::run() {
   while (window.isOpen()) {
     processEvents();
     update();
-    if (!gameWon) {
+    if (!gameWon && !gameLost) {
       render();
     }
   }
@@ -137,7 +137,7 @@ void Game::processEvents() {
     // Handle mouse click on "Play Again" button
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
       sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-      sf::FloatRect buttonBounds = playAgainButton.getGlobalBounds();
+      sf::FloatRect buttonBounds = gameOverScreen.getPlayAgainButton().getGlobalBounds();
       auto translated_pos = window.mapPixelToCoords(mousePos); // Mouse position translated into world coordinates
 
       // Check if the click is within the button bounds
@@ -162,6 +162,11 @@ void Game::update() {
     gameWon = true;
     return;
   }
+  if (checkLosing()) {
+    gameLost = true;
+    return;
+  }
+  
   sf::Vector2f movement(
       moveRight ? 1 : (moveLeft ? -1 : 0.f),
       moveDown ? 1 : (moveUp ? -1 : 0.f)
@@ -182,15 +187,21 @@ void Game::update() {
 
 bool Game::checkWinning(bool monstersKilled) {
   if (player_.getRoomIndex() == rooms.size() + corridors.size() - 1 && monstersKilled) {
-        renderWinningScreen();
+        gameOverScreen.render(window, font, "Congratulations! You won!", sf::Color::Green);
+        return true;
+  } 
+  return false;
+}
+
+bool Game::checkLosing() {
+  if (!player_.IsAlive()) {
+        gameOverScreen.render(window, font, "You died! Game over!", sf::Color::Red);
         return true;
   } 
   return false;
 }
 
 void Game::render() {
-  //renderWinningScreen();
-  //return;
   window.clear();
         
   drawDungeon();
@@ -205,46 +216,7 @@ void Game::render() {
     Item::Draw(window, p, 1, potion_inv_t);
   }
   player_.DrawHealthBar(window);
-  
-
   player_.GetInventory().Draw(window);
-//  for (auto c : circles) {
-//    window.draw(c);
-//  }
-  window.display();
-}
-
-void Game::renderWinningScreen() {
-  sf::Text winText(font);
-  winText.setString("Congratulations! You won!");
-  winText.setCharacterSize(100);
-  winText.setFillColor(sf::Color::Green);
-  sf::FloatRect textRect = winText.getLocalBounds();
-  winText.setOrigin(sf::Vector2(textRect.left + textRect.width / 2.0f, textRect.top  + textRect.height / 2.0f));
-  winText.setPosition(window.getView().getCenter());
-  winText.setScale(sf::Vector2f(0.01f, 0.01f));
-
-  // Create a "Play Again" button aligned just under the Congratulations text
-  playAgainButton= sf::RectangleShape(sf::Vector2f(200, 50));
-  playAgainButton.setFillColor(sf::Color::Blue);
-  sf::FloatRect rect = playAgainButton.getLocalBounds();
-  playAgainButton.setOrigin(sf::Vector2(rect.width / 2.0f, rect.height / 2.0f));
-  playAgainButton.setPosition(sf::Vector2(window.getView().getCenter().x, winText.getPosition().y + textRect.height * 0.02f));
-  playAgainButton.setScale(sf::Vector2f(0.02f, 0.02f));
-
-  sf::Text buttonText(font);
-  buttonText.setString("Play Again");
-  buttonText.setCharacterSize(24);
-  buttonText.setFillColor(sf::Color::White);
-  sf::FloatRect buttonRect = buttonText.getLocalBounds();
-  buttonText.setOrigin(sf::Vector2(buttonRect.left + buttonRect.width / 2.0f, buttonRect.top + buttonRect.height / 2.0f));
-  buttonText.setPosition(playAgainButton.getPosition());
-  buttonText.setScale(sf::Vector2f(0.02f, 0.02f));
-
-  window.clear();
-  window.draw(winText);
-  window.draw(playAgainButton);
-  window.draw(buttonText);
   window.display();
 }
 

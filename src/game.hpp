@@ -8,7 +8,7 @@
 #include "inventory.hpp"
 #include "textureManager.hpp"
 #include "Creature/GameCharacter.hpp"
-#include "ui.hpp"
+#include "gameOverScreen.hpp"
 
 const std::string WINDOW_TITLE = "Dungeon Crawler";
 const unsigned int WINDOW_WIDTH = 1080u;
@@ -35,11 +35,10 @@ private:
     std::vector<sf::Vector2f> potions_;
     
     sf::RenderWindow window;
-    sf::RectangleShape playAgainButton;
 
     Dungeon dungeon;
     Inventory inventory;
-    UIManager uiManager;
+    GameOverScreen gameOverScreen;
     std::vector<Room> rooms;
     std::vector<Room> corridors;
 
@@ -49,15 +48,16 @@ private:
     bool moveRight = false;
     bool isRunning = false;
     bool gameWon = false;
+    bool gameLost = false;
 
     void initializeTextures();
     bool checkWinning(bool monstersKilled);
+    bool checkLosing();
     void initializeWindow();
     void initializeCircle();
     void processEvents();
     void update();
     void render();
-    void renderWinningScreen();
     void initiateDungeon();
     void initiateInventory();
     void drawDungeon();

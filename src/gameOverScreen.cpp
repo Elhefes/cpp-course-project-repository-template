@@ -1,12 +1,10 @@
-#include "ui.hpp"
+#include "gameOverScreen.hpp"
 
-void UIManager::renderWinningScreen(sf::RenderWindow& window, sf::Font& font) {
-    /*
+void GameOverScreen::render(sf::RenderWindow& window, sf::Font& font, std::string text, sf::Color textColor) {
   sf::Text winText(font);
-  winText.setFont(font);
-  winText.setString("Congratulations! You won!");
+  winText.setString(text);
   winText.setCharacterSize(100);
-  winText.setFillColor(sf::Color::Green);
+  winText.setFillColor(textColor);
   sf::FloatRect textRect = winText.getLocalBounds();
   winText.setOrigin(sf::Vector2(textRect.left + textRect.width / 2.0f, textRect.top  + textRect.height / 2.0f));
   winText.setPosition(window.getView().getCenter());
@@ -21,7 +19,6 @@ void UIManager::renderWinningScreen(sf::RenderWindow& window, sf::Font& font) {
   playAgainButton.setScale(sf::Vector2f(0.02f, 0.02f));
 
   sf::Text buttonText(font);
-  buttonText.setFont(font);
   buttonText.setString("Play Again");
   buttonText.setCharacterSize(24);
   buttonText.setFillColor(sf::Color::White);
@@ -35,10 +32,8 @@ void UIManager::renderWinningScreen(sf::RenderWindow& window, sf::Font& font) {
   window.draw(playAgainButton);
   window.draw(buttonText);
   window.display();
-  */
 }
 
-sf::RectangleShape UIManager::getPlayAgainButton() {
-    sf::RectangleShape playAgainButton(sf::Vector2f(200, 50));
+sf::RectangleShape GameOverScreen::getPlayAgainButton() {
     return playAgainButton;
 }
