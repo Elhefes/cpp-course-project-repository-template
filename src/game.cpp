@@ -206,7 +206,7 @@ void Game::render() {
         
   drawDungeon();
   player_.Draw();
-  player_.GetInventory().Draw(window);
+  player_.GetInventory().Draw(window, player_.GetItemInUse());
   player_.DrawHealthBar(window);
   for (auto m : monsters_) {
     m->Draw();
