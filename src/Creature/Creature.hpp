@@ -25,8 +25,8 @@ class Creature {
            sf::RenderWindow &window,
            const Room &room,
            int base_damage,
+           sf::Texture &t,
            std::ostream &logger = std::cout,
-           const sf::CircleShape &sprite = sf::CircleShape(50),
            const Inventory &inventory = Inventory());
 
   /// @brief Checks if the creature is alive.
@@ -41,7 +41,7 @@ class Creature {
   /// @param base_damage Base attack damage (actual damage may be later recalculated somehow)
   /// @param c2 the creature who attacks
   /// @return the damage taken
-  int TakeHit(float base_damage, const Creature &c2);
+  float TakeHit(float base_damage, const Creature &c2);
 
   int Attack(Creature &c2, const Sword &sword = {}) const;
 
@@ -63,7 +63,7 @@ class Creature {
   /// @param nvy new y velocity.
   void SetVelocityY(float nvy);
   void SetHealth(float health);
-  void SetSprite(const sf::CircleShape &sprite);
+  void SetTexture(const sf::Texture &t);
   virtual void SetPosition(const sf::Vector2<float> &position);
   virtual void SetRoom(Room &room);
   /// @brief draws the healthbar of the creature
@@ -100,8 +100,8 @@ class Creature {
   std::string description_;
   /// @brief the inventory of the creature
   Inventory inventory_;
-  /// @brief change to actual sprite later
-  sf::CircleShape sprite_;
+  /// @brief texture
+  sf::Texture &texture_;
   /// @brief position of the creature on the screen
   sf::Vector2<float> position_;
   /// @brief current velocity of the creature

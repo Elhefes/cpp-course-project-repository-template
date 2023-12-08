@@ -47,19 +47,23 @@ void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res
   if (room_.isCorridor()) return;
 
   int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
+  float damage = 10;
   int monster_health = 60;
   float monster_velocity = 0.1f;
+  sf::Texture &texture = assassin_t;
   if (roomIndex_ + 1 == rooms_.size()) {
     monster_number = 1;
     monster_health = 100;
     monster_velocity = 0.03f;
+    damage *= 1.5;
+    texture = boss_t;
   }
   for (int _ = 0; _ < monster_number; _++) {
     std::string type = "random type later ig";
     std::string name = "random name later ig";
     auto pos = room_.randomPos(1.f);
     res.push_back(new Monster(type, name, monster_health, monster_velocity,
-                              pos, window, room_));
+                              pos, window, room_, (int) damage, texture));
   }
 }
 

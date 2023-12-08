@@ -23,18 +23,18 @@ class Monster : public Creature {
           const sf::Vector2<float> &initial_pos,
           sf::RenderWindow &window,
           const Room &room,
+          int base_damage,
+          sf::Texture &texture,
           std::ostream &logger = std::cout,
-          const sf::CircleShape &sprite = sf::CircleShape(0.5f),
           Inventory inventory = Inventory()) : Creature(type,
                                                         name,
                                                         max_health,
                                                         max_velocity,
                                                         initial_pos,
                                                         window,
-                                                        room, 0,
+                                                        room, base_damage, texture,
                                                         logger,
-                                                        sprite,
-                                                        inventory) { base_damage_ = 10; } // todo: add to constructor
+                                                        inventory) {}
 
   void tick(Player &p);
  private:
@@ -48,10 +48,10 @@ class Player : public Creature {
          const sf::Vector2<float> &initialPos,
          sf::RenderWindow &window,
          Room room,
+         sf::Texture &texture,
          std::ostream &logger = std::cout,
-         const sf::CircleShape &sprite = sf::CircleShape(0.5f),
          Inventory inventory = Inventory()) :
-      Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, logger, sprite, inventory) {};
+      Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, texture, logger, inventory) {};
 
   /// @brief Special ability of each player class
   void Special() {};
@@ -130,6 +130,19 @@ class Player : public Creature {
     sf::Vector2f curPos = creatureRect.getPosition();
     sf::Vector2f position = sf::Vector2f(sf::Mouse::getPosition(window_));
     return position - curPos;
+  }
+
+  void TryPickup(std::vector<sf::Vector2f> &potionPositions) {
+    int ind = 0;
+    for (int i = 1; i < potionPositions.size(); i++) {
+      if (help::square(potionPositions[i] - position_) < help::square(potionPositions[ind] - position_)) {
+        ind = i;
+      }
+    }
+    if (ind < potionPositions.size() && help::len(potionPositions[ind] - position_) <= ATTACK_RADIUS) {
+      potionPositions.erase(potionPositions.begin() + ind);
+      inventory_.addPotion(HealthPotion(), 1);
+    }
   }
 
   void SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res);
