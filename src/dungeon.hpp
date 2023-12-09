@@ -4,6 +4,11 @@
 #include <vector>
 #include "room.hpp"
 
+// Constants
+const int GRID_SIZE = 20;
+const int ROOM_MIN_SIZE = 10;
+const int ROOM_MAX_SIZE = 20;
+
 /**
  * @brief Enumeration representing directions.
  */
@@ -45,7 +50,6 @@ class Dungeon {
                        int WINDOW_HEIGHT);
 
  private:
-  static const int GRID_SIZE = 20;
   std::vector<std::vector<bool>> roomGrid_;
 
   /**

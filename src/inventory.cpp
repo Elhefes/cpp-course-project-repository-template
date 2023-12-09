@@ -9,13 +9,13 @@ float Inventory::DrawItems(std::vector<T> items,
                            bool itemInUse) {
   for (const auto &item : items) {
     // Draws the circles
-    sf::CircleShape circle(0.5f);
+    sf::CircleShape circle(ITEM_CIRCLE_RADIUS);
     circle.setFillColor(sf::Color::Transparent);
-    circle.setOutlineThickness(0.1f);
+    circle.setOutlineThickness(ITEM_CIRCLE_OUTLINE_THICKNESS);
     if (itemInUse) {
-      circle.setOutlineColor(sf::Color::Red);
+      circle.setOutlineColor(ITEM_IN_USE_COLOR);
     } else {
-      circle.setOutlineColor(sf::Color::Blue);
+      circle.setOutlineColor(ITEM_NOT_IN_USE_COLOR);
     }
     sf::Vector2f center = window.getView().getCenter();
     circle.setPosition(sf::Vector2f(x, y));
@@ -23,20 +23,21 @@ float Inventory::DrawItems(std::vector<T> items,
 
     // Draws the items inside the circles
     sf::Vector2f circleCenter(circle.getPosition());
-    Item::Draw(window, circleCenter, 2 * circle.getRadius(), t);
+    Item::Draw(window, circleCenter, ITEM_SIZE, t);
 
     // if the item is a potion, show quantity
     if (!item.IsSword()) {
       sf::Text quantityText(font);
       quantityText.setString(std::to_string(counter_[item.GetName()]));
       quantityText.setFillColor(sf::Color::White);
-      quantityText.setScale(sf::Vector2f(circle.getRadius() / 10, circle.getRadius() / 20));
+      quantityText.setScale(sf::Vector2f(circle.getRadius() / QUANTITY_TEXT_SCALE_X,
+                                         circle.getRadius() / QUANTITY_TEXT_SCALE_Y));
       quantityText.setPosition(sf::Vector2f(circleCenter.x + circle.getRadius() * 2,
                                             circleCenter.y - circle.getRadius() / 2));
       window.draw(quantityText);
     }
 
-    x += 1.5f;
+    x += 3 * ITEM_CIRCLE_RADIUS;
   }
   return x;
 }
@@ -45,8 +46,8 @@ int Inventory::GetSize() {
 }
 void Inventory::Draw(sf::RenderWindow &window, int itemInUse) {
   sf::Vector2f center = window.getView().getCenter();
-  float x = center.x - window.getView().getSize().x / 2 + 0.5;
-  float y = center.y - window.getView().getSize().y / 2 + 0.5;
+  float x = center.x - window.getView().getSize().x / 2 + ITEM_CIRCLE_RADIUS;
+  float y = center.y - window.getView().getSize().y / 2 + ITEM_CIRCLE_RADIUS;
 
   if (IsSword(itemInUse)) {
     x = DrawItems(swords_, sword_inv_t, x, y, window, true);

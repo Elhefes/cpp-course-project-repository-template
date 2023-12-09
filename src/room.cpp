@@ -33,15 +33,14 @@ Room::~Room() {
 }
 
 std::tuple<bool, float, float, sf::Vector2f> Room::IsInside(sf::Vector2f pos, float sz) const {
-  const float EPS = 0.1;
   auto xMin = (float) x /*+ sz / 2*/, xMax = (float) (x + std::abs(width)) /*- sz / 2*/;
   auto yMin = (float) y /*+ sz / 2*/, yMax = (float) (y + std::abs(height)) /*- sz / 2*/;
   bool flag = (xMin <= pos.x && pos.x <= xMax && yMin <= pos.y && pos.y <= yMax);
   float xMul = 1, yMul = 1;
-  if (help::close(pos.x, yMin, EPS) || help::close(pos.x, xMax, EPS)) xMul *= -1;
-  if (help::close(pos.y, yMin, EPS) || help::close(pos.y, yMax, EPS)) yMul *= -1;
-  pos.x = bound(pos.x, xMin, xMax, 0.9f * EPS);
-  pos.y = bound(pos.y, yMin, xMax, 0.9f * EPS);
+  if (help::close(pos.x, yMin, ROOM_INSIDE_EPS) || help::close(pos.x, xMax, ROOM_INSIDE_EPS)) xMul *= -1;
+  if (help::close(pos.y, yMin, ROOM_INSIDE_EPS) || help::close(pos.y, yMax, ROOM_INSIDE_EPS)) yMul *= -1;
+  pos.x = bound(pos.x, xMin, xMax, ROOM_BOUND_EPS);
+  pos.y = bound(pos.y, yMin, xMax, ROOM_BOUND_EPS);
   return {flag, xMul, yMul, pos};
 }
 sf::Vector2f Room::RandomPos(float sz) const {

@@ -5,6 +5,9 @@
 #include "string"
 #include <SFML/Graphics.hpp>
 
+// Constants
+const int DEFAULT_HEAL_AMOUNT = 10;
+
 /// @brief Basic class for items in the inventory.
 class Item {
  public:
@@ -54,6 +57,6 @@ class HealthPotion : public Item {
   [[nodiscard]] float GetHpRestored() const { return hpRestored_; };
  private:
   /// @brief Amount to heal by.
-  float hpRestored_ = 10;
+  float hpRestored_ = DEFAULT_HEAL_AMOUNT;
 };
 #endif //DUNGEONCRAWLER_SRC_ITEM_HPP_

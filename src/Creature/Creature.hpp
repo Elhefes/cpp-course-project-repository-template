@@ -14,6 +14,11 @@
 #include "../room.hpp"
 #include "../textureManager.hpp"
 
+// Constants
+const float CREATURE_SIZE = 1.0f;
+const float HEALTH_BAR_START_WIDTH = 0.3f;
+const float HEALTH_BAR_HEIGHT = 0.2f;
+
 /// @brief Base class for every "alive" entity in the dungeon.
 class Creature {
  public:

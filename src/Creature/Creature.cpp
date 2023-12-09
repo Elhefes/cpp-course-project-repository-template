@@ -25,7 +25,7 @@ Creature::Creature(const std::string &type,
       position_(initialPos),
       texture_(t) {
   description_ = "Creature \"" + type + " named " + name + "\"";
-  creatureRect_.setSize(sf::Vector2f(1.0f, 1.0f));
+  creatureRect_.setSize(sf::Vector2f(CREATURE_SIZE, CREATURE_SIZE));
   creatureRect_.setOrigin(sf::Vector2f(0.5f, 0.5f));
 }
 
@@ -151,21 +151,21 @@ void Creature::TurnToDirection(float dx, float dy) {
 }
 
 void Creature::DrawHealthBar(sf::RenderWindow &window) {
-  float barWidth = 0.3f;
-  sf::RectangleShape healthBar(sf::Vector2f(barWidth, 0.2f));
+  sf::RectangleShape healthBar(sf::Vector2f(HEALTH_BAR_START_WIDTH, HEALTH_BAR_HEIGHT));
   healthBar.setFillColor(sf::Color::Green);
-  healthBar.setPosition(sf::Vector2f(position_.x - barWidth * 2, position_.y - 0.8f));
+  healthBar.setPosition(sf::Vector2f(position_.x - HEALTH_BAR_START_WIDTH * 2,
+                                     position_.y - CREATURE_SIZE / 2 - HEALTH_BAR_HEIGHT));
 
   float healthRatio = health_ / maxHealth_;
-  healthBar.setSize(sf::Vector2f(healthRatio, 0.2f));
+  healthBar.setSize(sf::Vector2f(healthRatio, HEALTH_BAR_HEIGHT));
 
   sf::Color maxHealthColor = sf::Color::Green;
   sf::Color minHealthColor = sf::Color::Red;
 
   sf::Color barColor = sf::Color(
-      float(minHealthColor.r + (maxHealthColor.r - minHealthColor.r) * healthRatio),
-      float(minHealthColor.g + (maxHealthColor.g - minHealthColor.g) * healthRatio),
-      float(minHealthColor.b + (maxHealthColor.b - minHealthColor.b) * healthRatio)
+      (minHealthColor.r + (maxHealthColor.r - minHealthColor.r) * healthRatio),
+      (minHealthColor.g + (maxHealthColor.g - minHealthColor.g) * healthRatio),
+      (minHealthColor.b + (maxHealthColor.b - minHealthColor.b) * healthRatio)
   );
 
   healthBar.setFillColor(barColor);

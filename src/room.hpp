@@ -9,6 +9,10 @@
 #include "textureManager.hpp"
 #include "helper.hpp"
 
+// Constants
+const float ROOM_INSIDE_EPS = 0.1;
+const float ROOM_BOUND_EPS = 0.9f * ROOM_INSIDE_EPS;
+
 /**
  * @brief Class representing a Room in the game.
  */
