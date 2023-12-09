@@ -1,96 +1,78 @@
-/*
 #include "inventory.hpp"
 
-void Inventory::addItem(const std::string& itemName, int quantity, sf::Texture texture) {
-    bool found = false;
-    for (auto& item : items) {
-        if (std::get<0>(item) == itemName) {
-            std::get<1>(item) += quantity; // Update quantity if item exists
-            found = true;
-            break;
-        }
+template<typename T>
+float Inventory::DrawItems(std::vector<T> items,
+                           const sf::Texture &t,
+                           float x,
+                           float y,
+                           sf::RenderWindow &window,
+                           bool itemInUse) {
+  for (const auto &item : items) {
+    // Draws the circles
+    sf::CircleShape circle(0.5f);
+    circle.setFillColor(sf::Color::Transparent);
+    circle.setOutlineThickness(0.1f);
+    if (itemInUse) {
+      circle.setOutlineColor(sf::Color::Red);
+    } else {
+      circle.setOutlineColor(sf::Color::Blue);
     }
-    if (!found) {
-        items.emplace_back(itemName, quantity, texture); // Add new item otherwise
+    sf::Vector2f center = window.getView().getCenter();
+    circle.setPosition(sf::Vector2f(x, y));
+    window.draw(circle);
+
+    // Draws the items inside the circles
+    sf::Vector2f circleCenter(circle.getPosition());
+    Item::Draw(window, circleCenter, 2 * circle.getRadius(), t);
+
+    // if the item is a potion, show quantity
+    if (!item.IsSword()) {
+      sf::Text quantityText(font);
+      quantityText.setString(std::to_string(counter_[item.GetName()]));
+      quantityText.setFillColor(sf::Color::White);
+      quantityText.setScale(sf::Vector2f(circle.getRadius() / 10, circle.getRadius() / 20));
+      quantityText.setPosition(sf::Vector2f(circleCenter.x + circle.getRadius() * 2,
+                                            circleCenter.y - circle.getRadius() / 2));
+      window.draw(quantityText);
     }
+
+    x += 1.5f;
+  }
+  return x;
 }
-
-bool Inventory::removeItem(const std::string& itemName, int quantity) {
-    for (auto& item : items) {
-            if (std::get<0>(item) == itemName) {
-                if (std::get<1>(item) < quantity) {
-                    return false; // Insufficient quantity to remove
-                } else {
-                    std::get<1>(item) -= quantity; // Update quantity if item exists
-                    return true; // Successfully removed the specified quantity of the item
-                }
-            }
-        }
-        return false; // Item not found
+int Inventory::GetSize() {
+  return swords_.size() + potions_.size();
 }
+void Inventory::Draw(sf::RenderWindow &window, int itemInUse) {
+  sf::Vector2f center = window.getView().getCenter();
+  float x = center.x - window.getView().getSize().x / 2 + 0.5;
+  float y = center.y - window.getView().getSize().y / 2 + 0.5;
 
-int Inventory::getItemCount(const std::string& itemName) {
-    int count = 0;
-        for (const auto& item : items) {
-            if (std::get<0>(item) == itemName) {
-                count += std::get<1>(item);
-            }
-        }
-        return count;
+  if (IsSword(itemInUse)) {
+    x = DrawItems(swords_, sword_inv_t, x, y, window, true);
+    DrawItems(potions_, potion_inv_t, x, y, window, false);
+  } else {
+    x = DrawItems(swords_, sword_inv_t, x, y, window, false);
+    DrawItems(potions_, potion_inv_t, x, y, window, true);
+  }
+
+  // assumes that there is only one health potion and sword for now i guess as all the textures are same
 }
-
-void Inventory::displayInventory() {
-    std::cout << "Inventory:\n";
-        for (const auto& item : items) {
-            std::cout << std::get<0>(item) << " - Quantity: " << std::get<1>(item) << "\n";
-        }
+Sword Inventory::GetSword(int index) {
+  // assumes that isSword_[index] is true
+  // this dumb implementation assumes that player do not drop swords_
+  return swords_[isSword_[index].second];
 }
-
-int Inventory::getInventorySize() {
-    return items.size();
+HealthPotion Inventory::GetPotion(int index) {
+  return potions_[isSword_[index].second];
 }
-
-void Inventory::clearInventory() {
-    items.clear();
+int Inventory::GetHealingAmount(int index) {
+  if (isSword_[index].second) return 0;
+  HealthPotion potion = GetPotion(index);
+  if (counter_[potion.GetName()] > 0) {
+    counter_[potion.GetName()] -= 1;
+    return potion.GetHpRestored();
+  } else {
+    return 0;
+  }
 }
-
-std::vector<sf::CircleShape> Inventory::Draw(sf::RenderWindow& window) {
-    std::vector<sf::CircleShape> circles;
-        for (int i = 0; i < items.size(); ++i) {
-
-            // Draws the circles
-            sf::CircleShape circle(0.5f);
-            circle.setFillColor(sf::Color::Transparent);
-            circle.setOutlineThickness(0.1f);
-            circle.setOutlineColor(sf::Color::Blue);
-            sf::Vector2f center = window.getView().getCenter();
-            float x = center.x - window.getView().getSize().x / 2 + 0.5 + (i * 1.5f);
-            float y = center.y - window.getView().getSize().y / 2 + 0.5;
-            std::cout << x << "  " << y << std::endl;
-            circle.setPosition(sf::Vector2f(x, y));
-
-            // Draws the items inside the circles
-            sf::Vector2f circleCenter(circle.getPosition());
-            sf::Sprite sprite(std::get<2>(items[i]));
-            sf::FloatRect itemBounds = sprite.getGlobalBounds();
-            float scale = (2.0f * circle.getRadius()) / std::max(itemBounds.width, itemBounds.height);
-            sprite.setScale(sf::Vector2f(scale, scale));
-            sprite.setPosition(circleCenter);
-
-            // If items count is more than one draws the amount of the item on the top right of the circle
-            if (std::get<1>(items[i]) > 1) {
-                std::string amount = std::to_string(std::get<1>(items[i]));
-                sf::Text quantityText(font);
-                quantityText.setString(amount);
-                quantityText.setFillColor(sf::Color::White);
-                quantityText.setScale(sf::Vector2f(circle.getRadius() / 10, circle.getRadius() / 20));
-                quantityText.setPosition(sf::Vector2f(circleCenter.x + circle.getRadius() * 2, circleCenter.y - circle.getRadius() / 2));
-                window.draw(quantityText);
-            }
-            
-            window.draw(sprite);
-            circles.push_back(circle);
-        }
-        return circles;
-}
-*/

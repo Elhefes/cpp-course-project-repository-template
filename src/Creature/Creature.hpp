@@ -14,7 +14,7 @@
 #include "../room.hpp"
 #include "../textureManager.hpp"
 
-/// @brief Base class for every "alive" entity in the dungeon
+/// @brief Base class for every "alive" entity in the dungeon_
 class Creature {
  public:
   Creature(const std::string &type,
@@ -35,7 +35,6 @@ class Creature {
 
   /// @return description_
   [[nodiscard]] const std::string &GetDescription() const;
-  [[nodiscard]] const std::string &GetType() const;
 
   /// @brief Handles the logic when this creature is attacked.
   /// @param base_damage Base attack damage (actual damage may be later recalculated somehow)
@@ -62,7 +61,6 @@ class Creature {
   /// @brief Sets y velocity.
   /// @param nvy new y velocity.
   void SetVelocityY(float nvy);
-  void SetHealth(float health);
   void SetTexture(const sf::Texture &t);
   virtual void SetPosition(const sf::Vector2<float> &position);
   virtual void SetRoom(Room &room);
@@ -70,17 +68,11 @@ class Creature {
   /// @param window the window where the healthbar is drawn to
   void DrawHealthBar(sf::RenderWindow &window);
 
-  /// @return inventory
-  const Inventory &GetInventory() const;
   /// @return position
   const sf::Vector2<float> &GetPosition() const;
-  /// @return max velocity
-  float GetMaxVelocity() const;
-  /// @return velocity
-  const sf::Vector2<float> &GetVelocity() const;
   /// @return current room
   const Room &GetRoom() const;
-  /// @return inventory of the creture
+  /// @return inventory_ of the creture
   Inventory &GetInventory();
 
  protected:
@@ -98,7 +90,7 @@ class Creature {
   std::string name_;
   /// @brief description in the format "Creature of type <type_> named <name>"
   std::string description_;
-  /// @brief the inventory of the creature
+  /// @brief the inventory_ of the creature
   Inventory inventory_;
   /// @brief texture
   sf::Texture &texture_;
@@ -112,12 +104,12 @@ class Creature {
   std::ostream &logger_;
   /// @brief room the creature is in
 
-  sf::RectangleShape creatureRect;
+  sf::RectangleShape creatureRect_;
   Room room_;
 
   /// @brief Reduces health by damage. If damage is greater then health, sets health to 0.
   /// @param damage amount to reduce health_ by
-  void TakeDamage_(float damage) { health_ = std::max(0.f, health_ - damage); }
+  void TakeDamage_(float damage);
 
   virtual std::vector<Room> GetAvailableRooms();
   void UpdatePosition();

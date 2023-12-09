@@ -15,7 +15,7 @@ enum Direction {
 };
 
 /**
- * @brief Class representing a dungeon.
+ * @brief Class representing a dungeon_.
  */
 
 class Dungeon {
@@ -27,17 +27,17 @@ class Dungeon {
   ~Dungeon();
 
   /**
-   * @brief Generates a dungeon with rooms.
+   * @brief Generates a dungeon_ with rooms_.
    *
-   * @param rooms Vector to store generated rooms.
-   * @param corridors Vector to store generated corridors.
-   * @param numRooms Number of rooms to generate.
+   * @param rooms Vector to store generated rooms_.
+   * @param corridors Vector to store generated corridors_.
+   * @param numRooms Number of rooms_ to generate.
    * @param TILE_SIZE Size of a tile.
    * @param WINDOW_WIDTH Width of the game window.
    * @param WINDOW_HEIGHT Height of the game window.
    */
 
-  void generateDungeon(std::vector<Room> &rooms,
+  void GenerateDungeon(std::vector<Room> &rooms,
                        std::vector<Room> &corridors,
                        int numRooms,
                        int TILE_SIZE,
@@ -46,14 +46,14 @@ class Dungeon {
 
  private:
   static const int GRID_SIZE = 20;
-  std::vector<std::vector<bool>> roomGrid;
+  std::vector<std::vector<bool>> roomGrid_;
 
   /**
-   * @brief Recursively generates rooms and corridors that connect the rooms in the dungeon.
+   * @brief Recursively generates rooms_ and corridors_ that connect the rooms_ in the dungeon_.
    *
-   * @param rooms Vector to store generated rooms.
-   * @param rooms Vector to store generated corridors.
-   * @param numRooms Number of rooms to generate.
+   * @param rooms Vector to store generated rooms_.
+   * @param rooms Vector to store generated corridors_.
+   * @param numRooms Number of rooms_ to generate.
    * @param x X-coordinate.
    * @param y Y-coordinate.
    * @param GRID_WIDTH Width of a grid cell.
@@ -62,8 +62,7 @@ class Dungeon {
    * @param WINDOW_HEIGHT Height of the window.
    * @param GRID_SIZE Size of the grid.
    */
-
-  void generateRooms(std::vector<Room> &rooms,
+  void GenerateRooms(std::vector<Room> &rooms,
                      std::vector<Room> &corridors,
                      int numRooms,
                      int x,

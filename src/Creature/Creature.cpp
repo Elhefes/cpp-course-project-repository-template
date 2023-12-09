@@ -25,8 +25,8 @@ Creature::Creature(const std::string &type,
       position_(initialPos),
       texture_(t) {
   description_ = "Creature \"" + type + " named " + name + "\"";
-  creatureRect.setSize(sf::Vector2f(1.0f, 1.0f));
-  creatureRect.setOrigin(sf::Vector2f(0.5f, 0.5f));
+  creatureRect_.setSize(sf::Vector2f(1.0f, 1.0f));
+  creatureRect_.setOrigin(sf::Vector2f(0.5f, 0.5f));
 }
 
 const std::string &Creature::GetDescription() const {
@@ -41,29 +41,25 @@ float Creature::TakeHit(float base_damage, const Creature &c2) {
   return damageDealt;
 }
 
-const std::string &Creature::GetType() const {
-  return type_;
-}
-
 void Creature::Draw() {
   //debug:
-//  creatureRect.setOutlineColor(sf::Color::Red);
-//  creatureRect.setOutlineThickness(0.05f);
+//  creatureRect_.setOutlineColor(sf::Color::Red);
+//  creatureRect_.setOutlineThickness(0.05f);
 //  sf::CircleShape tmp(0.1);
 //  tmp.setFillColor(sf::Color::Blue);
 //  tmp.setPosition(position_ - sf::Vector2f(0.5f, 0.5f));
 //  window_.draw(tmp);
 //  tmp.setPosition(position_ + sf::Vector2f(0.5f, 0.5f));
 //  window_.draw(tmp);
-//  window_.draw(creatureRect);
+//  window_.draw(creatureRect_);
 //  sf::RectangleShape tmp2(sf::Vector2f(0.1, room_.height));
 //  tmp2.setPosition(sf::Vector2f(room_.x, room_.y));
 //  window_.draw(tmp2);
 
-  creatureRect.setTexture(&texture_);
-  creatureRect.setPosition(position_);
-  if (!IsAlive()) creatureRect.setFillColor(sf::Color::Red);
-  window_.draw(creatureRect);
+  creatureRect_.setTexture(&texture_);
+  creatureRect_.setPosition(position_);
+  if (!IsAlive()) creatureRect_.setFillColor(sf::Color::Red);
+  window_.draw(creatureRect_);
 }
 
 void Creature::Update() {
@@ -72,14 +68,8 @@ void Creature::Update() {
   UpdateRotation();
 }
 
-const Inventory &Creature::GetInventory() const {
-  return inventory_;
-}
 const sf::Vector2<float> &Creature::GetPosition() const {
   return position_;
-}
-const sf::Vector2<float> &Creature::GetVelocity() const {
-  return velocity_;
 }
 
 template<typename T>
@@ -103,12 +93,9 @@ void Creature::SetVelocity(const sf::Vector2<float> &newVelocity) {
 
 void Creature::SetVelocityX(float nvx) { velocity_.x = limitModule(nvx, maxVelocity_); }
 void Creature::SetVelocityY(float nvy) { velocity_.y = limitModule(nvy, maxVelocity_); }
-void Creature::SetHealth(float health) {
-  health_ = std::min(health, maxHealth_);
-}
 void Creature::SetTexture(const sf::Texture &t) {
   texture_ = t;
-  creatureRect.setTexture(&t);
+  creatureRect_.setTexture(&t);
 }
 const Room &Creature::GetRoom() const {
   return room_;
@@ -133,9 +120,6 @@ void Creature::SetPosition(const sf::Vector2<float> &position) {
 void Creature::SetRoom(Room &room) {
   room_ = room;
 }
-float Creature::GetMaxVelocity() const {
-  return maxVelocity_;
-}
 std::vector<Room> Creature::GetAvailableRooms() {
   // default behaviour: only my room is available
   // will be overriden by player class
@@ -147,8 +131,8 @@ void Creature::UpdatePosition() {
   sf::Vector2f newPos = position_ + velocity_;
   std::vector<Room> rooms = GetAvailableRooms();
   for (auto &r : rooms) {
-    float sz = std::max(creatureRect.getSize().x, creatureRect.getSize().y);
-    auto [isInside, xMul, yMul, boundedPos] = r.isInside(newPos, sz);
+    float sz = std::max(creatureRect_.getSize().x, creatureRect_.getSize().y);
+    auto [isInside, xMul, yMul, boundedPos] = r.IsInside(newPos, sz);
     if (isInside) {
       position_ = boundedPos;
       velocity_.x *= xMul;
@@ -170,7 +154,7 @@ sf::Vector2f Creature::GetFacingDirection() {
 
 void Creature::TurnToDirection(float dx, float dy) {
   float rotation = atan2f(dy, dx);
-  creatureRect.setRotation(sf::radians(rotation - M_PI_2f32));
+  creatureRect_.setRotation(sf::radians(rotation - M_PI_2f32));
 }
 
 void Creature::DrawHealthBar(sf::RenderWindow &window) {
@@ -194,3 +178,4 @@ void Creature::DrawHealthBar(sf::RenderWindow &window) {
   healthBar.setFillColor(barColor);
   window.draw(healthBar);
 }
+void Creature::TakeDamage_(float damage) { health_ = std::max(0.f, health_ - damage); }

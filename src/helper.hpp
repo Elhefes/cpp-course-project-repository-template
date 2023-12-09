@@ -54,19 +54,19 @@ bool close(const sf::Vector2<T> &v1, const sf::Vector2<T> &v2, T maxDist) {
 }
 //std::mt19937 engine; // todo: why the fuck it gives me "multiple definitions" error particularly on this function
 //
-//int randInt() {
+//int RandInt() {
 //  // [0; INTMAX?)
 //  return abs((int) engine());
 //}
 //
-//int randInt(int b) {
+//int RandInt(int b) {
 //  // [0; b)
-//  return randInt() % b;
+//  return RandInt() % b;
 //}
 //
-//int randInt(int a, int b) {
+//int RandInt(int a, int b) {
 //  // [a; b)
-//  return a + randInt(b - a);
+//  return a + RandInt(b - a);
 //}
 }
 

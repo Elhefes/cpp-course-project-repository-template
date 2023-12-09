@@ -1,3 +1,4 @@
+#include <random>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -5,14 +6,12 @@
 #include <algorithm>
 #include "dungeon.hpp"
 
-Dungeon::Dungeon() : roomGrid(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
+Dungeon::Dungeon() : roomGrid_(GRID_SIZE, std::vector<bool>(GRID_SIZE, false)) {
 }
 
-Dungeon::~Dungeon() {
+Dungeon::~Dungeon() = default;
 
-}
-
-void Dungeon::generateDungeon(std::vector<Room> &rooms,
+void Dungeon::GenerateDungeon(std::vector<Room> &rooms,
                               std::vector<Room> &corridors,
                               int numRooms,
                               int TILE_SIZE,
@@ -21,7 +20,7 @@ void Dungeon::generateDungeon(std::vector<Room> &rooms,
   const float GRID_WIDTH = static_cast<float>(WINDOW_WIDTH) / GRID_SIZE;
   const float GRID_HEIGHT = static_cast<float>(WINDOW_HEIGHT) / GRID_SIZE;
 
-  // Create a 2D array to represent the grid that rooms are placed in
+  // Create a 2D array to represent the grid that rooms_ are placed in
   std::pair<int, int> grid[GRID_SIZE][GRID_SIZE];
 
   // Calculate the center of the grid
@@ -37,7 +36,7 @@ void Dungeon::generateDungeon(std::vector<Room> &rooms,
     }
   }
 
-  generateRooms(rooms,
+  GenerateRooms(rooms,
                 corridors,
                 numRooms,
                 GRID_SIZE / 2,
@@ -49,7 +48,7 @@ void Dungeon::generateDungeon(std::vector<Room> &rooms,
                 GRID_SIZE);
 }
 
-void Dungeon::generateRooms(std::vector<Room> &rooms,
+void Dungeon::GenerateRooms(std::vector<Room> &rooms,
                             std::vector<Room> &corridors,
                             int numRooms,
                             int x,
@@ -114,11 +113,11 @@ void Dungeon::generateRooms(std::vector<Room> &rooms,
     }
   }
 
-  roomGrid[x][y] = true;
+  roomGrid_[x][y] = true;
 
   // Randomly choose directions to branch out
   std::vector<Direction> directions = {UP, DOWN, LEFT, RIGHT};
-  std::random_shuffle(directions.begin(), directions.end());
+  std::shuffle(directions.begin(), directions.end(), std::mt19937(std::random_device()()));
 
   // Flag to check if a valid direction is found
   bool validDirectionFound = false;
@@ -139,9 +138,9 @@ void Dungeon::generateRooms(std::vector<Room> &rooms,
     }
 
     // Check if the new coordinates are within the grid
-    if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE && !roomGrid[newX][newY]) {
+    if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE && !roomGrid_[newX][newY]) {
       validDirectionFound = true;
-      generateRooms(rooms,
+      GenerateRooms(rooms,
                     corridors,
                     numRooms,
                     newX,
@@ -158,8 +157,8 @@ void Dungeon::generateRooms(std::vector<Room> &rooms,
   if (!validDirectionFound) {
     rooms.clear();
     corridors.clear();
-    roomGrid.assign(GRID_SIZE, std::vector<bool>(GRID_SIZE, false));
-    generateRooms(rooms,
+    roomGrid_.assign(GRID_SIZE, std::vector<bool>(GRID_SIZE, false));
+    GenerateRooms(rooms,
                   corridors,
                   numRooms,
                   GRID_SIZE / 2,
