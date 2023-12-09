@@ -31,45 +31,43 @@ class Game {
  public:
   Game(); ///< Constructor
   ~Game(); ///< Destructor
-  void run(); ///< Start the game loop
+  void Run(); ///< Start the game loop
 
-private:
-    /// @brief main character (me like literally)
-    Player player_; ///< Main character
-    std::vector<Monster *> monsters_; ///< List of monsters
-    std::vector<sf::Vector2f> potions_; ///< List of potions
-    
-    sf::RenderWindow window; ///< Render window
+ private:
+  /// @brief main character (me like literally)
+  Player player_; ///< Main character
+  std::vector<Monster *> monsters_; ///< List of monsters
+  std::vector<sf::Vector2f> potions_; ///< List of potions_
 
-    Dungeon dungeon; ///< Dungeon generator
-    Inventory inventory; ///< Game inventory
-    GameOverScreen gameOverScreen; ///< Game over screen
-    std::vector<Room> rooms; ///< List of rooms
-    std::vector<Room> corridors; ///< List of corridors
+  sf::RenderWindow window_; ///< Render window
 
-    // Movement flags
-    bool moveUp = false;
-    bool moveDown = false;
-    bool moveLeft = false;
-    bool moveRight = false;
-    bool isRunning = false;
-    bool gameWon = false;
-    bool gameLost = false;
+  Dungeon dungeon_; ///< Dungeon generator
+  Inventory inventory_; ///< Game inventory_
+  GameOverScreen gameOverScreen_; ///< Game over screen
+  std::vector<Room> rooms_; ///< List of rooms_
+  std::vector<Room> corridors_; ///< List of corridors_
 
-    // Methods
-    void initializeTextures(); ///< Load textures
-    bool checkWinning(bool monstersKilled); ///< Check for winning condition
-    bool checkLosing(); ///< Check for losing condition
-    void initializeWindow(); ///< Initialize game window
-    void initializeCircle(); ///< Initialize circle
-    void processEvents(); ///< Process user input events
-    void update(); ///< Update game logic
-    void render(); ///< Render game elements
-    void initiateDungeon(); ///< Generate dungeon layout
-    void initiateInventory(); ///< Initialize inventory items
-    void drawDungeon(); ///< Draw dungeon layout
-    void addItem(Item newItem); ///< Add an item to the inventory
-    void drawRoom(const Room& room, RoomType type); ///< Draw a room
+  // Movement flags
+  bool moveUp_ = false;
+  bool moveDown_ = false;
+  bool moveLeft_ = false;
+  bool moveRight_ = false;
+  bool isRunning_ = false;
+  bool gameWon_ = false;
+  bool gameLost_ = false;
+
+  // Methods
+  static void InitializeTextures(); ///< Load textures
+  bool CheckWinning(bool monstersKilled); ///< Check for winning condition
+  bool CheckLosing(); ///< Check for losing condition
+  void InitializeWindow(); ///< Initialize game window
+  void ProcessEvents(); ///< Process user input events
+  void Update(); ///< Update game logic
+  void Render(); ///< Render game elements
+  void InitiateDungeon(); ///< Generate dungeon_ layout
+  void InitiateInventory(); ///< Initialize inventory_ items
+  void DrawDungeon(); ///< Draw dungeon_ layout
+  void DrawRoom(const Room &room, RoomType type); ///< Draw a room
 };
 
 #endif /* GAME_HPP */
