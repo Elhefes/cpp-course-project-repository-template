@@ -40,10 +40,10 @@ void Monster::tick(Player &p) {
 
 void Player::SetRoom(Room &room, std::vector<Monster *> &monsters, std::vector<sf::Vector2f> &potionPos) {
   SetRoom(room);
-  SpawnMonsters(window_, monsters);
+  SpawnMonsters(monsters);
   SpawnPotion(potionPos);
 }
-void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res) {
+void Player::SpawnMonsters(std::vector<Monster *> &res) {
   if (room_.IsCorridor()) return;
 
   int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
@@ -63,7 +63,7 @@ void Player::SpawnMonsters(sf::RenderWindow &window, std::vector<Monster *> &res
     std::string name = "random name later ig";
     auto pos = room_.RandomPos(1.f);
     res.push_back(new Monster(type, name, monster_health, monster_velocity,
-                              pos, window, room_, (int) damage, texture));
+                              pos, window_, room_, (int) damage, texture));
   }
 }
 
@@ -81,7 +81,7 @@ void Player::Update(std::vector<Monster *> &monsters, std::vector<sf::Vector2f> 
   auto old = room_;
   Creature::Update();
   if (room_ != old) {
-    SpawnMonsters(window_, monsters);
+    SpawnMonsters(monsters);
     SpawnPotion(potions);
   }
 }
@@ -99,7 +99,7 @@ void Player::SetItemInUse(int index) {
 int Player::GetItemInUse() const {
   return itemInUse;
 }
-void Player::tryHealing() {
+void Player::TryHealing() {
   if (!inventory_.IsSword(itemInUse)) {
     float amountToHeal = inventory_.GetHealingAmount(itemInUse);
     float old = health_;

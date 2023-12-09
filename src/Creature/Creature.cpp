@@ -42,20 +42,6 @@ float Creature::TakeHit(float base_damage, const Creature &c2) {
 }
 
 void Creature::Draw() {
-  //debug:
-//  creatureRect_.setOutlineColor(sf::Color::Red);
-//  creatureRect_.setOutlineThickness(0.05f);
-//  sf::CircleShape tmp(0.1);
-//  tmp.setFillColor(sf::Color::Blue);
-//  tmp.setPosition(position_ - sf::Vector2f(0.5f, 0.5f));
-//  window_.draw(tmp);
-//  tmp.setPosition(position_ + sf::Vector2f(0.5f, 0.5f));
-//  window_.draw(tmp);
-//  window_.draw(creatureRect_);
-//  sf::RectangleShape tmp2(sf::Vector2f(0.1, room_.height));
-//  tmp2.setPosition(sf::Vector2f(room_.x, room_.y));
-//  window_.draw(tmp2);
-
   creatureRect_.setTexture(&texture_);
   creatureRect_.setPosition(position_);
   if (!IsAlive()) creatureRect_.setFillColor(sf::Color::Red);
@@ -92,11 +78,14 @@ void Creature::SetVelocity(const sf::Vector2<float> &newVelocity) {
 }
 
 void Creature::SetVelocityX(float nvx) { velocity_.x = limitModule(nvx, maxVelocity_); }
+
 void Creature::SetVelocityY(float nvy) { velocity_.y = limitModule(nvy, maxVelocity_); }
+
 void Creature::SetTexture(const sf::Texture &t) {
   texture_ = t;
   creatureRect_.setTexture(&t);
 }
+
 const Room &Creature::GetRoom() const {
   return room_;
 }
@@ -105,7 +94,7 @@ Inventory &Creature::GetInventory() {
   return inventory_;
 }
 
-int Creature::Attack(Creature &c2, const Sword &sword) const {
+float Creature::Attack(Creature &c2, const Sword &sword) const {
   if (sword.GetName().empty()) { // no sword was passed
     return c2.TakeHit(base_damage_, *this);
   }
@@ -114,18 +103,21 @@ int Creature::Attack(Creature &c2, const Sword &sword) const {
   return c2.TakeHit(damage, *this);
 
 }
+
 void Creature::SetPosition(const sf::Vector2<float> &position) {
   position_ = position;
 }
+
 void Creature::SetRoom(Room &room) {
   room_ = room;
 }
+
 std::vector<Room> Creature::GetAvailableRooms() {
   // default behaviour: only my room is available
   // will be overriden by player class
-  // TODO: move this to documentation
   return {room_};
 }
+
 void Creature::UpdatePosition() {
   // assumes that creature is alive
   sf::Vector2f newPos = position_ + velocity_;
@@ -142,6 +134,7 @@ void Creature::UpdatePosition() {
     }
   }
 }
+
 void Creature::UpdateRotation() {
   auto [dx, dy] = GetFacingDirection();
   TurnToDirection(dx, dy);
@@ -178,4 +171,5 @@ void Creature::DrawHealthBar(sf::RenderWindow &window) {
   healthBar.setFillColor(barColor);
   window.draw(healthBar);
 }
+
 void Creature::TakeDamage_(float damage) { health_ = std::max(0.f, health_ - damage); }

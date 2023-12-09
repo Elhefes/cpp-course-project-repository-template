@@ -122,7 +122,7 @@ void Game::ProcessEvents() {
       }
 
       if (key == sf::Keyboard::E && event.type == sf::Event::KeyPressed) {
-        player_.tryHealing();
+        player_.TryHealing();
       }
 
       if (key == sf::Keyboard::F && event.type == sf::Event::KeyPressed) {

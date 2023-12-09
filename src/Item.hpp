@@ -5,6 +5,7 @@
 #include "string"
 #include <SFML/Graphics.hpp>
 
+/// @brief Basic class for items in the inventory.
 class Item {
  public:
   Item() = default;
@@ -14,15 +15,24 @@ class Item {
 
   [[nodiscard]] bool IsSword() const { return isSword_; }
 
+  /// @brief Draws the item.
+  /// @param window Window to draw the item in.
+  /// @param pos Position to draw the item at.
+  /// @param maxSize Maximum of allowed width and height.
+  /// @param t Texture to use.
   static void Draw(sf::RenderWindow &window,
                    const sf::Vector2f &pos,
                    float maxSize,
                    const sf::Texture &t);
  protected:
+  /// @brief name of the item.
   std::string name_;
+
+  /// @brief true if the item is a sword, false otherwise.
   bool isSword_{};
 };
 
+/// @brief A sword - an item that buffs the damage (multiplies it by some value)
 class Sword : public Item {
  public:
   Sword() = default;
@@ -30,9 +40,11 @@ class Sword : public Item {
 
   [[nodiscard]] float GetMultiplier() const { return multiplier_; }
  private:
+  /// @brief value to multiply damage by
   float multiplier_ = 1;
 };
 
+/// @brief A health potion - an item that heals the player by the given amount
 class HealthPotion : public Item {
  public:
   HealthPotion() = default;
@@ -41,6 +53,7 @@ class HealthPotion : public Item {
 
   [[nodiscard]] float GetHpRestored() const { return hpRestored_; };
  private:
+  /// @brief Amount to heal by.
   float hpRestored_ = 10;
 };
 #endif //DUNGEONCRAWLER_SRC_ITEM_HPP_
