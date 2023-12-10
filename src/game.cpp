@@ -11,7 +11,7 @@ sf::Texture sword_inv_t;
 sf::Texture potion_inv_t;
 sf::Font font;
 
-Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
+Game::Game() : player_("Hooman", "Literally me", 100, PLAYER_RUNNING_SPEED,
                        sf::Vector2f(0, 0),
                        window_, Room(0, 0, 0, 0, false), player_t) {
   InitializeWindow();
