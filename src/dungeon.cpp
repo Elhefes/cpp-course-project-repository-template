@@ -1,8 +1,6 @@
 #include <random>
 #include <vector>
 #include <cstdlib>
-#include <ctime>
-#include <iostream>
 #include <algorithm>
 #include "dungeon.hpp"
 
@@ -62,8 +60,8 @@ void Dungeon::GenerateRooms(std::vector<Room> &rooms,
     return;
   }
 
-  int roomWidth = 10 + rand() % 10;  // Random width of room
-  int roomHeight = 10 + rand() % 10; // Random height of room
+  int roomWidth = ROOM_MIN_SIZE + rand() % (ROOM_MAX_SIZE - ROOM_MIN_SIZE);  // Random width of room
+  int roomHeight = ROOM_MIN_SIZE + rand() % (ROOM_MAX_SIZE - ROOM_MIN_SIZE); // Random height of room
   int roomX = x * GRID_WIDTH + (GRID_WIDTH / 2) - (roomWidth / 2);
   int roomY = y * GRID_HEIGHT + (GRID_HEIGHT / 2) - (roomHeight / 2);
 

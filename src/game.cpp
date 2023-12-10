@@ -10,8 +10,6 @@ sf::Texture boss_t;
 sf::Texture sword_inv_t;
 sf::Texture potion_inv_t;
 sf::Font font;
-const float PLAYER_WALKING_SPEED = 0.12f;
-const float PLAYER_RUNNING_SPEED = 0.16f;
 
 Game::Game() : player_("Hooman", "Literally me", 50, PLAYER_RUNNING_SPEED,
                        sf::Vector2f(0, 0),
@@ -92,7 +90,7 @@ void Game::InitializeTextures() {
 void Game::InitializeWindow() {
   sf::Vector2u windowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
   window_.create(sf::VideoMode(windowSize), WINDOW_TITLE);
-  window_.setFramerateLimit(60);
+  window_.setFramerateLimit(FRAMERATE_LIMIT);
   window_.setPosition(sf::Vector2i(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2));
 }
 
@@ -222,8 +220,8 @@ void Game::InitiateDungeon() {
 }
 
 void Game::InitiateInventory() {
-  player_.GetInventory().AddSword(Sword("Escalibur", 1.2), 1);
-  player_.GetInventory().AddPotion(HealthPotion(), 3);
+  player_.GetInventory().AddSword(Sword("Escalibur", START_SWORD_MULTIPLIER), 1);
+  player_.GetInventory().AddPotion(HealthPotion(), INITIAL_POTION_NUMBER);
 }
 
 void Game::DrawDungeon() {

@@ -3,6 +3,12 @@
 //
 #include "GameCharacter.hpp"
 
+/// @return returns true with the given probability
+bool RandomEvent(float probability) {
+  // todo: i know that we are not supposed to use this random, but it's too late now
+  return ((float) rand() / RAND_MAX < probability);
+}
+
 void Monster::tick(Player &p) {
   if (clock() - lastTick_ < TICK_TIME || !IsAlive()) return;
   lastTick_ = clock();
@@ -11,63 +17,47 @@ void Monster::tick(Player &p) {
     return;
   }
   sf::Vector2 v = (p.GetPosition() - position_);
-  if (rand() % 3 == 0) v.x *= -1;
-  if (rand() % 3 == 0) v.y *= -1;
+  if (RandomEvent(MONSTER_DIRECTION_CHANGE_PROBABILITY)) v.x *= -1;
+  if (RandomEvent(MONSTER_DIRECTION_CHANGE_PROBABILITY)) v.y *= -1;
   v /= (float) help::len(v);
   v *= maxVelocity_;
   SetVelocity(v);
-  if (help::close(position_, p.GetPosition(), (float) ATTACK_RADIUS)) {
+  if (help::close(position_, p.GetPosition(), (float) MONSTER_ATTACK_RADIUS)) {
     Attack(p);
   }
 }
-
-//void Monster::SpawnMonsters(Room &room, sf::RenderWindow &window, std::vector<Monster *> &res) {
-//  if (room.IsCorridor()) return;
-//
-//  // TODO: if room is already completed do not spawn anyone
-////  const int MONSTER_NUMBER = 0; // TODO: set this to be a room parameter
-//  int monster_number = 1 + rand() % ()
-//  const int MONSTER_HEALTH = 10;
-//  const float MONSTER_VELOCITY = 0.1f;
-//  for (int _ = 0; _ < MONSTER_NUMBER; _++) {
-//    std::string type = "random type later ig";
-//    std::string name = "random name later ig";
-//    auto pos = room.RandomPos(1.f);
-//    res.push_back(new Monster(type, name, MONSTER_HEALTH, MONSTER_VELOCITY,
-//                              pos, window, room));
-//  }
-//}
 
 void Player::SetRoom(Room &room, std::vector<Monster *> &monsters, std::vector<sf::Vector2f> &potionPos) {
   SetRoom(room);
   SpawnMonsters(monsters);
   SpawnPotion(potionPos);
 }
+
 void Player::SpawnMonsters(std::vector<Monster *> &res) {
   if (room_.IsCorridor()) return;
 
   int monster_number = 1 + roomIndex_ / 2 + rand() % (roomIndex_ + 1);
-  float damage = 10;
-  int monster_health = 60;
-  float monster_velocity = 0.085f;
+  float damage = DEFAULT_MONSTER_DAMAGE;
+  int monster_health = DEFAULT_MONSTER_HEALTH;
+  float monster_velocity = DEFAULT_MONSTER_VELOCITY;
   sf::Texture &texture = assassin_t;
   if (roomIndex_ + 1 == rooms_.size()) {
     monster_number = 1;
-    monster_health = 250;
-    monster_velocity = 0.07f;
-    damage *= 1.5;
+    damage = BOSS_MONSTER_DAMAGE;
+    monster_health = BOSS_MONSTER_HEALTH;
+    monster_velocity = BOSS_MONSTER_VELOCITY;
     texture = boss_t;
   }
   for (int _ = 0; _ < monster_number; _++) {
     std::string type = "random type later ig";
     std::string name = "random name later ig";
-    auto pos = room_.RandomPos(1.f);
+    auto pos = room_.RandomPos(CREATURE_SIZE);
     res.push_back(new Monster(type, name, monster_health, monster_velocity,
                               pos, window_, room_, (int) damage, texture));
   }
 }
 
-int Player::GetRoomIndex() {
+int Player::GetRoomIndex() const {
   return roomIndex_;
 }
 sf::Vector2f Player::GetPosition() {
@@ -122,7 +112,7 @@ void Player::TryAttack(const std::vector<Monster *> &monsters) {
       ind = i;
     }
   }
-  if (!monsters.empty() && help::close(monsters[ind]->GetPosition(), GetPosition(), ATTACK_RADIUS)) {
+  if (!monsters.empty() && help::close(monsters[ind]->GetPosition(), GetPosition(), PLAYER_ATTACK_RADIUS)) {
     if (itemInUse >= inventory_.GetSize() || !inventory_.IsSword(itemInUse)) Attack(*monsters[ind]);
     else {
       Attack(*monsters[ind], inventory_.GetSword(itemInUse));
@@ -141,16 +131,17 @@ void Player::TryPickup(std::vector<sf::Vector2f> &potionPositions) {
       ind = i;
     }
   }
-  if (ind < potionPositions.size() && help::len(potionPositions[ind] - position_) <= ATTACK_RADIUS) {
+  if (ind < potionPositions.size() && help::len(potionPositions[ind] - position_) <= PLAYER_ATTACK_RADIUS) {
     potionPositions.erase(potionPositions.begin() + ind);
     inventory_.AddPotion(HealthPotion(), 1);
   }
 }
 void Player::SpawnPotion(std::vector<sf::Vector2f> &pos) {
-  // spawns with probability 1/3
-  if (rand() % 3 != 0) return; // spawns just one for now, but can be easily changed to spawn more
-  pos.push_back(room_.RandomPos(1.f));
+  // spawns with probability 1/POTION_SPAWN_CHANCE
+  if (!RandomEvent(POTION_SPAWN_PROBABILITY)) return; // spawns just one for now, but can be easily changed to spawn more
+  pos.push_back(room_.RandomPos(ITEM_SIZE));
 }
+
 void Player::UpdateRoomIndex() {
   Room tmp = room_;
   roomIndex_ = int(std::find_if(rooms_.begin(),

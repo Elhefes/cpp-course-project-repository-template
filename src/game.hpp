@@ -11,12 +11,21 @@
 #include "gameOverScreen.hpp"
 
 // Constants
+// game
 const std::string WINDOW_TITLE = "Dungeon Crawler";
 const unsigned int WINDOW_WIDTH = 1080u;
 const unsigned int WINDOW_HEIGHT = 720u;
+const int FRAMERATE_LIMIT = 60;
+const float ZOOM_LEVEL = 50.0f;
+// dungeon
 const int ROOM_AMOUNT = 5;
 const int TILE_SIZE = 1;
-const float ZOOM_LEVEL = 50.0f;
+// player
+const float PLAYER_WALKING_SPEED = 0.12f;
+const float PLAYER_RUNNING_SPEED = 0.16f;
+// items
+const float START_SWORD_MULTIPLIER = 1.2f;
+const int INITIAL_POTION_NUMBER = 3;
 
 // Enum for room types
 enum RoomType {

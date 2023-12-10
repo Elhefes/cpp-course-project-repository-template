@@ -8,6 +8,13 @@
 #include "SFML/Graphics.hpp"
 #include "random"
 
+/// @brief Bounds the value to the interval [lower + EPS; upper - EPS]
+/// @tparam T type of the value to bound
+/// @param x value to bound
+/// @param lower lower bound
+/// @param upper upper bound
+/// @param EPS offset
+/// @return bounded value
 template<typename T>
 T bound(T x, T lower, T upper, T EPS) {
   x = std::max(lower + EPS, x);
@@ -52,22 +59,6 @@ template<typename T>
 bool close(const sf::Vector2<T> &v1, const sf::Vector2<T> &v2, T maxDist) {
   return square(v1 - v2) <= maxDist * maxDist;
 }
-//std::mt19937 engine; // todo: why the fuck it gives me "multiple definitions" error particularly on this function
-//
-//int RandInt() {
-//  // [0; INTMAX?)
-//  return abs((int) engine());
-//}
-//
-//int RandInt(int b) {
-//  // [0; b)
-//  return RandInt() % b;
-//}
-//
-//int RandInt(int a, int b) {
-//  // [a; b)
-//  return a + RandInt(b - a);
-//}
 }
 
 #endif //DUNGEONCRAWLER_SRC_HELPER_HPP_

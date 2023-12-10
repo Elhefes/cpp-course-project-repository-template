@@ -9,11 +9,27 @@
 #include "../room.hpp"
 #include "../helper.hpp"
 
-const long TICK_TIME = CLOCKS_PER_SEC / 2;
+// Constants
+// monster behavior
+const int TICKS_PER_SECOND = 2;
+const long TICK_TIME = CLOCKS_PER_SEC / TICKS_PER_SECOND;
+const float MONSTER_ATTACK_RADIUS = 2.f;
+const float MONSTER_DIRECTION_CHANGE_PROBABILITY = 0.2f;
+// player behavior
+const float PLAYER_ATTACK_RADIUS = 2.2f;
+// spawn monsters
+const int DEFAULT_MONSTER_DAMAGE = 10;
+const int DEFAULT_MONSTER_HEALTH = 60;
+const float DEFAULT_MONSTER_VELOCITY = 0.085f;
+
+const float BOSS_MONSTER_DAMAGE_MULTIPLIER = 1.5f;
+const float BOSS_MONSTER_DAMAGE = DEFAULT_MONSTER_DAMAGE * BOSS_MONSTER_DAMAGE_MULTIPLIER;
+const int BOSS_MONSTER_HEALTH = 250;
+const float BOSS_MONSTER_VELOCITY = 0.07f;
+// spawn items
+const float POTION_SPAWN_PROBABILITY = 0.33f;
 
 class Player;
-
-const float ATTACK_RADIUS = 2.f;
 
 /// @brief Class for enemies
 class Monster : public Creature {
@@ -61,7 +77,7 @@ class Player : public Creature {
       Creature(type, name, maxHealth, maxVelocity, initialPos, window, room, 25, texture, logger, inventory) {};
 
   /// @return current room index
-  int GetRoomIndex();
+  int GetRoomIndex() const;
 
   /// @return current position
   sf::Vector2f GetPosition();

@@ -10,6 +10,15 @@
 #include "Item.hpp"
 #include "textureManager.hpp"
 
+// Constants
+const float ITEM_CIRCLE_RADIUS = 0.5f;
+const float ITEM_SIZE = 2 * ITEM_CIRCLE_RADIUS;
+const float ITEM_CIRCLE_OUTLINE_THICKNESS = 0.1f;
+const sf::Color ITEM_IN_USE_COLOR = sf::Color::Red;
+const sf::Color ITEM_NOT_IN_USE_COLOR = sf::Color::Blue;
+const int QUANTITY_TEXT_SCALE_X = 10;
+const int QUANTITY_TEXT_SCALE_Y = 20;
+
 /**
  * @brief Class defining an inventory_ to manage items.\n
  * All the items are stored in a vector; each item is either sword or a health potion. The item in use is highlighted
