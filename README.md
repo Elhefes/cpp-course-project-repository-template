@@ -1,57 +1,25 @@
 # Dungeon_crawler_antti_karvanen_3 
 
-This is the template for the projects. Please copy the project description here. 
-You can use Markdown language to render it as formatted **HTML** file.
-
 # Group
 - Matias Veikkola 
 - Henri Palin 
 - Lauri Palin 
 - Daniil Parniukov 
 
-# Repository organization
-Your project implementation should follow the skelaton organization in this repository.
-See readme.md files in each folder.
+This software is a basic dungeon crawler video game. It’s programmed in C++ and uses SFML to draw the game. 
 
-# Project Implementation 
-You must use git repository for the work on the project, making frequent enough commits so 
-that the project group (and course staff) can follow the progress.
+Before the game starts, the software runs a series of tests which test the basic functionality of dungeon generation, creature creation and inventory handling. After all of the tests pass, the actual game starts. 
 
-The completed project work will be demonstrated to the group's advisor at a demo session. 
-The final demonstrations are arranged on week 50. After the final demonstrations project group 
-evaluates another project, and self-evaluates own project. In addition, project members will 
-give a confidential individual assessment of each group member
+The software uses SFML to draw a window and loads all used texture files from a set directory. A randomly generated dungeon is then created, consisting of rooms and corridors that connect them. The rooms’ floors have a random distribution of different textures and the corridors have their own textures as well. 
 
-The course staff should be able to easily compile the project work using makefile and related 
-instructions provided in the git repository. The final output should be in the **master branch** of the git repository.
+The player is spawned in the first room and its inventory is created. Currently it consists of a sword and collectible potions. The player can move with keyboard input, attack with mouse clicks and equip the sword or the potion(s) with key binds to their respective numbers to use them. Potions have a chance to spawn randomly in each room and they can be picked up and added to the inventory. Using potions restores health. 
 
-# Working practices
-Each project group is assigned an advisor from the project teaching personnel. 
-There will be a dedicated Teams channel for each project topic to facilitate discussion between 
-the groups in the same topic and the advisor. 
+A single basic enemy is also spawned to the first room, and the player needs to kill the enemy to gain access to the corridor. Killing all of the enemies in each room is the basic game loop. 
 
-**The group should meet weekly.** The weekly meeting does not need to be long if there are no special issues 
-to discuss, and can be taken remotely as voice/video chat on the group Teams channel (or Zoom or other similar tool), 
-preferably at a regular weekly time. In the meeting the group updates:
+The enemies can attack the player. If the player is hit, their health gets lower. If their health reaches zero, the game is lost. In this scenario, a losing screen is shown and there is a “Play again” button. 
 
-- What each member has done during the week
-- Are there challenges or problems? Discuss the possible solutions
-- Plan for the next week for everyone
-- Deviations and changes to the project plan, if any
-- After the meetings, the meeting notes will be committed to the project repository in the `Meeting-notes.md` file. 
-    * The commits within the week should have some commit messages referring to the meeting notes so 
-      that the project advisor can follow the progress.  
-    * **The meeting notes should be in English.**
+Clearing rooms of enemies becomes consecutively harder as there are more and more enemies to fight as the player progresses.
 
-> Everyone may not be able to participate to all meetings, but at least a couple of members should be present in each meeting. 
-> Regular absence from meetings will affect in individual evaluation.
+The build instructions can be found in Readme.md file in the build/ folder.
 
-# Source code documentation
-It is strongly recommended to use Doxygen to document your source code.
-Please go over the *Project Guidelines* for details.
-
-# TODOs (Date)
-You can create a list of TODOs in this file.
-The recommended format is:
-- Complete class implementation **foo**. Assigned to \<Member 1\>
-- Test ...
+Finally, the last room contains only one enemy, the boss. The boss is much stronger than basic enemies and has its own texture. Killing the boss is the game’s winning condition, where a congratulatory screen is shown. There is a “Play again” button. 
