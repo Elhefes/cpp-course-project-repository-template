@@ -20,6 +20,6 @@ The enemies can attack the player. If the player is hit, their health gets lower
 
 Clearing rooms of enemies becomes consecutively harder as there are more and more enemies to fight as the player progresses.
 
-The build instructions can be found in Readme.md file in the build/ folder.
-
 Finally, the last room contains only one enemy, the boss. The boss is much stronger than basic enemies and has its own texture. Killing the boss is the game’s winning condition, where a congratulatory screen is shown. There is a “Play again” button. 
+
+The build instructions can be found in Readme.md file in the build/ folder.
